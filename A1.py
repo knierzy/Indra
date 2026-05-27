@@ -3,11 +3,26 @@ import numpy as np
 import pandas as pd
 import itertools
 
-# === INPUT / OUTPUT ===
-input_file = r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\kompendium_dynamic_March23_.xlsx"
-preferred_sheet = "Sheet1"  # oder leer lassen
-output_file = (r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\kompendium2026_EQ2_5_95_dynamic_spec_constraint_may27.xlsx")
+from pathlib import Path
 
+# Input / output paths for GitHub repository use
+
+BASE_DIR = Path(__file__).resolve().parent
+
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "outputs"
+
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+input_file = DATA_DIR / "compendium.xlsx"
+
+preferred_sheet = "Sheet1"
+
+output_file = OUTPUT_DIR / "kompendium_processed.xlsx"
+
+output_file_cartesian = (
+    OUTPUT_DIR / "CartesianProduct_spec_constraints.xlsx"
+)
 # Helper Functions
 
 def find_header_row(xls_path, sheet, probes=5):
@@ -776,11 +791,6 @@ print(
     f"min/max values, meq/percentage data, and correlation pairs: {output_file}"
 )
 
-# Additional output: create constrained Cartesian product and meta numbers
-
-output_file_cartesian = (
-    r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\CartesianProduct_spec_constraints.may27_.xlsx"
-)
 
 print("\n📦 Creating constrained Cartesian product and meta numbers ...")
 
