@@ -5,13 +5,13 @@ This script processes hydrochemical Excel data and generates:
 - HCO3 calculations from SBV
 - meq/L and percentage compositions
 - 5–95 % filtered typical hydrochemical ranges
+  (except for DA_* reference groups)
 - constrained Cartesian ion combinations
 - hydrochemical meta numbers
 
 The generated meta-number datasets are later used
 for INDRA projection and hydrochemical pattern analysis.
 """
-
 
 import re
 import numpy as np
