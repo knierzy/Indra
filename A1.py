@@ -1,4 +1,4 @@
-####
+"""
 This script processes hydrochemical Excel data and generates:
 
 - cleaned ion datasets
@@ -10,7 +10,7 @@ This script processes hydrochemical Excel data and generates:
 
 The generated meta-number datasets are later used
 for INDRA projection and hydrochemical pattern analysis.
-####
+"""
 
 
 import re
