@@ -197,60 +197,66 @@ try:
     # LOG-Version für Plot verwenden
     ref_vector = group_means.loc[ref_group].values
 
-    mah_dict = {}
-
-    for g in group_means.index:
-        vec = group_means.loc[g].values
-        mah_dict[g] = log_euclid(vec, ref_vector)
-
-    # danach EINMAL normalisieren
-    mah_dict = {k.strip().lower(): v for k, v in mah_dict.items()}
-    # --- Mapping auf dein Plot-DataFrame ---
-    # --- Namen normalisieren ---
-    # --- Mapping auf dein Plot-DataFrame ---
-    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
-
-    # Mahalanobis-Keys sauber normalisieren
-    mah_dict = {str(k).strip().lower(): v for k, v in mah_dict.items()}
-
-    # Exaktes Mapping
-  def match_maha(name):
-    name = name.lower()
-
-    mapping = {
-        "da_altheim": "tgw_altheim",
-        "da_bad schallerbach": "tgw_bad schallerbach",
-        "da_buch-st. magdalena": "tgw_buch-st. magdalena",
-        "da_großwilfersdorf": "tgw_großwilfersdorf",
-        "da_rottenbach": "tgw_rottenbach",
-        "da_senftenbach": "tgw_senftenbach",
-
-        "gw_gaweinstal": "gaweinstal_pg31600452",
-        "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
-        "gw_laa_an_der_thaya": "laa_pg31600422",
-        "gw_mureck": "mureck_pg61511062",
-        "gw_traiskirchen": "traiskirchen_pg30600152",
-
-        "fw_tux": "kk72410012_tux",
-
-        "lake constance": "bodensee",
-        "lake fuschl": "fuschlsee",
-        "lake hallstatt": "hallstätter see",
-        "lake millstatt": "millstätter see",
-        "lake neusiedl": "neusiedlersee",
-        "lake ossiach": "ossiacher see",
-        "lake wolfgang": "wolfgangsee"
+       # Mahalanobis-Keys sauber normalisieren
+    mah_dict = {
+        str(k).strip().lower(): v
+        for k, v in mah_dict.items()
     }
 
-    if name in mapping:
-        return mah_dict.get(mapping[name], np.nan)
+    # ============================================================
+    # Mapping Plotgruppen → Referenzgruppen
+    # ============================================================
 
-    for key in mah_dict.keys():
-        if name in key or key in name:
-            return mah_dict[key]
+    def match_maha(name):
 
-    return np.nan
-      
+        name = str(name).strip().lower()
+
+        mapping = {
+            "da_altheim": "tgw_altheim",
+            "da_bad schallerbach": "tgw_bad schallerbach",
+            "da_buch-st. magdalena": "tgw_buch-st. magdalena",
+            "da_großwilfersdorf": "tgw_großwilfersdorf",
+            "da_rottenbach": "tgw_rottenbach",
+            "da_senftenbach": "tgw_senftenbach",
+
+            "gw_gaweinstal": "gaweinstal_pg31600452",
+            "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
+            "gw_laa_an_der_thaya": "laa_pg31600422",
+            "gw_mureck": "mureck_pg61511062",
+            "gw_traiskirchen": "traiskirchen_pg30600152",
+
+            "fw_tux": "kk72410012_tux",
+
+            "lake constance": "bodensee",
+            "lake fuschl": "fuschlsee",
+            "lake hallstatt": "hallstätter see",
+            "lake millstatt": "millstätter see",
+            "lake neusiedl": "neusiedlersee",
+            "lake ossiach": "ossiacher see",
+            "lake wolfgang": "wolfgangsee"
+        }
+
+        # 1️⃣ direkte Zuordnung
+        if name in mapping:
+            return mah_dict.get(mapping[name], np.nan)
+
+        # 2️⃣ exakter Match
+        if name in mah_dict:
+            return mah_dict[name]
+
+        # 3️⃣ unscharfer Match
+        for key in mah_dict.keys():
+
+            key_norm = str(key).strip().lower()
+
+            if name in key_norm:
+                return mah_dict[key]
+
+            if key_norm in name:
+                return mah_dict[key]
+
+        return np.nan
+
     fig = go.Figure()
 
     mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
