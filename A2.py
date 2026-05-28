@@ -113,19 +113,21 @@ try:
     # ============================================================
     # MAHALANOBIS-DISTANZ (VOR DEM PLOT!)
     # ============================================================
+try:
+    ...
     from scipy.spatial.distance import mahalanobis
 
     # --- Ionen definieren ---
-ion_cols = [
-    "meq_L_Ca2+",
-    "meq_L_Mg2+",
-    "meq_L_Na+",
-    "meq_L_K+",
-    "meq_L_Cl-",
-    "meq_L_SO4_2-",
-    "meq_L_NO3-",
-    "meq_L_HCO3-"
-]
+    ion_cols = [
+        "meq_L_Ca2+",
+        "meq_L_Mg2+",
+        "meq_L_Na+",
+        "meq_L_K+",
+        "meq_L_Cl-",
+        "meq_L_SO4_2-",
+        "meq_L_NO3-",
+        "meq_L_HCO3-"
+    ]
 
     # --- Kovarianzmatrix ---
     cov = np.cov(raw_df[ion_cols].values.T)
@@ -206,7 +208,7 @@ ion_cols = [
     # --- Mapping auf dein Plot-DataFrame ---
     # --- Namen normalisieren ---
     # --- Mapping auf dein Plot-DataFrame ---
-    df["Art_clean"] = df["Art"].astype(str).str.strip().str.lower()
+    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
 
     # Mahalanobis-Keys sauber normalisieren
     mah_dict = {str(k).strip().lower(): v for k, v in mah_dict.items()}
@@ -215,31 +217,30 @@ ion_cols = [
     def match_maha(name):
         name = name.lower()
 
-        # 1️⃣ direkte harte Zuordnung
-        mapping = {
-            "da_altheim": "tgw_altheim",
-            "da_bad schallerbach": "tgw_bad schallerbach",
-            "da_buch-st. magdalena": "tgw_buch-st. magdalena",
-            "da_großwilfersdorf": "tgw_großwilfersdorf",
-            "da_rottenbach": "tgw_rottenbach",
-            "da_senftenbach": "tgw_senftenbach",
+      mapping = {
+    "da_altheim": "tgw_altheim",
+    "da_bad schallerbach": "tgw_bad schallerbach",
+    "da_buch-st. magdalena": "tgw_buch-st. magdalena",
+    "da_großwilfersdorf": "tgw_großwilfersdorf",
+    "da_rottenbach": "tgw_rottenbach",
+    "da_senftenbach": "tgw_senftenbach",
 
-            "gw_gaweinstal": "gaweinstal_pg31600452",
-            "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
-            "gw_laa_an_der_thaya": "laa_pg31600422",
-            "GW_Mureck": "mureck_pg61511062",
-            "gw_traiskirchen": "traiskirchen_pg30600152",
+    "gw_gaweinstal": "gaweinstal_pg31600452",
+    "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
+    "gw_laa_an_der_thaya": "laa_pg31600422",
+    "gw_mureck": "mureck_pg61511062",
+    "gw_traiskirchen": "traiskirchen_pg30600152",
 
-            "fw_tux": "kk72410012_tux",
+    "fw_tux": "kk72410012_tux",
 
-            "Lake Constance": "bodensee",
-            "Lake Fuschl": "fuschlsee",
-            "Lake Hallstatt": "hallstätter see",
-            "Lake Millstatt": "millstätter see",
-            "Lake Neusiedl": "neusiedlersee",
-            "Lake Ossiach": "ossiacher see",
-            "lake Wolfgang": "wolfgangsee"
-        }
+    "lake constance": "bodensee",
+    "lake fuschl": "fuschlsee",
+    "lake hallstatt": "hallstätter see",
+    "lake millstatt": "millstätter see",
+    "lake neusiedl": "neusiedlersee",
+    "lake ossiach": "ossiacher see",
+    "lake wolfgang": "wolfgangsee"
+}
 
         # 🔹 1. exakte Zuordnung
         if name in mapping:
