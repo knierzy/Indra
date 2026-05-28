@@ -16,16 +16,29 @@ def log_euclid(a, b):
 
 
 
+from pathlib import Path
 
-input_file = r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\CartesianProduct_spec_constraints.AP30_check_obrichtig_.xlsx"
-#input_file = r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\CartesianProduct_spec_constraints_Metazahlen_07alle_DA_GW_Lake.xlsx"
-plot_output = r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\Metazahlen_Plot_Ca_HCO3_Baender.html"
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "outputs"
 
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
+input_file = DATA_DIR / "CartesianProduct_constraints.xlsx"
+raw_file = DATA_DIR / "compendium_processed.xlsx"
 
-raw_file = r"C:\Users\wolfgang.knierzinger\Desktop\mandelbrot\manuskript\Relevante_hintergrund_daten\umgerechnet_1_für_paper_24_standorte.xlsx"
-raw_df = pd.read_excel(raw_file, sheet_name="Gefiltert_5_95")
+plot_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
+
+df = pd.read_excel(
+    input_file,
+    sheet_name="Meta_Kombinationen"
+)
+
+raw_df = pd.read_excel(
+    raw_file,
+    sheet_name="Typical_Data_5_95"
+)
+
 
 
 # ============================================================
@@ -103,16 +116,16 @@ try:
     from scipy.spatial.distance import mahalanobis
 
     # --- Ionen definieren ---
-    ion_cols = [
-        "meq_Ca2+",
-        "meq_Mg2+",
-        "meq_Na+",
-        "meq_K+",
-        "meq_Cl-",
-        "meq_SO4_2-",
-        "meq_NO3-",
-        "meq_HCO3-"
-    ]
+ion_cols = [
+    "meq_L_Ca2+",
+    "meq_L_Mg2+",
+    "meq_L_Na+",
+    "meq_L_K+",
+    "meq_L_Cl-",
+    "meq_L_SO4_2-",
+    "meq_L_NO3-",
+    "meq_L_HCO3-"
+]
 
     # --- Kovarianzmatrix ---
     cov = np.cov(raw_df[ion_cols].values.T)
