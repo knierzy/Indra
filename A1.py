@@ -2,7 +2,7 @@
 This script processes hydrochemical Excel data and generates:
 
 - cleaned ion datasets
-- HCO3 calculations from SBV
+- HCO3 calculations from ANC
 - meq/L and percentage compositions
 - 5–95 % filtered typical hydrochemical ranges
   (except for DA_* reference groups)
@@ -294,16 +294,6 @@ print("\n🔎 Column mapping:")
 for k, v in mapping.items():
     print(f"  {k:15s} → {v if (isinstance(v, str) and v in df.columns) else str(v)}")
 
-
-# Calculate HCO3 from SBV or use existing HCO3 column
-
-sbv_col = mapping['SBV (mmol/l)']
-hco3_col = mapping['HCO3 mg/l']
-
-if sbv_col is not None:
-    df['SBV_mmol_L'] = df[sbv_col].apply(to_num)
-else:
-    df['SBV_mmol_L'] = np.nan
 
 
 # Use existing HCO3 values if available
