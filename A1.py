@@ -296,14 +296,6 @@ for k, v in mapping.items():
 
 
 
-# Use existing HCO3 values if available
-
-if hco3_col:
-    df['HCO3_mg_L_original'] = df[hco3_col].apply(to_num)
-else:
-    df['HCO3_mg_L_original'] = np.nan
-
-
 # Calculate bicarbonate from ANC or use existing bicarbonate column
 
 anc_col = mapping['ACID_NEUTRALIZING_CAPACITY']
