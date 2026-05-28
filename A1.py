@@ -262,17 +262,23 @@ print(f"🧭 Used header row: {hrow}")
 cols = list(df.columns)
 
 mapping = {
-    'ENTNAHME-DATUM':  pick(cols, r'entnahme[-\s]?datum'),
+    'ENTNAHME-DATUM':  pick(cols, r'entnahme[-\s]?datum|sampling'),
     'SBV (mmol/l)':    pick(cols, r'\bsbv\b'),
+    
     'CALCIUM mg/l':    pick(cols, r'calcium'),
     'MAGNESIUM mg/l':  pick(cols, r'magnesium'),
-    'NATRIUM mg/l':    pick(cols, r'natrium'),
-    'KALIUM mg/l':     pick(cols, r'kalium'),
-    'NITRAT-N mg/l':   pick(cols, r'nitrat.*mg/?l'),
-    'CHLORID mg/l':    pick(cols, r'chlorid'),
-    'SULFAT mg/l':     pick(cols, r'sulfat'),
-    'HCO3 mg/l':       pick(cols, r'(hco3|hydrogenk)'),
-    'pH':              pick(cols, r'\bpH\b'),
+
+    'NATRIUM mg/l':    pick(cols, r'natrium|sodium'),
+    'KALIUM mg/l':     pick(cols, r'kalium|potassium'),
+
+    'NITRAT-N mg/l':   pick(cols, r'nitrat|nitrate'),
+
+    'CHLORID mg/l':    pick(cols, r'chlorid|chloride'),
+    'SULFAT mg/l':     pick(cols, r'sulfat|sulfate'),
+
+    'HCO3 mg/l':       pick(cols, r'hco3|bicarbon|hydrogencarbonate'),
+
+    'pH':              pick(cols, r'\bph\b'),
 }
 
 
