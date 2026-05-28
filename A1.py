@@ -380,17 +380,16 @@ df['HCO3_mg_L_final'] = (
 )
 
 
-
 # Extract ion concentrations in mg/L
 
-df['Ca_mg_L'] = df[mapping['CALCIUM mg/l']].apply(to_num) if mapping['CALCIUM mg/l'] else np.nan
-df['Mg_mg_L'] = df[mapping['MAGNESIUM mg/l']].apply(to_num) if mapping['MAGNESIUM mg/l'] else np.nan
-df['Na_mg_L'] = df[mapping['NATRIUM mg/l']].apply(to_num) if mapping['NATRIUM mg/l'] else np.nan
-df['K_mg_L'] = df[mapping['KALIUM mg/l']].apply(to_num) if mapping['KALIUM mg/l'] else np.nan
-df['Cl_mg_L'] = df[mapping['CHLORID mg/l']].apply(to_num) if mapping['CHLORID mg/l'] else np.nan
-df['SO4_mg_L'] = df[mapping['SULFAT mg/l']].apply(to_num) if mapping['SULFAT mg/l'] else np.nan
+df['Ca_mg_L'] = df[mapping['CALCIUM_mg_L']].apply(to_num) if mapping['CALCIUM_mg_L'] else np.nan
+df['Mg_mg_L'] = df[mapping['MAGNESIUM_mg_L']].apply(to_num) if mapping['MAGNESIUM_mg_L'] else np.nan
+df['Na_mg_L'] = df[mapping['SODIUM_mg_L']].apply(to_num) if mapping['SODIUM_mg_L'] else np.nan
+df['K_mg_L'] = df[mapping['POTASSIUM_mg_L']].apply(to_num) if mapping['POTASSIUM_mg_L'] else np.nan
+df['Cl_mg_L'] = df[mapping['CHLORIDE_mg_L']].apply(to_num) if mapping['CHLORIDE_mg_L'] else np.nan
+df['SO4_mg_L'] = df[mapping['SULFATE_mg_L']].apply(to_num) if mapping['SULFATE_mg_L'] else np.nan
 
-no3_raw = df[mapping['NITRAT-N mg/l']].apply(to_num) if mapping['NITRAT-N mg/l'] else np.nan
+no3_raw = df[mapping['NITRATE_mg_L']].apply(to_num) if mapping['NITRATE_mg_L'] else np.nan
 
 
 # Convert nitrate-nitrogen to nitrate only for lake samples
