@@ -133,7 +133,7 @@ ion_cols = [
     cov_inv = np.linalg.pinv(cov)
 
     # --- Gruppenmittelwerte ---
-    group_means = raw_df.groupby("Lokalität")[ion_cols].mean()
+    group_means = raw_df.groupby("Art")[ion_cols].mean()
     group_means.index = group_means.index.astype(str).str.strip()
 
     # ============================================================
@@ -149,7 +149,7 @@ ion_cols = [
     cov_log_inv = np.linalg.pinv(cov_log)
 
     # --- Gruppenmittelwerte im Log-Raum ---
-    group_means_log = raw_df.groupby("Lokalität")[ion_cols].mean()
+    group_means_log = raw_df.groupby("Art")[ion_cols].mean()
     group_means_log = np.log1p(group_means_log)
     group_means_log.index = group_means_log.index.astype(str).str.strip()
 
@@ -206,7 +206,7 @@ ion_cols = [
     # --- Mapping auf dein Plot-DataFrame ---
     # --- Namen normalisieren ---
     # --- Mapping auf dein Plot-DataFrame ---
-    df["Lokalität_clean"] = df["Art"].astype(str).str.strip().str.lower()
+    df["Art_clean"] = df["Art"].astype(str).str.strip().str.lower()
 
     # Mahalanobis-Keys sauber normalisieren
     mah_dict = {str(k).strip().lower(): v for k, v in mah_dict.items()}
@@ -278,7 +278,7 @@ ion_cols = [
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
-    df["LogEuclid"] = df["Lokalität_clean"].apply(match_maha)
+    df["LogEuclid"] = df["Group_clean"].apply(match_maha)
 
     print("\n📏 Log-Euclidean Distanzen relativ zu Hallstatt:\n")
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
@@ -289,7 +289,7 @@ ion_cols = [
     # 🔥 HIER HINZUFÜGEN
     max_maha = df["LogEuclid"].max()
     # 🔥 DEBUG HIER EINBAUEN
-    missing = df[df["LogEuclid"].isna()]["Lokalität_clean"].unique()
+    missing = df[df["LogEuclid"].isna()]["Art_clean"].unique()
 
     print("\n❌ NICHT GEMATCHT:")
     for m in missing[:20]:
@@ -300,7 +300,7 @@ ion_cols = [
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
     print("\nDEBUG MATCHING:")
-    print(df["Lokalität_clean"].unique()[:10])
+    print(df["Group_clean"].unique()[:10])
     print(list(mah_dict.keys())[:10])
 
     print("\nLogEuclid Check:")
