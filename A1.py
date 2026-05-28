@@ -260,19 +260,19 @@ print(f"🧭 Used header row: {hrow}")
 cols = list(df.columns)
 
 mapping = {
-    'SAMPLING_DATE':       pick(cols, r'sampling|sampling[-\s]?date|date'),
+    'SAMPLING_DATE': pick(cols, r'sampling|sampling[-\s]?date|date'),
     'ACID_NEUTRALIZING_CAPACITY': pick(cols, r'acid\s*neutralizing|anc|sbv'),
 
-    'CALCIUM_mg_L':        pick(cols, r'calcium'),
-    'MAGNESIUM_mg_L':      pick(cols, r'magnesium'),
-    'SODIUM_mg_L':         pick(cols, r'sodium'),
-    'POTASSIUM_mg_L':      pick(cols, r'potassium'),
-    'NITRATE_mg_L':        pick(cols, r'nitrate'),
-    'CHLORIDE_mg_L':       pick(cols, r'chloride'),
-    'SULFATE_mg_L':        pick(cols, r'sulfate'),
-    'BICARBONATE_mg_L':    pick(cols, r'bicarbonate|hydrogencarbonate|hco3'),
+    'CALCIUM_mg_L': pick(cols, r'calcium|ca\b'),
+    'MAGNESIUM_mg_L': pick(cols, r'magnesium|mg\b'),
+    'SODIUM_mg_L': pick(cols, r'sodium|natrium|na\b'),
+    'POTASSIUM_mg_L': pick(cols, r'potassium|kalium|k\b'),
+    'NITRATE_mg_L': pick(cols, r'nitrate|nitrat'),
+    'CHLORIDE_mg_L': pick(cols, r'chloride|chlorid'),
+    'SULFATE_mg_L': pick(cols, r'sulfate|sulfat'),
+    'BICARBONATE_mg_L': pick(cols, r'bicarbonate|hydrogencarbonate|hydrogenkarbonat|hco3'),
 
-    'pH':                  pick(cols, r'\bph\b'),
+    'pH': pick(cols, r'\bph\b'),
 }
 
 
@@ -436,6 +436,12 @@ print("HCO3 final:", df['HCO3_mg_L_final'].notna().sum())
 n_before = len(df)
 
 df = df.dropna(subset=required_ions).copy()
+if df.empty:
+    raise ValueError(
+        "No complete ion analyses found. Check the column mapping above: "
+        "at least one required ion column was not detected."
+    )
+
 
 n_after = len(df)
 
