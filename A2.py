@@ -194,15 +194,19 @@ try:
     ref_group = ref_candidates[0]
     print(f"\n✅ Referenz: {ref_group}")
 
-    # LOG-Version für Plot verwenden
+        # LOG-Version für Plot verwenden
     ref_vector = group_means.loc[ref_group].values
 
-       # Mahalanobis-Keys sauber normalisieren
-    mah_dict = {
-        str(k).strip().lower(): v
-        for k, v in mah_dict.items()
-    }
+    # Calculate Log-Euclidean distances to reference group
+    mah_dict = {}
 
+    for g in group_means.index:
+        vec = group_means.loc[g].values
+        mah_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
+
+    # Clean plot group names
+    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
+    
     # ============================================================
     # Mapping Plotgruppen → Referenzgruppen
     # ============================================================
