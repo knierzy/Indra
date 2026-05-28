@@ -33,10 +33,10 @@ input_file = DATA_DIR / "compendium.xlsx"
 
 preferred_sheet = "Sheet1"
 
-output_file = OUTPUT_DIR / "kompendium_processed.xlsx"
+output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 
 output_file_cartesian = (
-    OUTPUT_DIR / "CartesianProduct_spec_constraints.xlsx"
+    OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
 )
 # Helper Functions
 
@@ -285,7 +285,7 @@ mapping = {
 # Create Art column from column B
 
 df['Art'] = df.iloc[:, 1].astype(str).str.strip()
-print("✅ Art column created.")
+print("✅ Group column created.")
 
 
 print("\n🔎 Group size by Art:")
@@ -778,31 +778,31 @@ with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
 
     df.to_excel(
         writer,
-        sheet_name="Daten_berechnet",
+        sheet_name="Calculated_Data",
         index=False
     )
 
     df_typisch.to_excel(
         writer,
-        sheet_name="Daten_5-95_gruppiert",
+        sheet_name="Typical_Data_5_95",
         index=False
     )
 
     minmax_typisch.to_excel(
         writer,
-        sheet_name="MinMax_bis10m_typisch",
+        sheet_name="MinMax_Typical",
         index=False
     )
 
     df_meq_pct.to_excel(
         writer,
-        sheet_name="Daten_meq_und_Prozent_alle",
+        sheet_name="All_meq_Percent",
         index=False
     )
 
     df_corr.to_excel(
         writer,
-        sheet_name="Korrelationspaare",
+        sheet_name="Correlation_Pairs",
         index=False
     )
 
