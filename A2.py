@@ -113,8 +113,8 @@ try:
     # ============================================================
     # MAHALANOBIS-DISTANZ (VOR DEM PLOT!)
     # ============================================================
-try:
-    ...
+
+
     from scipy.spatial.distance import mahalanobis
 
     # --- Ionen definieren ---
