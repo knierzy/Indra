@@ -214,45 +214,43 @@ try:
     mah_dict = {str(k).strip().lower(): v for k, v in mah_dict.items()}
 
     # Exaktes Mapping
-    def match_maha(name):
-        name = name.lower()
+  def match_maha(name):
+    name = name.lower()
 
-      mapping = {
-    "da_altheim": "tgw_altheim",
-    "da_bad schallerbach": "tgw_bad schallerbach",
-    "da_buch-st. magdalena": "tgw_buch-st. magdalena",
-    "da_großwilfersdorf": "tgw_großwilfersdorf",
-    "da_rottenbach": "tgw_rottenbach",
-    "da_senftenbach": "tgw_senftenbach",
+    mapping = {
+        "da_altheim": "tgw_altheim",
+        "da_bad schallerbach": "tgw_bad schallerbach",
+        "da_buch-st. magdalena": "tgw_buch-st. magdalena",
+        "da_großwilfersdorf": "tgw_großwilfersdorf",
+        "da_rottenbach": "tgw_rottenbach",
+        "da_senftenbach": "tgw_senftenbach",
 
-    "gw_gaweinstal": "gaweinstal_pg31600452",
-    "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
-    "gw_laa_an_der_thaya": "laa_pg31600422",
-    "gw_mureck": "mureck_pg61511062",
-    "gw_traiskirchen": "traiskirchen_pg30600152",
+        "gw_gaweinstal": "gaweinstal_pg31600452",
+        "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
+        "gw_laa_an_der_thaya": "laa_pg31600422",
+        "gw_mureck": "mureck_pg61511062",
+        "gw_traiskirchen": "traiskirchen_pg30600152",
 
-    "fw_tux": "kk72410012_tux",
+        "fw_tux": "kk72410012_tux",
 
-    "lake constance": "bodensee",
-    "lake fuschl": "fuschlsee",
-    "lake hallstatt": "hallstätter see",
-    "lake millstatt": "millstätter see",
-    "lake neusiedl": "neusiedlersee",
-    "lake ossiach": "ossiacher see",
-    "lake wolfgang": "wolfgangsee"
-}
+        "lake constance": "bodensee",
+        "lake fuschl": "fuschlsee",
+        "lake hallstatt": "hallstätter see",
+        "lake millstatt": "millstätter see",
+        "lake neusiedl": "neusiedlersee",
+        "lake ossiach": "ossiacher see",
+        "lake wolfgang": "wolfgangsee"
+    }
 
-        # 🔹 1. exakte Zuordnung
-        if name in mapping:
-            return mah_dict.get(mapping[name], np.nan)
+    if name in mapping:
+        return mah_dict.get(mapping[name], np.nan)
 
-        # 🔹 2. fuzzy matching (NEU 🔥)
-        for key in mah_dict.keys():
-            if name in key or key in name:
-                return mah_dict[key]
+    for key in mah_dict.keys():
+        if name in key or key in name:
+            return mah_dict[key]
 
-        # 🔹 3. fallback
-        return np.nan
+    return np.nan
+      
     fig = go.Figure()
 
     mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
@@ -290,7 +288,7 @@ try:
     # 🔥 HIER HINZUFÜGEN
     max_maha = df["LogEuclid"].max()
     # 🔥 DEBUG HIER EINBAUEN
-    missing = df[df["LogEuclid"].isna()]["Art_clean"].unique()
+    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
     print("\n❌ NICHT GEMATCHT:")
     for m in missing[:20]:
