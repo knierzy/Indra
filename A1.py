@@ -423,12 +423,11 @@ print("\n🔎 Availability before complete-ion filter:")
 for c in required_ions:
     print(c, df[c].notna().sum())
 
-print("\n🔎 HCO3 sources:")
+print("\n🔎 Bicarbonate sources:")
 print("HCO3 original:", df['HCO3_mg_L_original'].notna().sum())
-print("SBV:", df['SBV_mmol_L'].notna().sum())
+print("ANC:", df['ANC_mmol_L'].notna().sum())
 print("HCO3 quick:", df['HCO3_mg_L_quick'].notna().sum())
 print("HCO3 final:", df['HCO3_mg_L_final'].notna().sum())
-
 
 
 
