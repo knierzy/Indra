@@ -43,7 +43,7 @@ output_file_cartesian = (
 def find_header_row(xls_path, sheet, probes=5):
     """
     Detects the most likely header row in the Excel sheet
-    by searching the first rows for typical hydrochemical keywords.
+    by searching the first rows for hydrochemical keywords.
     """
 
     probe = pd.read_excel(
@@ -56,27 +56,25 @@ def find_header_row(xls_path, sheet, probes=5):
     patterns = [
         r'calcium',
         r'magnesium',
-        r'natrium',
-        r'kalium',
-        r'chlorid',
-        r'sulfat',
-        r'hydrogenkarbonat|hydrogencarbonat|hco3',
-        r'nitrat'
+        r'sodium',
+        r'potassium',
+        r'nitrate',
+        r'chloride',
+        r'sulfate',
+        r'bicarbonate|hydrogencarbonate|hco3',
+        r'acid\s*neutralizing|anc',
+        r'\bph\b'
     ]
 
     for i in range(len(probe)):
-
         row_str = " | ".join(
             probe.iloc[i].astype(str).tolist()
         ).lower()
 
-        # Return the first row containing hydrochemical keywords
         if any(re.search(p, row_str) for p in patterns):
             return i
 
-    # Fallback: use first row as header
     return 0
-
 
 # Find matching column names
 
@@ -262,23 +260,19 @@ print(f"🧭 Used header row: {hrow}")
 cols = list(df.columns)
 
 mapping = {
-    'ENTNAHME-DATUM':  pick(cols, r'entnahme[-\s]?datum|sampling'),
-    'SBV (mmol/l)':    pick(cols, r'\bsbv\b'),
-    
-    'CALCIUM mg/l':    pick(cols, r'calcium'),
-    'MAGNESIUM mg/l':  pick(cols, r'magnesium'),
+    'SAMPLING_DATE':       pick(cols, r'sampling|sampling[-\s]?date|date'),
+    'ACID_NEUTRALIZING_CAPACITY': pick(cols, r'acid\s*neutralizing|anc|sbv'),
 
-    'NATRIUM mg/l':    pick(cols, r'natrium|sodium'),
-    'KALIUM mg/l':     pick(cols, r'kalium|potassium'),
+    'CALCIUM_mg_L':        pick(cols, r'calcium'),
+    'MAGNESIUM_mg_L':      pick(cols, r'magnesium'),
+    'SODIUM_mg_L':         pick(cols, r'sodium'),
+    'POTASSIUM_mg_L':      pick(cols, r'potassium'),
+    'NITRATE_mg_L':        pick(cols, r'nitrate'),
+    'CHLORIDE_mg_L':       pick(cols, r'chloride'),
+    'SULFATE_mg_L':        pick(cols, r'sulfate'),
+    'BICARBONATE_mg_L':    pick(cols, r'bicarbonate|hydrogencarbonate|hco3'),
 
-    'NITRAT-N mg/l':   pick(cols, r'nitrat|nitrate'),
-
-    'CHLORID mg/l':    pick(cols, r'chlorid|chloride'),
-    'SULFAT mg/l':     pick(cols, r'sulfat|sulfate'),
-
-    'HCO3 mg/l':       pick(cols, r'hco3|bicarbon|hydrogencarbonate'),
-
-    'pH':              pick(cols, r'\bph\b'),
+    'pH':                  pick(cols, r'\bph\b'),
 }
 
 
@@ -320,23 +314,54 @@ else:
     df['HCO3_mg_L_original'] = np.nan
 
 
-# Calculate HCO3 only if SBV is available
+# Calculate bicarbonate from ANC or use existing bicarbonate column
 
-if sbv_col is not None:
+anc_col = mapping['ACID_NEUTRALIZING_CAPACITY']
+hco3_col = mapping['BICARBONATE_mg_L']
 
-    df['HCO3_mg_L_quick'] = hco3_quick_from_sbv(df['SBV_mmol_L'])
+if anc_col is not None:
+    df['ANC_mmol_L'] = df[anc_col].apply(to_num)
+else:
+    df['ANC_mmol_L'] = np.nan
+
+
+# Use existing bicarbonate values if available
+
+if hco3_col:
+    df['HCO3_mg_L_original'] = df[hco3_col].apply(to_num)
+else:
+    df['HCO3_mg_L_original'] = np.nan
+
+
+# Calculate HCO3 only if ANC is available
+
+if anc_col is not None:
+
+    df['HCO3_mg_L_quick'] = hco3_quick_from_sbv(
+        df['ANC_mmol_L']
+    )
 
     if mapping['pH']:
 
         df['pH_num'] = df[mapping['pH']].apply(to_num)
 
-        hco3_precise, co3_precise = [], []
+        hco3_precise = []
+        co3_precise = []
 
-        for sbv, pH in zip(df['SBV_mmol_L'], df['pH_num']):
+        for anc, pH in zip(
+            df['ANC_mmol_L'],
+            df['pH_num']
+        ):
 
-            if pd.notna(sbv) and pd.notna(pH):
+            if pd.notna(anc) and pd.notna(pH):
 
-                hco3_val, co3_val = hco3_precise_from_sbv_ph(sbv, pH)
+                hco3_val, co3_val = (
+                    hco3_precise_from_sbv_ph(
+                        anc,
+                        pH
+                    )
+                )
+
                 hco3_precise.append(hco3_val)
                 co3_precise.append(co3_val)
 
@@ -354,17 +379,23 @@ if sbv_col is not None:
 
 else:
 
-    # If SBV is missing, HCO3 can only be taken from the input file
-
     df['HCO3_mg_L_quick'] = np.nan
     df['HCO3_mg_L_precise'] = np.nan
 
 
-# Select final HCO3 value
+# Select final bicarbonate value
 
 df['HCO3_mg_L_final'] = df['HCO3_mg_L_original']
-df['HCO3_mg_L_final'] = df['HCO3_mg_L_final'].fillna(df['HCO3_mg_L_precise'])
-df['HCO3_mg_L_final'] = df['HCO3_mg_L_final'].fillna(df['HCO3_mg_L_quick'])
+
+df['HCO3_mg_L_final'] = (
+    df['HCO3_mg_L_final']
+    .fillna(df['HCO3_mg_L_precise'])
+)
+
+df['HCO3_mg_L_final'] = (
+    df['HCO3_mg_L_final']
+    .fillna(df['HCO3_mg_L_quick'])
+)
 
 
 
