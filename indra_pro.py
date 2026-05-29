@@ -2168,7 +2168,7 @@ try:
 
     # Export & Show
         # Feste Plotgröße wie im HTML/CMD-Output
-    fig.update_layout(
+       fig.update_layout(
         width=1800,
         height=950,
         autosize=False
@@ -2181,18 +2181,10 @@ try:
         config={"responsive": False}
     )
 
-    html = fig.to_html(
-        include_plotlyjs="cdn",
-        full_html=False,
-        config={"responsive": False}
-    )
+    html = plot_output.read_text(encoding="utf-8")
 
     components.html(
-        f"""
-        <div style="width:1800px; height:950px;">
-            {html}
-        </div>
-        """,
+        html,
         height=1000,
         scrolling=True
     )
