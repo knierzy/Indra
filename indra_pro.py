@@ -1220,9 +1220,8 @@ from plotly.express.colors import qualitative
 import numpy as np
 from scipy.spatial import ConvexHull
 from scipy.spatial import distance_matrix
-# === Datei & Zielpfad ===
 from scipy.spatial.distance import euclidean
-
+import streamlit.components.v1 as components
 def log_euclid(a, b):
     return euclidean(np.log1p(a), np.log1p(b))
 
@@ -2164,7 +2163,7 @@ try:
 
 
 
-    import numpy as np
+     import numpy as np
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -2175,8 +2174,17 @@ try:
     # Export & Show
     fig.write_html(plot_output)
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    st.plotly_chart(fig, use_container_width=True)
 
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False
+    )
+
+    components.html(
+        html,
+        height=1200,
+        scrolling=True
+    )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
