@@ -1282,7 +1282,7 @@ def format_hover(row):
 
 try:
     # Excel einlesen
-   df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
+    df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
 
     required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
     for col in required_cols:
