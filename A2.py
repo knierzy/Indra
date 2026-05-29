@@ -189,11 +189,10 @@ try:
 
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
-    ref_candidates = [g for g in group_means_log.index if "hall" in g.lower()]
-    if not ref_candidates:
-        raise ValueError("❌ Keine Hallstatt-Gruppe gefunden!")
-
-    ref_group = ref_candidates[0]
+    ref_group = next(
+        g for g in group_means.index
+        if str(g).strip().lower() == "lake hallstatt"
+    )
     print(f"\n✅ Referenz: {ref_group}")
 
         # LOG-Version für Plot verwenden
@@ -206,15 +205,21 @@ try:
         vec = group_means.loc[g].values
         mah_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
 
-    # Clean plot group names
+        # Clean plot group names
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
-    
-    # ============================================================
-    # Mapping Plotgruppen → Referenzgruppen
-    # ============================================================
 
+    # LogEuclid direkt über identische Gruppennamen zuordnen
+    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+
+    print("\nLogEuclid Check:")
     print(df["LogEuclid"].head())
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
+
+    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
+
+    print("\n❌ NICHT GEMATCHT:")
+    for m in missing[:20]:
+        print(m)
 
 
     fig = go.Figure()
