@@ -2167,17 +2167,33 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # Export & Show
-    fig.write_html(plot_output)
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
+        # Feste Plotgröße wie im HTML/CMD-Output
+    fig.update_layout(
+        width=1800,
+        height=950,
+        autosize=False
+    )
+
+    fig.write_html(
+        plot_output,
+        include_plotlyjs="cdn",
+        full_html=True,
+        config={"responsive": False}
+    )
 
     html = fig.to_html(
         include_plotlyjs="cdn",
-        full_html=False
+        full_html=False,
+        config={"responsive": False}
     )
 
     components.html(
-        html,
-        height=1200,
+        f"""
+        <div style="width:1800px; height:950px;">
+            {html}
+        </div>
+        """,
+        height=1000,
         scrolling=True
     )
     # Ergebnisse (Grenzen) auch ausgeben
