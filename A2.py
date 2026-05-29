@@ -213,7 +213,8 @@ try:
     # Mapping Plotgruppen → Referenzgruppen
     # ============================================================
 
-
+    print(df["LogEuclid"].head())
+    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
         # 1️⃣ direkte Zuordnung
         if name in mapping:
