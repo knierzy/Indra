@@ -213,34 +213,7 @@ try:
     # Mapping Plotgruppen → Referenzgruppen
     # ============================================================
 
-    def match_maha(name):
 
-        name = str(name).strip().lower()
-
-        mapping = {
-            "da_altheim": "tgw_altheim",
-            "da_bad schallerbach": "tgw_bad schallerbach",
-            "da_buch-st. magdalena": "tgw_buch-st. magdalena",
-            "da_großwilfersdorf": "tgw_großwilfersdorf",
-            "da_rottenbach": "tgw_rottenbach",
-            "da_senftenbach": "tgw_senftenbach",
-
-            "gw_gaweinstal": "gaweinstal_pg31600452",
-            "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
-            "gw_laa_an_der_thaya": "laa_pg31600422",
-            "gw_mureck": "mureck_pg61511062",
-            "gw_traiskirchen": "traiskirchen_pg30600152",
-
-            "fw_tux": "kk72410012_tux",
-
-            "lake constance": "bodensee",
-            "lake fuschl": "fuschlsee",
-            "lake hallstatt": "hallstätter see",
-            "lake millstatt": "millstätter see",
-            "lake neusiedl": "neusiedlersee",
-            "lake ossiach": "ossiacher see",
-            "lake wolfgang": "wolfgangsee"
-        }
 
         # 1️⃣ direkte Zuordnung
         if name in mapping:
@@ -289,7 +262,7 @@ try:
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
-    df["LogEuclid"] = df["Group_clean"].apply(match_maha)
+   df["LogEuclid"] = df["Group_clean"].map(mah_dict)
 
     print("\n📏 Log-Euclidean Distanzen relativ zu Hallstatt:\n")
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
