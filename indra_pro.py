@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 import itertools
 
-fimport streamlit as st
+import streamlit as st
 from pathlib import Path
 import tempfile
 
