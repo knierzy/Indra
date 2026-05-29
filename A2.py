@@ -248,7 +248,7 @@ try:
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
-   df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+
 
     print("\n📏 Log-Euclidean Distanzen relativ zu Hallstatt:\n")
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
