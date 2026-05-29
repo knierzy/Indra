@@ -1,7 +1,9 @@
-import streamlit as st
-from pathlib import Path
-import subprocess
+import sys
 import shutil
+import subprocess
+from pathlib import Path
+
+import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
@@ -31,7 +33,7 @@ if uploaded_file is not None:
     if st.button("Diagramm erzeugen"):
         with st.spinner("A1 läuft: Daten berechnen und Cartesian Product erzeugen..."):
             result_a1 = subprocess.run(
-                ["python", "A1.py"],
+                [sys.executable, "A1.py"],
                 cwd=BASE_DIR,
                 capture_output=True,
                 text=True
@@ -44,8 +46,12 @@ if uploaded_file is not None:
 
         st.success("A1 fertig.")
 
-        # A1 schreibt nach outputs, A2 erwartet aktuell data.
-        # Deshalb kopieren wir die erzeugten Dateien für A2.
+        st.text_area(
+            "A1 Ausgabe",
+            result_a1.stdout,
+            height=250
+        )
+
         shutil.copy(
             OUTPUT_DIR / "CartesianProduct_constraints.xlsx",
             DATA_DIR / "CartesianProduct_constraints.xlsx"
@@ -58,7 +64,7 @@ if uploaded_file is not None:
 
         with st.spinner("A2 läuft: Diagramm erzeugen..."):
             result_a2 = subprocess.run(
-                ["python", "A2.py"],
+                [sys.executable, "A2.py"],
                 cwd=BASE_DIR,
                 capture_output=True,
                 text=True
@@ -70,6 +76,12 @@ if uploaded_file is not None:
             st.stop()
 
         st.success("Diagramm erzeugt.")
+
+        st.text_area(
+            "A2 Ausgabe",
+            result_a2.stdout,
+            height=250
+        )
 
         html_path = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
 
