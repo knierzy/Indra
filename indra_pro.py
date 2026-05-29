@@ -1801,44 +1801,6 @@ try:
         ))
 
               
-                colorscale=custom_scale,
-
-                cmin=0,
-                cmax=max_maha,  # 🔥 wieder korrekt
-
-                showscale=(i == 0),
-
-                colorbar=dict(
-                    title=dict(
-                        text="Log-Euclidean Distance<br>(to Hallstatt)",
-                        font=dict(
-                            size=22,
-                            family="Arial Black",
-                            color="black"
-                        )
-                    ),
-
-                    tickfont=dict(
-                        size=22
-                    ),
-
-                    tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
-                    ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
-
-                    x=0.12,
-                    y=0.5,
-                    xanchor="right",
-                    yanchor="middle",
-
-                    len=1,
-                    thickness=24
-                ),
-
-                line=dict(width=0.5, color="black")
-            ),
-            text=sub["hover_text"],
-            hoverinfo="text"
-        ))
 
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
