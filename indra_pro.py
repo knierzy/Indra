@@ -2160,11 +2160,6 @@ try:
         )
 
 
-
-
-
-     import numpy as np
-
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
