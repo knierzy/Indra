@@ -216,26 +216,6 @@ try:
     print(df["LogEuclid"].head())
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
-        # 1️⃣ direkte Zuordnung
-        if name in mapping:
-            return mah_dict.get(mapping[name], np.nan)
-
-        # 2️⃣ exakter Match
-        if name in mah_dict:
-            return mah_dict[name]
-
-        # 3️⃣ unscharfer Match
-        for key in mah_dict.keys():
-
-            key_norm = str(key).strip().lower()
-
-            if name in key_norm:
-                return mah_dict[key]
-
-            if key_norm in name:
-                return mah_dict[key]
-
-        return np.nan
 
     fig = go.Figure()
 
