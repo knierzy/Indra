@@ -2165,10 +2165,9 @@ try:
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-
     # Export & Show
-        # Feste Plotgröße wie im HTML/CMD-Output
-       fig.update_layout(
+    # Feste Plotgröße wie im HTML/CMD-Output
+    fig.update_layout(
         width=1800,
         height=950,
         autosize=False
