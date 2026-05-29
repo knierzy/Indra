@@ -155,38 +155,37 @@ try:
     group_means_log = np.log1p(group_means_log)
     group_means_log.index = group_means_log.index.astype(str).str.strip()
 
-# --- DEBUG: Vergleich Hallstatt vs Ossiach ---
-from scipy.spatial.distance import euclidean, mahalanobis
+    # --- DEBUG: Vergleich Hallstatt vs Ossiach ---
+    from scipy.spatial.distance import euclidean, mahalanobis
 
-h_name = next(
-    g for g in group_means.index
-    if str(g).strip().lower() == "lake hallstatt"
-)
+    h_name = next(
+        g for g in group_means.index
+        if str(g).strip().lower() == "lake hallstatt"
+    )
 
-o_name = next(
-    g for g in group_means.index
-    if str(g).strip().lower() == "lake ossiach"
-)
+    o_name = next(
+        g for g in group_means.index
+        if str(g).strip().lower() == "lake ossiach"
+    )
 
-h = group_means.loc[h_name].values
-o = group_means.loc[o_name].values
+    h = group_means.loc[h_name].values
+    o = group_means.loc[o_name].values
 
-print("\n🔍 Vergleich Hallstatt vs Ossiach")
-print("Hallstatt:", h_name)
-print("Ossiach:", o_name)
+    print("\n🔍 Vergleich Hallstatt vs Ossiach")
+    print("Hallstatt:", h_name)
+    print("Ossiach:", o_name)
 
-print("\nMittelwerte Differenz:")
-print(group_means.loc[h_name] - group_means.loc[o_name])
+    print("\nMittelwerte Differenz:")
+    print(group_means.loc[h_name] - group_means.loc[o_name])
 
-print("\nDistanzen:")
-print("Euclidean:   ", euclidean(h, o))
-print("Mahalanobis (raw): ", mahalanobis(o, h, cov_inv))
+    print("\nDistanzen:")
+    print("Euclidean:   ", euclidean(h, o))
+    print("Mahalanobis (raw): ", mahalanobis(o, h, cov_inv))
 
-h_log = group_means_log.loc[h_name].values
-o_log = group_means_log.loc[o_name].values
+    h_log = group_means_log.loc[h_name].values
+    o_log = group_means_log.loc[o_name].values
 
-print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
-
+    print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
 
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
