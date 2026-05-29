@@ -260,22 +260,37 @@ print(f"🧭 Used header row: {hrow}")
 cols = list(df.columns)
 
 mapping = {
-    'SAMPLING_DATE': pick(cols, r'sampling|sampling[-\s]?date|date'),
-    'ACID_NEUTRALIZING_CAPACITY': pick(cols, r'acid\s*neutralizing|anc|sbv'),
-
-    'CALCIUM_mg_L': pick(cols, r'calcium|ca\b'),
-    'MAGNESIUM_mg_L': pick(cols, r'magnesium|mg\b'),
-    'SODIUM_mg_L': pick(cols, r'sodium|natrium|na\b'),
-    'POTASSIUM_mg_L': pick(cols, r'potassium|kalium|k\b'),
-    'NITRATE_mg_L': pick(cols, r'nitrate|nitrat'),
-    'CHLORIDE_mg_L': pick(cols, r'chloride|chlorid'),
-    'SULFATE_mg_L': pick(cols, r'sulfate|sulfat'),
-    'BICARBONATE_mg_L': pick(cols, r'bicarbonate|hydrogencarbonate|hydrogenkarbonat|hco3'),
-
+    'SAMPLING_DATE': pick(cols, r'G102|sampling|entnahme|date'),
+    'CALCIUM_mg_L': pick(cols, r'G134|calcium'),
+    'MAGNESIUM_mg_L': pick(cols, r'G135|magnesium'),
+    'SODIUM_mg_L': pick(cols, r'G136|sodium|natrium'),
+    'POTASSIUM_mg_L': pick(cols, r'G137|potassium|kalium'),
+    'NITRATE_mg_L': pick(cols, r'G154|nitrate|nitrat'),
+    'CHLORIDE_mg_L': pick(cols, r'G155|chloride|chlorid'),
+    'SULFATE_mg_L': pick(cols, r'G156|sulfate|sulfat'),
+    'BICARBONATE_mg_L': pick(cols, r'G157|bicarbonate|hydrogencarbonate|hydrogenkarbonat|hco3'),
+    'ACID_NEUTRALIZING_CAPACITY': pick(cols, r'G158|acid\s*neutralizing|anc|sbv'),
     'pH': pick(cols, r'\bph\b'),
 }
 
+print("\n🔎 Column mapping:")
+for k, v in mapping.items():
+    print(f"{k:30s} -> {v}")
 
+required_mapping = [
+    "CALCIUM_mg_L",
+    "MAGNESIUM_mg_L",
+    "SODIUM_mg_L",
+    "POTASSIUM_mg_L",
+    "NITRATE_mg_L",
+    "CHLORIDE_mg_L",
+    "SULFATE_mg_L",
+    "BICARBONATE_mg_L",
+]
+
+missing_mapping = [k for k in required_mapping if mapping[k] is None]
+if missing_mapping:
+    raise ValueError(f"❌ Missing column mapping: {missing_mapping}")
 # Create Art column from column B
 
 df['Art'] = df.iloc[:, 1].astype(str).str.strip()
