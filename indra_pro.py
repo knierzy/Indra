@@ -23,6 +23,18 @@ from pathlib import Path
 import tempfile
 
 st.set_page_config(layout="wide")
+st.markdown(
+    """
+    <style>
+    .block-container {
+        max-width: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.title("INDRA Projection")
 
 BASE_DIR = Path(__file__).resolve().parent
