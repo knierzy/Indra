@@ -2188,13 +2188,13 @@ try:
 
         margin=dict(
             l=70,
-            r=320,
+            r=40,
             t=120,
             b=80
         ),
 
         xaxis=dict(
-            domain=[0.03, 0.82],
+            domain=[0.03, 0.96],
             title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
