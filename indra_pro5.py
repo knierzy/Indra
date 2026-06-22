@@ -23,6 +23,18 @@ from pathlib import Path
 import tempfile
 
 st.set_page_config(layout="wide")
+st.markdown(
+    """
+    <style>
+    .block-container {
+        max-width: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.title("INDRA Projection")
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -1641,7 +1653,7 @@ try:
         fillcolor="rgba(240,245,250,1)",
         line=dict(width=0),
         layer="below"
-    ),
+    )
 
 
     # X-Achse (HCO3)
@@ -2165,21 +2177,19 @@ try:
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
     fig.update_layout(
-        width=1800,
-        height=950,
-        autosize=False
+         width=1800,
+         height=950,
+         autosize=False
     )
 
     st.plotly_chart(
-        fig,
-        use_container_width=False,
-        config={"responsive": False}
+         fig,
+         use_container_width=False,
+         config={"responsive": False}
     )
-
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
@@ -2188,6 +2198,7 @@ try:
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
+
 
 
 except Exception as e:
