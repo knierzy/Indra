@@ -1220,9 +1220,8 @@ from plotly.express.colors import qualitative
 import numpy as np
 from scipy.spatial import ConvexHull
 from scipy.spatial import distance_matrix
-# === Datei & Zielpfad ===
 from scipy.spatial.distance import euclidean
-
+import streamlit.components.v1 as components
 def log_euclid(a, b):
     return euclidean(np.log1p(a), np.log1p(b))
 
@@ -1679,22 +1678,22 @@ try:
         line=dict(color="black", width=1.5, dash="dash")
     )
 
-    # ============================================================
+        # ============================================================
     # 🎨 NICHTLINEARE COLORBAR (0–4 gestreckt)
     # ============================================================
 
-    t = 1.2 / max_maha if max_maha > 0 else 0.5
-    gamma = 0.5  # 🔥 Stärke der Verzerrung (0.3 = sehr stark, 0.6 = moderat)
+    max_maha = df["LogEuclid"].max()
+    if pd.isna(max_maha) or max_maha <= 0:
+        max_maha = 1.0
 
+    t = 1.2 / max_maha
+    gamma = 0.5
 
     def stretch(x):
-        return (x ** gamma) * t
-
+        return min((x ** gamma) * t, 1.0)
 
     custom_scale = [
         [0.0, "rgb(49,54,149)"],
-
-        # 🔥 EXTREM fein 0–1
         [stretch(0.01), "rgb(55,70,160)"],
         [stretch(0.02), "rgb(60,90,170)"],
         [stretch(0.03), "rgb(65,105,175)"],
@@ -1708,20 +1707,35 @@ try:
         [stretch(0.35), "rgb(200,235,240)"],
         [stretch(0.40), "rgb(215,240,245)"],
         [stretch(0.45), "rgb(224,243,248)"],
-
-        [t, "rgb(255,255,191)"],
-
-        # 🔽 stark komprimiert oben
-        [t + (1 - t) * 0.2, "rgb(253,174,97)"],
-        [t + (1 - t) * 0.5, "rgb(244,109,67)"],
+        [min(t, 1.0), "rgb(255,255,191)"],
+        [min(t + (1 - t) * 0.2, 1.0), "rgb(253,174,97)"],
+        [min(t + (1 - t) * 0.5, 1.0), "rgb(244,109,67)"],
         [1.0, "rgb(165,0,38)"]
     ]
 
+    custom_scale = sorted(custom_scale, key=lambda z: z[0])
+
     # ============================================================
-    # 🎯 PUNKTE MIT MAHALANOBIS-FARBEN
+    # 🎯 PUNKTE MIT LOG-EUCLIDEAN-FARBEN
     # ============================================================
 
-    # 🔥 Median-Mahalanobis pro Art berechnen
+    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
+    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+
+    print("Punkte gesamt:", len(df))
+    print("LogEuclid gültig:", df["LogEuclid"].notna().sum())
+    print("LogEuclid NaN:", df["LogEuclid"].isna().sum())
+
+    if df["LogEuclid"].isna().any():
+        print("Nicht gematchte Gruppen:")
+        print(
+            df.loc[df["LogEuclid"].isna(), "Art"]
+            .drop_duplicates()
+            .head(30)
+        )
+
+    df["LogEuclid"] = df["LogEuclid"].fillna(0)
+
     art_order = (
         df.groupby("Art")["LogEuclid"]
         .median()
@@ -1729,7 +1743,6 @@ try:
         .index
     )
 
-    # 🔥 danach plotten
     for i, art in enumerate(art_order):
 
         sub = df[df["Art"] == art]
@@ -1739,7 +1752,6 @@ try:
 
         art_str = str(art).upper()
 
-        # Symbol-Logik
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
             marker_size = 26
@@ -1761,47 +1773,33 @@ try:
             marker=dict(
                 symbol=symbol_shape,
                 size=marker_size,
-
-                # 🔥 ORIGINALWERTE (kein sqrt!)
                 color=sub["LogEuclid"],
                 colorscale=custom_scale,
-
                 cmin=0,
-                cmax=max_maha,  # 🔥 wieder korrekt
-
+                cmax=max_maha,
                 showscale=(i == 0),
-
                 colorbar=dict(
                     title=dict(
                         text="Log-Euclidean Distance<br>(to Hallstatt)",
-                        font=dict(
-                            size=22,
-                            family="Arial Black",
-                            color="black"
-                        )
+                        font=dict(size=22, family="Arial Black", color="black")
                     ),
-
-                    tickfont=dict(
-                        size=22
-                    ),
-
+                    tickfont=dict(size=22),
                     tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
                     ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
-
                     x=0.12,
                     y=0.5,
                     xanchor="right",
                     yanchor="middle",
-
                     len=1,
                     thickness=24
                 ),
-
                 line=dict(width=0.5, color="black")
             ),
             text=sub["hover_text"],
             hoverinfo="text"
         ))
+
+              
 
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
@@ -2162,22 +2160,33 @@ try:
         )
 
 
-
-
-
-    import numpy as np
-
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-
     # Export & Show
-    fig.write_html(plot_output)
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    st.plotly_chart(fig, use_container_width=True)
+    # Feste Plotgröße wie im HTML/CMD-Output
+    fig.update_layout(
+        width=1800,
+        height=950,
+        autosize=False
+    )
 
+    fig.write_html(
+        plot_output,
+        include_plotlyjs="cdn",
+        full_html=True,
+        config={"responsive": False}
+    )
+
+    html = plot_output.read_text(encoding="utf-8")
+
+    components.html(
+        html,
+        height=1000,
+        scrolling=True
+    )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
