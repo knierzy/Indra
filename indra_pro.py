@@ -2179,16 +2179,53 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
-    fig.update_layout(
-         width=1800,
-         height=950,
-         autosize=False
+        fig.update_layout(
+        autosize=True,
+        height=850,
+
+        margin=dict(l=120, r=360, t=140, b=90),
+
+        xaxis=dict(
+            domain=[0.08, 0.78],
+            title=dict(text="", font=dict(size=18)),
+            tickvals=[0, 100],
+            ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
+            tickfont=dict(size=18),
+            showline=False,
+            zeroline=False,
+            range=[0, xmax]
+        ),
+
+        yaxis=dict(
+            title=dict(text="", font=dict(size=18)),
+            tickvals=[0, 100],
+            ticktext=["", f"Ca (≈ {ca_max}%)"],
+            tickfont=dict(size=18),
+            tickangle=-90,
+            showline=False,
+            zeroline=False,
+            range=[-3, ymax]
+        ),
+
+        legend=dict(
+            x=1.02,
+            y=0.95,
+            xanchor="left",
+            yanchor="top",
+            font=dict(size=17, color="black", family="Arial"),
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="black",
+            borderwidth=1
+        ),
+
+        hoverlabel=dict(font_size=16),
+        plot_bgcolor="white"
     )
 
     st.plotly_chart(
-         fig,
-         use_container_width=False,
-         config={"responsive": False}
+        fig,
+        use_container_width=True,
+        config={"responsive": True}
     )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
