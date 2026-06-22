@@ -2179,11 +2179,19 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
-    fig.update_layout(
-        autosize=True,
-        height=900,
+       # Export & Show
 
-        margin=dict(l=70, r=260, t=120, b=80),
+    fig.update_layout(
+        width=1700,
+        height=900,
+        autosize=False,
+
+        margin=dict(
+            l=70,
+            r=320,
+            t=120,
+            b=80
+        ),
 
         xaxis=dict(
             domain=[0.03, 0.82],
@@ -2222,10 +2230,16 @@ try:
         plot_bgcolor="white"
     )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"responsive": True}
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config={"responsive": False}
+    )
+
+    components.html(
+        html,
+        height=950,
+        scrolling=True
     )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
