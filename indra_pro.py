@@ -1537,7 +1537,7 @@ try:
             y=(y_min + y_max) / 2,
             text=f"<b>Ca = {ca_val}%</b>",
             showarrow=False,
-            font=dict(size=20, color="grey"),
+            font=dict(size=12, color="grey"),
             xanchor="left",
             yanchor="middle"
         )
@@ -1575,7 +1575,7 @@ try:
             x=(x_min + x_max) / 2, y=-3,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
-            font=dict(size=20, color="blue"),
+            font=dict(size=12, color="blue"),
             xanchor="center",
             yanchor="bottom"
         )
