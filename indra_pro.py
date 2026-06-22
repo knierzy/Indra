@@ -2179,7 +2179,7 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
-        fig.update_layout(
+    fig.update_layout(
         autosize=True,
         height=850,
 
