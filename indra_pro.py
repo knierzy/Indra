@@ -1766,16 +1766,16 @@ try:
 
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
-            marker_size = 20
+            marker_size = 16
         elif art_str.startswith("GW"):
             symbol_shape = "square"
-            marker_size = 14
+            marker_size = 12
         elif art_str.startswith("FW"):
             symbol_shape = "star"
-            marker_size = 18
+            marker_size = 14
         else:
             symbol_shape = "circle"
-            marker_size = 16
+            marker_size = 12
 
         fig.add_trace(go.Scatter(
             x=sub["Anionen_trans"],
@@ -1938,7 +1938,7 @@ try:
                 y=hull_points[:, 1],
                 mode="lines",
                 line=dict(
-                    width=3.5,
+                    width=1.5,
                     color="rgba(0,0,0,0.8)"  # dünn + leicht transparent
                 ),
                 showlegend=False,
