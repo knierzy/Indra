@@ -1448,11 +1448,11 @@ try:
 
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.55, y=1.05,
+        x=0.58, y=0.98,
         xanchor="left", yanchor="top",
         text=mah_text,
         showarrow=False,
-        font=dict(size=24),  # Basisgröße für den Rest
+        font=dict(size=16),  # Basisgröße für den Rest
         align="left",
         bgcolor="rgba(255,255,255,0.95)",
         bordercolor="black", borderwidth=1.5
@@ -1766,16 +1766,16 @@ try:
 
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
-            marker_size = 26
+            marker_size = 24
         elif art_str.startswith("GW"):
             symbol_shape = "square"
-            marker_size = 22
+            marker_size = 18
         elif art_str.startswith("FW"):
             symbol_shape = "star"
-            marker_size = 26
+            marker_size = 22
         else:
             symbol_shape = "circle"
-            marker_size = 24
+            marker_size = 20
 
         fig.add_trace(go.Scatter(
             x=sub["Anionen_trans"],
@@ -2053,16 +2053,16 @@ try:
     # Box oben links einfügen
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.32, y=1.05,  # 🔼 höher & zentriert
+        x=0.28, y=0.98,  # 🔼 höher & zentriert
         xanchor="center", yanchor="top",
         text=overlap_text,
         showarrow=False,
-        font=dict(size=24),
+        font=dict(size=16),
         align="left",
         bgcolor="rgba(255,255,255,0.95)",
         bordercolor="black",
         borderwidth=1.5,
-        width=600  # 🔥 macht die Box breit!
+        width=400  # 🔥 macht die Box breit!
     )
 
 
@@ -2160,7 +2160,7 @@ try:
             text=label,
             showarrow=False,  # ← KEINE Pfeile
             font=dict(
-                size=25,
+                size=14,
                 color="black",
                 family="Arial Black"
             ),
