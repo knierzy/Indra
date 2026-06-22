@@ -1522,7 +1522,7 @@ try:
                 shape="/",  # Schraffur
                 fgcolor="grey",
                 size=6,
-                solidity=0.2
+                solidity=0.08
             ),
             fillcolor="lightgrey",
             line=dict(width=0),
@@ -1560,7 +1560,7 @@ try:
                 shape="\\",  # Schraffur andere Richtung
                 fgcolor="blue",
                 size=6,
-                solidity=0.2
+                solidity=0.08
             ),
             fillcolor="lightblue",
             line=dict(width=0),
@@ -2186,14 +2186,14 @@ try:
         autosize=True,
 
         margin=dict(
-            l=70,
-            r=40,
-            t=120,
-            b=80
+            l=45,
+            r=20,
+            t=100,
+            b=70
         ),
 
         xaxis=dict(
-            domain=[0.03, 0.96],
+            domain=[0.01, 0.99],
             title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
