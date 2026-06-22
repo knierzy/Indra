@@ -2168,8 +2168,8 @@ try:
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
     fig.update_layout(
-         width=1200,
-         height=700,
+         width=None,
+         height=950,
          autosize=True
     )
 
