@@ -1793,7 +1793,7 @@ try:
                 colorbar=dict(
                     title=dict(
                         text="Log-Euclidean Distance<br>(to Hallstatt)",
-                        font=dict(size=22, family="Arial Black", color="black")
+                        font=dict(size=12, family="Arial Black", color="black")
                     ),
                     tickfont=dict(size=22),
                     tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
