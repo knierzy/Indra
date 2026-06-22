@@ -2165,7 +2165,6 @@ try:
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
     fig.update_layout(
@@ -2174,12 +2173,20 @@ try:
         autosize=False
     )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=False,
+    fig.write_html(
+        plot_output,
+        include_plotlyjs="cdn",
+        full_html=True,
         config={"responsive": False}
     )
 
+    html = plot_output.read_text(encoding="utf-8")
+
+    components.html(
+        html,
+        height=1000,
+        scrolling=True
+    )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
@@ -2190,9 +2197,6 @@ try:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
 
 
+
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
-
-
-
-
