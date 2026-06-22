@@ -2181,12 +2181,12 @@ try:
     # Feste Plotgröße wie im HTML/CMD-Output
     fig.update_layout(
         autosize=True,
-        height=850,
+        height=900,
 
-        margin=dict(l=60, r=250, t=120, b=80),
+        margin=dict(l=70, r=260, t=120, b=80),
 
         xaxis=dict(
-            domain=[0.01, 0.88],
+            domain=[0.03, 0.82],
             title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
@@ -2209,10 +2209,10 @@ try:
 
         legend=dict(
             x=1.02,
-            y=0.95,
+            y=0.98,
             xanchor="left",
             yanchor="top",
-            font=dict(size=17, color="black", family="Arial"),
+            font=dict(size=14, color="black", family="Arial"),
             bgcolor="rgba(255,255,255,0.95)",
             bordercolor="black",
             borderwidth=1
