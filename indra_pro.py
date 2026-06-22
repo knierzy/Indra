@@ -1601,7 +1601,7 @@ try:
             title=dict(text="", font=dict(size=20)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=22),
+            tickfont=dict(size=14),
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
             range=[0, xmax]
@@ -1610,7 +1610,7 @@ try:
             title=dict(text="", font=dict(size=20)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=22),
+            tickfont=dict(size=14),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
@@ -1795,7 +1795,7 @@ try:
                         text="Log-Euclidean Distance<br>(to Hallstatt)",
                         font=dict(size=12, family="Arial Black", color="black")
                     ),
-                    tickfont=dict(size=22),
+                    tickfont=dict(size=10),
                     tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
                     ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
                     x=0.12,
