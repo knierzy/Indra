@@ -2167,25 +2167,16 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
-    fig.update_layout(
-        width=1200,
-        height=700,
-        autosize=True
+      fig.update_layout(
+         width=1200,
+         height=700,
+         autosize=True
     )
 
-    fig.write_html(
-        plot_output,
-        include_plotlyjs="cdn",
-        full_html=True,
-        config={"responsive": False}
-    )
-
-    html = plot_output.read_text(encoding="utf-8")
-
-    components.html(
-        html,
-        height=1000,
-        scrolling=True
+      st.plotly_chart(
+         fig,
+         use_container_width=True,
+         config={"responsive": True}
     )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
