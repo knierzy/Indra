@@ -1441,7 +1441,7 @@ try:
 
     mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
 
-    mah_text = "<span style='font-size:24px'><b>Log-Euclidan distance – reference: Hallstatt</b></span><br>"
+    mah_text = "<span style='font-size:15px'><b>Log-Euclidan distance – reference: Hallstatt</b></span><br>"
 
     for g, d in mah_sorted[:5]:  # Top 5
         mah_text += f"{g.title()}: {d:.2f}<br>"
@@ -2034,7 +2034,7 @@ try:
     # Text für Box
     if pair_set:
         overlap_text = (
-                f"<span style='font-size:22px;'><b>Overlap statistic</b></span><br>"
+                f"<span style='font-size:15px;'><b>Overlap statistic</b></span><br>"
                 f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
                 f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
                 f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}<br>"
