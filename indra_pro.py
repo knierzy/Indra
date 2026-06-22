@@ -2183,10 +2183,10 @@ try:
         autosize=True,
         height=850,
 
-        margin=dict(l=120, r=360, t=140, b=90),
+        margin=dict(l=60, r=250, t=120, b=80),
 
         xaxis=dict(
-            domain=[0.08, 0.78],
+            domain=[0.01, 0.88],
             title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
