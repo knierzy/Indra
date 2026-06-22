@@ -2168,15 +2168,15 @@ try:
     # Export & Show
     # Feste Plotgröße wie im HTML/CMD-Output
     fig.update_layout(
-         width=None,
+         width=1800,
          height=950,
-         autosize=True
+         autosize=False
     )
 
     st.plotly_chart(
          fig,
-         use_container_width=True,
-         config={"responsive": True}
+         use_container_width=False,
+         config={"responsive": False}
     )
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
