@@ -1641,7 +1641,7 @@ try:
         fillcolor="rgba(240,245,250,1)",
         line=dict(width=0),
         layer="below"
-    ),
+    )
 
 
     # X-Achse (HCO3)
