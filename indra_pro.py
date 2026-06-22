@@ -2182,9 +2182,8 @@ try:
        # Export & Show
 
     fig.update_layout(
-        width=1700,
         height=900,
-        autosize=False,
+        autosize=True,
 
         margin=dict(
             l=70,
