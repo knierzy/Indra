@@ -1766,16 +1766,16 @@ try:
 
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
-            marker_size = 8
+            marker_size = 12
         elif art_str.startswith("GW"):
             symbol_shape = "square"
-            marker_size = 6
+            marker_size = 10
         elif art_str.startswith("FW"):
             symbol_shape = "star"
-            marker_size = 7
+            marker_size = 11
         else:
             symbol_shape = "circle"
-            marker_size = 6
+            marker_size = 10
 
         fig.add_trace(go.Scatter(
             x=sub["Anionen_trans"],
