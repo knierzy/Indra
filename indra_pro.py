@@ -1766,16 +1766,16 @@ try:
 
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
-            marker_size = 16
+            marker_size = 8
         elif art_str.startswith("GW"):
             symbol_shape = "square"
-            marker_size = 12
+            marker_size = 6
         elif art_str.startswith("FW"):
             symbol_shape = "star"
-            marker_size = 14
+            marker_size = 7
         else:
             symbol_shape = "circle"
-            marker_size = 12
+            marker_size = 6
 
         fig.add_trace(go.Scatter(
             x=sub["Anionen_trans"],
@@ -1816,8 +1816,8 @@ try:
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
         if not overlaps.empty:
-            base_size = 12
-            ring_width = 8
+            base_size = 6
+            ring_width = 4
 
             grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
 
