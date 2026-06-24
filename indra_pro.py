@@ -1678,7 +1678,7 @@ try:
         x0=100, x1=100,
         y0=0, y1=100,
         xref="x", yref="y",
-        line=dict(color="black", width=1.5, dash="dash")
+        line=dict(color="black", width=0.5, dash="dash")
     )
 
     # Horizontale Linie bei Ca max
@@ -1687,7 +1687,7 @@ try:
         x0=0, x1=100,
         y0=100, y1=100,
         xref="x", yref="y",
-        line=dict(color="black", width=1.5, dash="dash")
+        line=dict(color="black", width=0.5, dash="dash")
     )
 
         # ============================================================
@@ -1987,7 +1987,7 @@ try:
         x0=0, y0=0,
         x1=x_end, y1=y_end,
         xref="x", yref="y",
-        line=dict(color="grey", width=3.5, dash="dot"),
+        line=dict(color="grey", width=0.5, dash="dot"),
     )
 
     # Beschriftung mittig auf der gekürzten Linie
