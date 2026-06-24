@@ -1996,7 +1996,7 @@ try:
         y=y_end * 0.5,
         text="dotted line = Ca - HCO3 ~ 1:1 ",
         showarrow=False,
-        font=dict(size=20, color="blue"),
+        font=dict(size=12, color="blue"),
         bgcolor="white",
         opacity=0.8
     )
