@@ -1816,7 +1816,7 @@ try:
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
         if not overlaps.empty:
-            base_size = 18
+            base_size = 12
             ring_width = 8
 
             grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
@@ -1831,7 +1831,7 @@ try:
                     mode="markers",
                     marker=dict(
                         symbol="x",
-                        size=12,
+                        size=8,
                         color="red",
                         line=dict(width=3, color="darkred")
                     ),
