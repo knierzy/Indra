@@ -1537,7 +1537,7 @@ try:
             y=(y_min + y_max) / 2,
             text=f"<b>Ca = {ca_val}%</b>",
             showarrow=False,
-            font=dict(size=12, color="grey"),
+            font=dict(size=8, color="grey"),
             xanchor="left",
             yanchor="middle"
         )
@@ -1572,10 +1572,10 @@ try:
 
         # Beschriftung im Plot
         fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-3,
+            x=(x_min + x_max) / 2, y=-5,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
-            font=dict(size=12, color="blue"),
+            font=dict(size=8, color="blue"),
             xanchor="center",
             yanchor="bottom"
         )
