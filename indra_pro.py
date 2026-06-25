@@ -2196,8 +2196,8 @@ try:
             domain=[0.01, 0.99],
             title=dict(text="", font=dict(size=14)),
             tickvals=[0, 100],
-            ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=18),
+            ticktext=["", ""],   # HCO3-Text hier entfernen
+            tickfont=dict(size=8),
             showline=False,
             zeroline=False,
             range=[0, xmax]
@@ -2206,14 +2206,13 @@ try:
         yaxis=dict(
             title=dict(text="", font=dict(size=14)),
             tickvals=[0, 100],
-            ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=18),
+            ticktext=["", ""],   # Ca-Text hier entfernen
+            tickfont=dict(size=8),
             tickangle=-90,
             showline=False,
             zeroline=False,
             range=[-3, ymax]
         ),
-
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2240,6 +2239,28 @@ try:
         height=750,
         scrolling=True
     )
+
+fig.add_annotation(
+    x=100,
+    y=-6,
+    text=f"HCO₃ (≈ {hco3_max}%)",
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    xanchor="right",
+    yanchor="top"
+)
+
+fig.add_annotation(
+    x=-2.5,
+    y=100,
+    text=f"Ca (≈ {ca_max}%)",
+    textangle=-90,
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    xanchor="center",
+    yanchor="bottom"
+)
+  
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
