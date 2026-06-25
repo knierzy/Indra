@@ -1420,25 +1420,26 @@ try:
 
     print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
 
-# --- Referenzgruppe für Log-Euclidean-Distanz auswählen ---
+    # --- Referenzgruppe für Log-Euclidean-Distanz auswählen ---
     available_ref_groups = sorted(group_means.index.astype(str).tolist())
 
     default_ref = "Lake Hallstatt"
+
     default_index = (
-       available_ref_groups.index(default_ref)
-       if default_ref in available_ref_groups
-       else 0
-)
+        available_ref_groups.index(default_ref)
+        if default_ref in available_ref_groups
+        else 0
+    )
 
     ref_group = st.selectbox(
-       "Referenzgruppe für Log-Euclidean-Distanz",
-       options=available_ref_groups,
-       index=default_index
-)
+        "Referenzgruppe für Log-Euclidean-Distanz",
+        options=available_ref_groups,
+        index=default_index
+    )
 
-print(f"\n✅ Referenz: {ref_group}")
+    print(f"\n✅ Referenz: {ref_group}")
 
-ref_vector = group_means.loc[ref_group].values
+    ref_vector = group_means.loc[ref_group].values
         # LOG-Version für Plot verwenden
     ref_vector = group_means.loc[ref_group].values
 
