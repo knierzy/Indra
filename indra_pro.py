@@ -1868,67 +1868,65 @@ try:
 
               
 
-        # Überlappungen (Ringe)
+                # Überlappungen (Ringe)
         if show_overlap_markers:
 
-    # Überlappungen (Ringe)
-    overlaps = df[df["Symbol"] == "star"].copy()
+            overlaps = df[df["Symbol"] == "star"].copy()
 
-    if not overlaps.empty:
+            if not overlaps.empty:
 
-        base_size = 6
-        ring_width = 4
+                base_size = 6
+                ring_width = 4
 
-        grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
+                grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
 
-        for (y0, x0), g in grouped:
+                for (y0, x0), g in grouped:
 
-            arts = list(g["Art"])
-            n = len(arts)
+                    arts = list(g["Art"])
+                    n = len(arts)
 
-            # zentrales X
-            fig.add_trace(go.Scatter(
-                x=[x0],
-                y=[y0],
-                mode="markers",
-                marker=dict(
-                    symbol="x",
-                    size=8,
-                    color="red",
-                    line=dict(
-                        width=3,
-                        color="darkred"
-                    )
-                ),
-                text=[f"Overlap with {n} groups"],
-                hoverinfo="text",
-                showlegend=False
-            ))
-
-            # konzentrische rote Ringe
-            for i, art in enumerate(arts):
-
-                row = g[g["Art"] == art].iloc[0]
-
-                size = base_size + i * ring_width
-
-                fig.add_trace(go.Scatter(
-                    x=[x0],
-                    y=[y0],
-                    mode="markers",
-                    marker=dict(
-                        symbol="circle",
-                        size=size,
-                        color="rgba(0,0,0,0)",
-                        line=dict(
-                            width=5,
-                            color="red"
+                    # zentrales X
+                    fig.add_trace(go.Scatter(
+                        x=[x0],
+                        y=[y0],
+                        mode="markers",
+                        marker=dict(
+                            symbol="x",
+                            size=8,
+                            color="red",
+                            line=dict(
+                                width=3,
+                                color="darkred"
+                            )
                         ),
-                    ),
-                    text=[row["hover_text"]],
-                    hoverinfo="text",
-                    showlegend=False
-                ))
+                        text=[f"Overlap with {n} groups"],
+                        hoverinfo="text",
+                        showlegend=False
+                    ))
+
+                    # konzentrische rote Ringe
+                    for i, art in enumerate(arts):
+
+                        row = g[g["Art"] == art].iloc[0]
+                        size = base_size + i * ring_width
+
+                        fig.add_trace(go.Scatter(
+                            x=[x0],
+                            y=[y0],
+                            mode="markers",
+                            marker=dict(
+                                symbol="circle",
+                                size=size,
+                                color="rgba(0,0,0,0)",
+                                line=dict(
+                                    width=5,
+                                    color="red"
+                                )
+                            ),
+                            text=[row["hover_text"]],
+                            hoverinfo="text",
+                            showlegend=False
+                        ))
 
                 # konzentrische rote Halos
                 for i, art in enumerate(arts):
