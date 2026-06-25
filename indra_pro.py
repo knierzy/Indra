@@ -54,6 +54,21 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     tmp.write(uploaded_file.getbuffer())
     input_file = Path(tmp.name)
 
+base_addition = st.number_input(
+    "Transformationsbasis: e + n",
+    min_value=1,
+    max_value=50,
+    value=4,
+    step=1
+)
+
+selected_base = math.e + base_addition
+
+st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
+
+
+
+
 preferred_sheet = "Sheet1"
 
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
@@ -1258,7 +1273,9 @@ raw_df = pd.read_excel(
 
 # ============================================================
 # --- Hilfsfunktion zur Transformation mit frei wählbarer Basis ---
-def custom_transform_optimal(x, base=math.e +4): #12.1415926535
+def custom_transform_optimal(x, base=None):
+    if base is None:
+        base = selected_base
     try:
         x_str = str(int(x)).zfill(8)
         a = int(x_str[0:2])
