@@ -2235,16 +2235,6 @@ try:
         config={"responsive": False}
     )
 
-      fig.add_annotation(
-        x=-1.8,
-        y=100,
-        text=f"Ca (≈ {ca_max}%)",
-        textangle=-90,
-        showarrow=False,
-        font=dict(size=10, color="black"),
-        xanchor="center",
-        yanchor="bottom"
-    )
 
     components.html(
         html,
