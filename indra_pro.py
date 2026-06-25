@@ -2182,7 +2182,7 @@ try:
        # Export & Show
 
     fig.update_layout(
-        height=900,
+        height=700,
         autosize=True,
 
         margin=dict(
@@ -2237,7 +2237,7 @@ try:
 
     components.html(
         html,
-        height=750,
+        height=700,
         scrolling=True
     )
     # Ergebnisse (Grenzen) auch ausgeben
