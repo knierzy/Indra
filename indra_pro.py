@@ -1533,7 +1533,7 @@ try:
         ))
 
         fig.add_annotation(
-            x=0,
+            x=1,
             y=(y_min + y_max) / 2,
             text=f"<b>Ca = {ca_val}%</b>",
             showarrow=False,
