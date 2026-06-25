@@ -1448,7 +1448,7 @@ try:
 
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.58, y=0.98,
+        x=0.58, y=1.15,
         xanchor="left", yanchor="top",
         text=mah_text,
         showarrow=False,
@@ -2053,7 +2053,7 @@ try:
     # Box oben links einfügen
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.28, y=1.08,  # 🔼 höher & zentriert
+        x=0.38, y=1.15,  # 🔼 höher & zentriert
         xanchor="center", yanchor="top",
         text=overlap_text,
         showarrow=False,
