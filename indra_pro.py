@@ -1609,7 +1609,7 @@ try:
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
-            ticktext=["", ""]
+            ticktext=["", ""],
             tickfont=dict(size=12),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
