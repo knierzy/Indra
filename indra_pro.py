@@ -1609,7 +1609,7 @@ try:
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
-            ticktext=["", f"Ca (≈ {ca_max}%)"],
+            ticktext=["", ""]
             tickfont=dict(size=12),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
@@ -2233,6 +2233,17 @@ try:
         include_plotlyjs="cdn",
         full_html=False,
         config={"responsive": False}
+    )
+
+      fig.add_annotation(
+        x=-1.8,
+        y=100,
+        text=f"Ca (≈ {ca_max}%)",
+        textangle=-90,
+        showarrow=False,
+        font=dict(size=10, color="black"),
+        xanchor="center",
+        yanchor="bottom"
     )
 
     components.html(
