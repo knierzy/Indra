@@ -57,9 +57,9 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
 
 base_addition = st.number_input(
     "Transformationsbasis: e + n",
-    min_value=1,
-    max_value=50,
-    value=4,
+    min_value=-1,
+    max_value=97,
+    value=17,
     step=1
 )
 
