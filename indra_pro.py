@@ -1572,7 +1572,7 @@ try:
 
         # Beschriftung im Plot
         fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-5,
+            x=(x_min + x_max) / 2, y=-3,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
             font=dict(size=8, color="blue"),
@@ -1598,19 +1598,19 @@ try:
     # === Layout ===
     fig.update_layout(
         xaxis=dict(
-            title=dict(text="", font=dict(size=20)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=14),
+            tickfont=dict(size=12),
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
             range=[0, xmax]
         ),
         yaxis=dict(
-            title=dict(text="", font=dict(size=20)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=14),
+            tickfont=dict(size=12),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
