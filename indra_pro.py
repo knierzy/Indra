@@ -2171,15 +2171,15 @@ try:
             yanchor="middle"
         )
 
-
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-    # Export & Show
-    # Feste Plotgröße wie im HTML/CMD-Output
-       # Export & Show
+
+    # ============================================================
+    # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
+    # ============================================================
 
     fig.update_layout(
         height=750,
@@ -2194,25 +2194,26 @@ try:
 
         xaxis=dict(
             domain=[0.01, 0.99],
-            title=dict(text="", font=dict(size=14)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
-            ticktext=["", ""],   # HCO3-Text hier entfernen
-            tickfont=dict(size=8),
+            ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
+            tickfont=dict(size=10),
             showline=False,
             zeroline=False,
             range=[0, xmax]
         ),
 
         yaxis=dict(
-            title=dict(text="", font=dict(size=14)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
-            ticktext=["", ""],   # Ca-Text hier entfernen
-            tickfont=dict(size=8),
+            ticktext=["", f"Ca (≈ {ca_max}%)"],
+            tickfont=dict(size=10),
             tickangle=-90,
             showline=False,
             zeroline=False,
             range=[-3, ymax]
         ),
+
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2226,30 +2227,8 @@ try:
 
         hoverlabel=dict(font_size=16),
         plot_bgcolor="white"
-        )
-
-     fig.add_annotation(
-        x=100,
-        y=-6,
-        text=f"HCO₃ (≈ {hco3_max}%)",
-        showarrow=False,
-        font=dict(size=12, color="black"),
-        xanchor="right",
-        yanchor="top"
     )
 
-    fig.add_annotation(
-        x=-2.5,
-        y=100,
-        text=f"Ca (≈ {ca_max}%)",
-        textangle=-90,
-        showarrow=False,
-        font=dict(size=12, color="black"),
-        xanchor="center",
-        yanchor="bottom"
-    )
-
-  
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
@@ -2262,9 +2241,6 @@ try:
         scrolling=True
     )
 
-
-  
-    # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
         print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
@@ -2272,8 +2248,6 @@ try:
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
