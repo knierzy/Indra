@@ -2228,26 +2228,26 @@ try:
         plot_bgcolor="white"
         )
 
-       fig.add_annotation(
-           x=100,
-           y=-6,
-           text=f"HCO₃ (≈ {hco3_max}%)",
-           showarrow=False,
-           font=dict(size=12, color="black"),
-           xanchor="right",
-           yanchor="top"
-        )
+     fig.add_annotation(
+        x=100,
+        y=-6,
+        text=f"HCO₃ (≈ {hco3_max}%)",
+        showarrow=False,
+        font=dict(size=12, color="black"),
+        xanchor="right",
+        yanchor="top"
+    )
 
-       fig.add_annotation(
-           x=-2.5,
-           y=100,
-           text=f"Ca (≈ {ca_max}%)",
-           textangle=-90,
-           showarrow=False,
-           font=dict(size=12, color="black"),
-           xanchor="center",
-           yanchor="bottom"
-        )
+    fig.add_annotation(
+        x=-2.5,
+        y=100,
+        text=f"Ca (≈ {ca_max}%)",
+        textangle=-90,
+        showarrow=False,
+        font=dict(size=12, color="black"),
+        xanchor="center",
+        yanchor="bottom"
+    )
 
   
     html = fig.to_html(
