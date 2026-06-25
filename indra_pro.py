@@ -2237,7 +2237,7 @@ try:
 
     components.html(
         html,
-        height=850,
+        height=750,
         scrolling=True
     )
     # Ergebnisse (Grenzen) auch ausgeben
