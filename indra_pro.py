@@ -2194,7 +2194,7 @@ try:
 
         xaxis=dict(
             domain=[0.01, 0.99],
-            title=dict(text="", font=dict(size=18)),
+            title=dict(text="", font=dict(size=14)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
             tickfont=dict(size=18),
@@ -2204,7 +2204,7 @@ try:
         ),
 
         yaxis=dict(
-            title=dict(text="", font=dict(size=18)),
+            title=dict(text="", font=dict(size=14)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
             tickfont=dict(size=18),
