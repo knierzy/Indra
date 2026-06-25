@@ -2053,7 +2053,7 @@ try:
     # Box oben links einfügen
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.28, y=0.98,  # 🔼 höher & zentriert
+        x=0.28, y=1.08,  # 🔼 höher & zentriert
         xanchor="center", yanchor="top",
         text=overlap_text,
         showarrow=False,
@@ -2188,7 +2188,7 @@ try:
         margin=dict(
             l=45,
             r=20,
-            t=100,
+            t=150,
             b=70
         ),
 
