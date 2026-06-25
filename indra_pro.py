@@ -1420,14 +1420,25 @@ try:
 
     print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
 
-    # --- Referenz (Hallstatt) ---
-    # --- Referenz (Hallstatt) ---
-    ref_group = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake hallstatt"
-    )
-    print(f"\n✅ Referenz: {ref_group}")
+# --- Referenzgruppe für Log-Euclidean-Distanz auswählen ---
+    available_ref_groups = sorted(group_means.index.astype(str).tolist())
 
+    default_ref = "Lake Hallstatt"
+    default_index = (
+       available_ref_groups.index(default_ref)
+       if default_ref in available_ref_groups
+       else 0
+)
+
+    ref_group = st.selectbox(
+       "Referenzgruppe für Log-Euclidean-Distanz",
+       options=available_ref_groups,
+       index=default_index
+)
+
+print(f"\n✅ Referenz: {ref_group}")
+
+ref_vector = group_means.loc[ref_group].values
         # LOG-Version für Plot verwenden
     ref_vector = group_means.loc[ref_group].values
 
@@ -1459,7 +1470,11 @@ try:
 
     mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
 
-    mah_text = "<span style='font-size:15px'><b>Log-Euclidan distance – reference: Hallstatt</b></span><br>"
+    mah_text = (
+    f"<span style='font-size:15px'><b>"
+    f"Log-Euclidean distance – reference: {ref_group}"
+    f"</b></span><br>"
+)
 
     for g, d in mah_sorted[:5]:  # Top 5
         mah_text += f"{g.title()}: {d:.2f}<br>"
@@ -1483,7 +1498,7 @@ try:
 
 
 
-    print("\n📏 Log-Euclidean Distanzen relativ zu Hallstatt:\n")
+    print(f"\n📏 Log-Euclidean Distanzen relativ zu {ref_group}:\n")
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
@@ -1810,7 +1825,7 @@ try:
                 showscale=(i == 0),
                 colorbar=dict(
                     title=dict(
-                        text="Log-Euclidean Distance<br>(to Hallstatt)",
+                        text=f"Log-Euclidean Distance<br>(to {ref_group})",
                         font=dict(size=12, family="Arial Black", color="black")
                     ),
                     tickfont=dict(size=10),
