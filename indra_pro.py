@@ -2228,18 +2228,6 @@ try:
         plot_bgcolor="white"
     )
 
-    html = fig.to_html(
-        include_plotlyjs="cdn",
-        full_html=False,
-        config={"responsive": False}
-    )
-
-    components.html(
-        html,
-        height=750,
-        scrolling=True
-    )
-
 fig.add_annotation(
     x=100,
     y=-6,
@@ -2260,6 +2248,22 @@ fig.add_annotation(
     xanchor="center",
     yanchor="bottom"
 )
+
+
+  
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config={"responsive": False}
+    )
+
+    components.html(
+        html,
+        height=750,
+        scrolling=True
+    )
+
+
   
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
