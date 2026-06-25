@@ -1533,7 +1533,7 @@ try:
         ))
 
         fig.add_annotation(
-            x=0,
+            x=3,
             y=(y_min + y_max) / 2,
             text=f"<b>Ca = {ca_val}%</b>",
             showarrow=False,
@@ -1609,12 +1609,12 @@ try:
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
-            ticktext=["", f"Ca (≈ {ca_max}%)"],
+            ticktext=["", ""],
             tickfont=dict(size=12),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
-            range=[-3, ymax]
+            range=[-6, ymax]
         ),
         title=dict(
             text="",
@@ -1660,16 +1660,16 @@ try:
     fig.add_annotation(
         x=100, y=0, ax=0, ay=0,  # statt x=hco3_max → x=100
         xref="x", yref="y", axref="x", ayref="y",
-        showarrow=True, arrowhead=2, arrowsize=1.5,
-        arrowwidth=1.5, arrowcolor="black", text=""
+        showarrow=True, arrowhead=1, arrowsize=1,
+        arrowwidth=1, arrowcolor="black", text=""
     )
 
     # Y-Achse (Ca)
     fig.add_annotation(
         x=0, y=100, ax=0, ay=0,  # statt y=ca_max → y=100
         xref="x", yref="y", axref="x", ayref="y",
-        showarrow=True, arrowhead=2, arrowsize=1.5,
-        arrowwidth=1.5, arrowcolor="black", text=""
+        showarrow=True, arrowhead=1, arrowsize=1,
+        arrowwidth=1, arrowcolor="black", text=""
     )
 
     # Vertikale Linie bei HCO₃ max
@@ -2171,15 +2171,15 @@ try:
             yanchor="middle"
         )
 
-
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
-    # Export & Show
-    # Feste Plotgröße wie im HTML/CMD-Output
-       # Export & Show
+
+    # ============================================================
+    # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
+    # ============================================================
 
     fig.update_layout(
         height=750,
@@ -2194,24 +2194,24 @@ try:
 
         xaxis=dict(
             domain=[0.01, 0.99],
-            title=dict(text="", font=dict(size=14)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=18),
+            tickfont=dict(size=8),
             showline=False,
             zeroline=False,
             range=[0, xmax]
         ),
 
         yaxis=dict(
-            title=dict(text="", font=dict(size=14)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=18),
+            tickfont=dict(size=8),
             tickangle=-90,
             showline=False,
             zeroline=False,
-            range=[-3, ymax]
+            range=[-2, ymax]
         ),
 
         legend=dict(
@@ -2235,12 +2235,13 @@ try:
         config={"responsive": False}
     )
 
+
     components.html(
         html,
         height=750,
         scrolling=True
     )
-    # Ergebnisse (Grenzen) auch ausgeben
+
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
         print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
@@ -2248,8 +2249,6 @@ try:
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
