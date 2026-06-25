@@ -1521,12 +1521,12 @@ try:
             fillpattern=dict(
                 shape="/",  # Schraffur
                 fgcolor="grey",
-                size=6,
+                size=3,
                 solidity=0.08
             ),
             fillcolor="lightgrey",
             line=dict(width=0),
-            opacity=0.3,
+            opacity=0.5,
             name=f"Ca = {ca_val}%",
             showlegend=False,
             hoverinfo="skip"  # kein Hover
@@ -1559,12 +1559,12 @@ try:
             fillpattern=dict(
                 shape="\\",  # Schraffur andere Richtung
                 fgcolor="blue",
-                size=6,
+                size=3,
                 solidity=0.08
             ),
             fillcolor="lightblue",
             line=dict(width=0),
-            opacity=0.2,
+            opacity=0.5,
             name=f"HCO₃ = {hco3_val}%",
             showlegend=False,
             hoverinfo="skip"  # kein Hover
