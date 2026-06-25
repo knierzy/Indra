@@ -2119,47 +2119,43 @@ try:
             for a, b in combinations(arts_here, 2):
                 pair_set.add(f"{a} × {b}")
 
-    # Text für Box
-if pair_set:
-    overlap_text = (
-        f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
-        f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
-        f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
-        f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}"
-    )
-
-    if show_overlap_groups:
-        overlap_text += (
-            "<br><b>Overlapping groups:</b><br>"
-            + "<br>".join(f"• {p}" for p in sorted(pair_set))
+       # Text für Box
+    if pair_set:
+        overlap_text = (
+            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
+            f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
+            f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
+            f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}"
         )
 
-else:
-    overlap_text = (
-        f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
-        f"No overlapping determined"
-    )
+        if show_overlap_groups:
+            overlap_text += (
+                "<br><b>Overlapping groups:</b><br>"
+                + "<br>".join(f"• {p}" for p in sorted(pair_set))
+            )
 
-
-
+    else:
+        overlap_text = (
+            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
+            f"No overlapping determined"
+        )
 
     # Box oben links einfügen
-if show_overlap_stats:
-
-    fig.add_annotation(
-        xref="paper", yref="paper",
-        x=0.38, y=1.15,
-        xanchor="center",
-        yanchor="top",
-        text=overlap_text,
-        showarrow=False,
-        font=dict(size=16),
-        align="left",
-        bgcolor="rgba(255,255,255,0.95)",
-        bordercolor="black",
-        borderwidth=1.5,
-        width=400
-    )
+    if show_overlap_stats:
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.38, y=1.15,
+            xanchor="center",
+            yanchor="top",
+            text=overlap_text,
+            showarrow=False,
+            font=dict(size=16),
+            align="left",
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="black",
+            borderwidth=1.5,
+            width=400
+        )
 
     def smart_label(name):
 
