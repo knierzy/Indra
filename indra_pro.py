@@ -2249,7 +2249,6 @@ fig.add_annotation(
     yanchor="bottom"
 )
 
-
   
     html = fig.to_html(
         include_plotlyjs="cdn",
