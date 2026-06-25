@@ -1660,16 +1660,16 @@ try:
     fig.add_annotation(
         x=100, y=0, ax=0, ay=0,  # statt x=hco3_max → x=100
         xref="x", yref="y", axref="x", ayref="y",
-        showarrow=True, arrowhead=2, arrowsize=1.5,
-        arrowwidth=1.5, arrowcolor="black", text=""
+        showarrow=True, arrowhead=1, arrowsize=1,
+        arrowwidth=1, arrowcolor="black", text=""
     )
 
     # Y-Achse (Ca)
     fig.add_annotation(
         x=0, y=100, ax=0, ay=0,  # statt y=ca_max → y=100
         xref="x", yref="y", axref="x", ayref="y",
-        showarrow=True, arrowhead=2, arrowsize=1.5,
-        arrowwidth=1.5, arrowcolor="black", text=""
+        showarrow=True, arrowhead=1, arrowsize=1,
+        arrowwidth=1, arrowcolor="black", text=""
     )
 
     # Vertikale Linie bei HCO₃ max
