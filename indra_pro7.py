@@ -67,7 +67,15 @@ selected_base = math.e + base_addition
 
 st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
 
+marker_scale = st.number_input(
+    "Punktgrößen-Faktor",
+    min_value=0.5,
+    max_value=3.0,
+    value=1.0,
+    step=0.1
+)
 
+st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 
 
 preferred_sheet = "Sheet1"
@@ -1800,16 +1808,16 @@ try:
 
         if art_str.startswith("DA"):
             symbol_shape = "triangle-up"
-            marker_size = 12
+            marker_size = 12 * marker_scale
         elif art_str.startswith("GW"):
             symbol_shape = "square"
-            marker_size = 10
+            marker_size = 10 * marker_scale
         elif art_str.startswith("FW"):
             symbol_shape = "star"
-            marker_size = 11
+            marker_size = 11 * marker_scale
         else:
             symbol_shape = "circle"
-            marker_size = 10
+            marker_size = 10 * marker_scale
 
         fig.add_trace(go.Scatter(
             x=sub["Anionen_trans"],
