@@ -13,6 +13,7 @@ The generated meta-number datasets are later used
 for INDRA projection and hydrochemical pattern analysis.
 """
 
+import math
 import re
 import numpy as np
 import pandas as pd
@@ -1240,7 +1241,7 @@ print("📁", output_file_cartesian)
 # Das ist log euclidean... passe noch an
 #
 # -*- coding: utf-8 -*-
-import math
+
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.express.colors import qualitative
