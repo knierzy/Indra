@@ -1614,7 +1614,7 @@ try:
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
-            range=[-3, ymax]
+            range=[-6, ymax]
         ),
         title=dict(
             text="",
@@ -2211,7 +2211,7 @@ try:
             tickangle=-90,
             showline=False,
             zeroline=False,
-            range=[-3, ymax]
+            range=[-2, ymax]
         ),
 
         legend=dict(
