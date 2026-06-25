@@ -2197,7 +2197,7 @@ try:
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=10),
+            tickfont=dict(size=8),
             showline=False,
             zeroline=False,
             range=[0, xmax]
@@ -2207,7 +2207,7 @@ try:
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=10),
+            tickfont=dict(size=8),
             tickangle=-90,
             showline=False,
             zeroline=False,
