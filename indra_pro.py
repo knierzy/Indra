@@ -2434,6 +2434,8 @@ try:
             "SVG": "image/svg+xml"
         }[export_format]
 
+    st.write("Export bereit:")
+  
     st.download_button(
         label=f"Download {export_format} ({export_dpi} dpi)",
         data=export_buffer.getvalue(),
