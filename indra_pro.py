@@ -1803,32 +1803,40 @@ try:
 
     df["LogEuclid"] = df["LogEuclid"].fillna(0)
 
-    art_order = (
+        art_order = (
         df.groupby("Art")["LogEuclid"]
         .median()
         .sort_values(ascending=False)
         .index
     )
+
+    # ============================================================
+    # 🎨 Colormap auswählen
+    # ============================================================
+
     colormap = st.selectbox(
         "Color map",
-    [
-        "Custom",
-        "Viridis",
-        "Plasma",
-        "Turbo",
-        "Cividis",
-        "Magma",
-        "RdYlBu",
-        "Inferno",
-        "IceFire",
-        "Spectral",
-        "Balance"
-    ],
-    index=0
-)
+        [
+            "Custom",
+            "Viridis",
+            "Plasma",
+            "Turbo",
+            "Cividis",
+            "Magma",
+            "RdYlBu",
+            "Inferno",
+            "IceFire",
+            "Spectral",
+            "Balance"
+        ],
+        index=0
+    )
 
-# Plotly-Colorscale bestimmen
-plotly_colorscale = custom_scale if colormap == "Custom" else colormap  
+    plotly_colorscale = (
+        custom_scale
+        if colormap == "Custom"
+        else colormap
+    )
 
     for i, art in enumerate(art_order):
 
