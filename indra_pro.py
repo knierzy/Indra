@@ -2368,10 +2368,19 @@ try:
     )
 
     html = fig.to_html(
-        include_plotlyjs="cdn",
-        full_html=False,
-        config={"responsive": False}
-    )
+    include_plotlyjs="cdn",
+    full_html=False,
+    config={
+        "responsive": False,
+        "toImageButtonOptions": {
+            "format": export_format.lower(),
+            "filename": "INDRA_Projection",
+            "height": 3500,
+            "width": 3500,
+            "scale": export_dpi / 150
+        }
+    }
+)
 
 
     components.html(
