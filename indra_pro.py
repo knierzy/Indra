@@ -1809,8 +1809,8 @@ try:
         .sort_values(ascending=False)
         .index
     )
-  colormap = st.selectbox(
-    "Color map",
+    colormap = st.selectbox(
+        "Color map",
     [
         "Custom",
         "Viridis",
