@@ -1803,7 +1803,7 @@ try:
 
     df["LogEuclid"] = df["LogEuclid"].fillna(0)
 
-        art_order = (
+    art_order = (
         df.groupby("Art")["LogEuclid"]
         .median()
         .sort_values(ascending=False)
