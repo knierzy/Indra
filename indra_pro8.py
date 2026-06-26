@@ -43,12 +43,12 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 uploaded_file = st.file_uploader(
-    "Compendium Excel-Datei hochladen",
+    "Upload xlsx.file",
     type=["xlsx"]
 )
 
 if uploaded_file is None:
-    st.info("Bitte eine Excel-Datei hochladen.")
+    st.info("Upload xlsx.file")
     st.stop()
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
@@ -56,7 +56,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     input_file = Path(tmp.name)
 
 base_addition = st.number_input(
-    "Transformationsbasis: e + n",
+    "Transformation base: e + n",
     min_value=-1,
     max_value=97,
     value=17,
@@ -65,25 +65,38 @@ base_addition = st.number_input(
 
 selected_base = math.e + base_addition
 
-st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
+st.write(f"Current base: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
-    "Punktgrößen-Faktor",
+    "Point size factor",
     min_value=0.5,
     max_value=3.0,
     value=1.0,
     step=0.1
 )
 
-st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
+st.write(f"Point size factor: {marker_scale:.1f}×")
 
+show_overlap_stats = st.checkbox(
+    "Show overlap statistics",
+    value=True
+)
+
+show_overlap_groups = st.checkbox(
+    "Show overlapping groups",
+    value=True
+)
+
+show_overlap_markers = st.checkbox(
+    "Highlight overlap points",
+    value=True
+)
 
 preferred_sheet = "Sheet1"
-
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 output_file_cartesian = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
 
-if not st.button("Diagramm erzeugen"):
+if not st.button("Generate diagram"):
     st.stop()
 # Helper Functions
 
@@ -1855,32 +1868,65 @@ try:
 
               
 
-        # Überlappungen (Ringe)
-        overlaps = df[df["Symbol"] == "star"].copy()
-        if not overlaps.empty:
-            base_size = 6
-            ring_width = 4
+                # Überlappungen (Ringe)
+        if show_overlap_markers:
 
-            grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
+            overlaps = df[df["Symbol"] == "star"].copy()
 
-            for (y0, x0), g in grouped:
-                arts = list(g["Art"])
-                n = len(arts)
+            if not overlaps.empty:
 
-                # zentrales X
-                fig.add_trace(go.Scatter(
-                    x=[x0], y=[y0],
-                    mode="markers",
-                    marker=dict(
-                        symbol="x",
-                        size=8,
-                        color="red",
-                        line=dict(width=3, color="darkred")
-                    ),
-                    text=[f"Overlap with {n} groups"],
-                    hoverinfo="text",
-                    showlegend=False
-                ))
+                base_size = 6
+                ring_width = 4
+
+                grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
+
+                for (y0, x0), g in grouped:
+
+                    arts = list(g["Art"])
+                    n = len(arts)
+
+                    # zentrales X
+                    fig.add_trace(go.Scatter(
+                        x=[x0],
+                        y=[y0],
+                        mode="markers",
+                        marker=dict(
+                            symbol="x",
+                            size=8,
+                            color="red",
+                            line=dict(
+                                width=3,
+                                color="darkred"
+                            )
+                        ),
+                        text=[f"Overlap with {n} groups"],
+                        hoverinfo="text",
+                        showlegend=False
+                    ))
+
+                    # konzentrische rote Ringe
+                    for i, art in enumerate(arts):
+
+                        row = g[g["Art"] == art].iloc[0]
+                        size = base_size + i * ring_width
+
+                        fig.add_trace(go.Scatter(
+                            x=[x0],
+                            y=[y0],
+                            mode="markers",
+                            marker=dict(
+                                symbol="circle",
+                                size=size,
+                                color="rgba(0,0,0,0)",
+                                line=dict(
+                                    width=5,
+                                    color="red"
+                                )
+                            ),
+                            text=[row["hover_text"]],
+                            hoverinfo="text",
+                            showlegend=False
+                        ))
 
                 # konzentrische rote Halos
                 for i, art in enumerate(arts):
@@ -2073,40 +2119,43 @@ try:
             for a, b in combinations(arts_here, 2):
                 pair_set.add(f"{a} × {b}")
 
-    # Text für Box
+       # Text für Box
     if pair_set:
         overlap_text = (
-                f"<span style='font-size:15px;'><b>Overlap statistic</b></span><br>"
-                f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
-                f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
-                f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}<br>"
-                f"<b>Overlapping groups:</b><br>"
-                + "<br>".join(f"• {p}" for p in sorted(pair_set))
+            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
+            f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
+            f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
+            f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}"
         )
+
+        if show_overlap_groups:
+            overlap_text += (
+                "<br><b>Overlapping groups:</b><br>"
+                + "<br>".join(f"• {p}" for p in sorted(pair_set))
+            )
+
     else:
         overlap_text = (
-            f"<b>Overlap statistic</b><br>"
+            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
             f"No overlapping determined"
         )
 
-
-
-
     # Box oben links einfügen
-    fig.add_annotation(
-        xref="paper", yref="paper",
-        x=0.38, y=1.15,  # 🔼 höher & zentriert
-        xanchor="center", yanchor="top",
-        text=overlap_text,
-        showarrow=False,
-        font=dict(size=16),
-        align="left",
-        bgcolor="rgba(255,255,255,0.95)",
-        bordercolor="black",
-        borderwidth=1.5,
-        width=400  # 🔥 macht die Box breit!
-    )
-
+    if show_overlap_stats:
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.38, y=1.15,
+            xanchor="center",
+            yanchor="top",
+            text=overlap_text,
+            showarrow=False,
+            font=dict(size=16),
+            align="left",
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="black",
+            borderwidth=1.5,
+            width=400
+        )
 
     def smart_label(name):
 
