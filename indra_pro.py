@@ -65,7 +65,7 @@ base_addition = st.number_input(
 
 selected_base = math.e + base_addition
 
-st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
+st.write(f"Current base: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
     "Point size factor",
@@ -75,7 +75,7 @@ marker_scale = st.number_input(
     step=0.1
 )
 
-st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
+st.write(f"Point size factor: {marker_scale:.1f}×")
 
 show_overlap_stats = st.checkbox(
     "Show overlap statistics",
