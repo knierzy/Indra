@@ -48,7 +48,7 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is None:
-    st.info("Bitte eine Excel-Datei hochladen.")
+    st.info("Upload xlsx.file")
     st.stop()
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
@@ -56,7 +56,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     input_file = Path(tmp.name)
 
 base_addition = st.number_input(
-    "transformation base: e + n",
+    "Transformation base: e + n",
     min_value=-1,
     max_value=97,
     value=17,
@@ -68,7 +68,7 @@ selected_base = math.e + base_addition
 st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
-    "point size factor",
+    "Point size factor",
     min_value=0.5,
     max_value=3.0,
     value=1.0,
