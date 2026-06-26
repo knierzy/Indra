@@ -2366,13 +2366,20 @@ try:
         hoverlabel=dict(font_size=16),
         plot_bgcolor="white"
     )
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
         config={
+            "responsive": False,
             "displaylogo": False,
             "modeBarButtonsToRemove": ["toImage"]
         }
+    )
+
+    components.html(
+        html,
+        height=750,
+        scrolling=True
     )
    
     from io import BytesIO
