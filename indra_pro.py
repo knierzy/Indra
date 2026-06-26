@@ -99,7 +99,7 @@ show_overlap_markers = st.checkbox(
 export_format = st.selectbox(
     "Export format",
     ["PNG", "PDF", "SVG", "TIFF"],
-    index=0
+    index=1
 )
 
 export_dpi = st.selectbox(
@@ -2372,13 +2372,8 @@ try:
     full_html=False,
     config={
         "responsive": False,
-        "toImageButtonOptions": {
-            "format": export_format.lower(),
-            "filename": "INDRA_Projection",
-            "height": 3500,
-            "width": 3500,
-            "scale": export_dpi / 150
-        }
+        "displaylogo": False,
+        "modeBarButtonsToRemove": ["toImage"]
     }
 )
 
@@ -2388,9 +2383,63 @@ try:
         height=750,
         scrolling=True
     )
-    from io import BytesIO
+        from io import BytesIO
+    from PIL import Image
+
+    export_width = 3500
+    export_height = 3500
+    export_scale = export_dpi / 150
 
     export_buffer = BytesIO()
+
+    if export_format == "TIFF":
+
+        png_buffer = BytesIO()
+
+        fig.write_image(
+            png_buffer,
+            format="png",
+            width=export_width,
+            height=export_height,
+            scale=export_scale
+        )
+
+        png_buffer.seek(0)
+        img = Image.open(png_buffer)
+
+        img.save(
+            export_buffer,
+            format="TIFF",
+            dpi=(export_dpi, export_dpi)
+        )
+
+        file_ext = "tiff"
+        mime_type = "image/tiff"
+
+    else:
+
+        fig.write_image(
+            export_buffer,
+            format=export_format.lower(),
+            width=export_width,
+            height=export_height,
+            scale=export_scale
+        )
+
+        file_ext = export_format.lower()
+
+        mime_type = {
+            "PNG": "image/png",
+            "PDF": "application/pdf",
+            "SVG": "image/svg+xml"
+        }[export_format]
+
+    st.download_button(
+        label=f"Download {export_format} ({export_dpi} dpi)",
+        data=export_buffer.getvalue(),
+        file_name=f"INDRA_Projection.{file_ext}",
+        mime=mime_type
+    )
 
     fig.write_image(
         export_buffer,
