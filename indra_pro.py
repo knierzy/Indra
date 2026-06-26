@@ -43,7 +43,7 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 uploaded_file = st.file_uploader(
-    "Compendium Excel-Datei hochladen",
+    "Upload xlsx.file",
     type=["xlsx"]
 )
 
@@ -56,7 +56,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     input_file = Path(tmp.name)
 
 base_addition = st.number_input(
-    "Transformationsbasis: e + n",
+    "transformation base: e + n",
     min_value=-1,
     max_value=97,
     value=17,
@@ -68,7 +68,7 @@ selected_base = math.e + base_addition
 st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
-    "Punktgrößen-Faktor",
+    "point size factor",
     min_value=0.5,
     max_value=3.0,
     value=1.0,
@@ -96,7 +96,7 @@ preferred_sheet = "Sheet1"
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 output_file_cartesian = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
 
-if not st.button("Diagramm erzeugen"):
+if not st.button("generate diagram"):
     st.stop()
 # Helper Functions
 
