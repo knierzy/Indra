@@ -92,6 +92,25 @@ show_overlap_markers = st.checkbox(
     value=True
 )
 
+# ============================================================
+# Export settings
+# ============================================================
+
+export_format = st.selectbox(
+    "Export format",
+    ["PNG", "PDF", "SVG", "TIFF"],
+    index=0
+)
+
+export_dpi = st.selectbox(
+    "Export quality",
+    [150, 300, 600],
+    index=1
+)
+
+
+
+
 preferred_sheet = "Sheet1"
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 output_file_cartesian = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
@@ -2361,6 +2380,73 @@ try:
         scrolling=True
     )
 
+    # ============================================================
+    # Export figure
+    # ============================================================
+
+    from io import BytesIO
+    from PIL import Image
+
+    export_width = 2400
+    export_height = 2400
+    export_scale = export_dpi / 96
+
+    if export_format == "TIFF":
+
+        png_buffer = BytesIO()
+
+        fig.write_image(
+            png_buffer,
+            format="png",
+            width=export_width,
+            height=export_height,
+            scale=export_scale
+        )
+
+        png_buffer.seek(0)
+
+        img = Image.open(png_buffer)
+
+        tiff_buffer = BytesIO()
+        img.save(
+            tiff_buffer,
+            format="TIFF",
+            dpi=(export_dpi, export_dpi)
+        )
+
+        st.download_button(
+            label=f"Download TIFF ({export_dpi} dpi)",
+            data=tiff_buffer.getvalue(),
+            file_name="INDRA_plot.tiff",
+            mime="image/tiff"
+        )
+
+    else:
+
+        export_buffer = BytesIO()
+
+        fig.write_image(
+            export_buffer,
+            format=export_format.lower(),
+            width=export_width,
+            height=export_height,
+            scale=export_scale
+        )
+
+        mime_map = {
+            "PNG": "image/png",
+            "PDF": "application/pdf",
+            "SVG": "image/svg+xml"
+        }
+
+        st.download_button(
+            label=f"Download {export_format} ({export_dpi} dpi)",
+            data=export_buffer.getvalue(),
+            file_name=f"INDRA_plot.{export_format.lower()}",
+            mime=mime_map.get(export_format, "application/octet-stream")
+        )
+
+  
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
         print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
