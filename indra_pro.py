@@ -2388,7 +2388,27 @@ try:
         height=750,
         scrolling=True
     )
+    from io import BytesIO
 
+    export_buffer = BytesIO()
+
+    fig.write_image(
+        export_buffer,
+        format="pdf",
+        width=3500,
+        height=3500,
+        scale=1
+    )
+
+    st.download_button(
+        label="Download PDF",
+        data=export_buffer.getvalue(),
+        file_name="INDRA_Projection.pdf",
+        mime="application/pdf"
+    )
+
+
+  
     # ============================================================
     # Export figure
     # ============================================================
