@@ -1809,6 +1809,26 @@ try:
         .sort_values(ascending=False)
         .index
     )
+  colormap = st.selectbox(
+    "Color map",
+    [
+        "Custom",
+        "Viridis",
+        "Plasma",
+        "Turbo",
+        "Cividis",
+        "Magma",
+        "RdYlBu",
+        "Inferno",
+        "IceFire",
+        "Spectral",
+        "Balance"
+    ],
+    index=0
+)
+
+# Plotly-Colorscale bestimmen
+plotly_colorscale = custom_scale if colormap == "Custom" else colormap  
 
     for i, art in enumerate(art_order):
 
@@ -1841,7 +1861,7 @@ try:
                 symbol=symbol_shape,
                 size=marker_size,
                 color=sub["LogEuclid"],
-                colorscale=custom_scale,
+                colorscale=plotly_colorscale,
                 cmin=0,
                 cmax=max_maha,
                 showscale=(i == 0),
