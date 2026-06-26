@@ -2366,8 +2366,7 @@ try:
         hoverlabel=dict(font_size=16),
         plot_bgcolor="white"
     )
-
-        st.plotly_chart(
+    st.plotly_chart(
         fig,
         use_container_width=True,
         config={
@@ -2375,6 +2374,7 @@ try:
             "modeBarButtonsToRemove": ["toImage"]
         }
     )
+   
     from io import BytesIO
     from PIL import Image
 
