@@ -2348,89 +2348,45 @@ try:
         scrolling=True
     )
    
-    from io import BytesIO
-    from PIL import Image
+  # ============================================================
+# PUBLICATION PDF EXPORT
+# ============================================================
 
-    export_width = 3500
-    export_height = 3500
-    export_scale = export_dpi / 150
+from io import BytesIO
 
-    export_buffer = BytesIO()
+pdf_buffer = BytesIO()
 
-    if export_format == "TIFF":
+fig.update_layout(
+    width=7000,
+    height=5000,
+    font=dict(
+        family="Arial",
+        size=18,
+        color="black"
+    ),
+    margin=dict(
+        l=120,
+        r=220,
+        t=220,
+        b=140
+    ),
+    paper_bgcolor="white",
+    plot_bgcolor="white"
+)
 
-        png_buffer = BytesIO()
+fig.write_image(
+    pdf_buffer,
+    format="pdf",
+    width=7000,
+    height=5000,
+    scale=1
+)
 
-        fig.write_image(
-            png_buffer,
-            format="png",
-            width=export_width,
-            height=export_height,
-            scale=export_scale
-        )
+pdf_buffer.seek(0)
 
-        png_buffer.seek(0)
-        img = Image.open(png_buffer)
-
-        img.save(
-            export_buffer,
-            format="TIFF",
-            dpi=(export_dpi, export_dpi)
-        )
-
-        file_ext = "tiff"
-        mime_type = "image/tiff"
-
-    else:
-
-        fig.write_image(
-            export_buffer,
-            format=export_format.lower(),
-            width=export_width,
-            height=export_height,
-            scale=export_scale
-        )
-
-        file_ext = export_format.lower()
-
-        mime_type = {
-            "PNG": "image/png",
-            "PDF": "application/pdf",
-            "SVG": "image/svg+xml"
-        }[export_format]
-
-    st.write("Export bereit:")
-  
-    st.download_button(
-        label=f"Download {export_format} ({export_dpi} dpi)",
-        data=export_buffer.getvalue(),
-        file_name=f"INDRA_Projection.{file_ext}",
-        mime=mime_type
-    )
-
-    fig.write_image(
-        export_buffer,
-        format="pdf",
-        width=3500,
-        height=3500,
-        scale=1
-    )
-
-    st.download_button(
-        label="Download PDF",
-        data=export_buffer.getvalue(),
-        file_name="INDRA_Projection.pdf",
-        mime="application/pdf"
-    )
-
-
-    print("\nCa-Grenzen aus Daten:")
-    for r in results_ca:
-        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
-
-    print("\nHCO3-Grenzen aus Daten:")
-    for r in results_hco3:
-        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
+st.download_button(
+    label="Download publication-quality PDF",
+    data=pdf_buffer.getvalue(),
+    file_name="INDRA_Projection_publication.pdf",
+    mime="application/pdf"
+)
