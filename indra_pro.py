@@ -499,18 +499,9 @@ required_ions = [
     'HCO3_mg_L'
 ]
 
-print("\n🔎 Availability before complete-ion filter:")
+
 for c in required_ions:
     print(c, df[c].notna().sum())
-
-print("\n🔎 Bicarbonate sources:")
-print("HCO3 original:", df['HCO3_mg_L_original'].notna().sum())
-print("ANC:", df['ANC_mmol_L'].notna().sum())
-print("HCO3 quick:", df['HCO3_mg_L_quick'].notna().sum())
-print("HCO3 final:", df['HCO3_mg_L_final'].notna().sum())
-
-
-
 
 
 n_before = len(df)
@@ -683,16 +674,6 @@ df_typisch['Summe_Gesamt_meq_L'] = (
     df_typisch['meq_L_HCO3-']
 )
 
-ionen = [
-    'Ca2+',
-    'Mg2+',
-    'Na+',
-    'K+',
-    'Cl-',
-    'SO4_2-',
-    'NO3-',
-    'HCO3-'
-]
 
 for ion in ionen:
 
@@ -715,16 +696,6 @@ df_typisch[[f'Anteil_int_%_{ion}' for ion in ionen]] = (
 
 # Calculate correlation matrix values per Art
 
-ions = [
-    "Ca2+",
-    "Mg2+",
-    "Na+",
-    "K+",
-    "Cl-",
-    "SO4_2-",
-    "NO3-",
-    "HCO3-"
-]
 
 corr_results = []
 
