@@ -2332,6 +2332,7 @@ try:
         hoverlabel=dict(font_size=16),
         plot_bgcolor="white"
     )
+
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
@@ -2342,38 +2343,33 @@ try:
         }
     )
 
-               components.html(
-            html,
-            height=750,
-            scrolling=True
-        )
+    components.html(
+        html,
+        height=750,
+        scrolling=True
+    )
 
-        from io import BytesIO
+    # ============================================================
+    # PUBLICATION PDF EXPORT
+    # ============================================================
 
-        pdf_buffer = BytesIO()
+    from io import BytesIO
 
-        fig.update_layout(
-            width=7000,
-            height=5000,
-            font=dict(family="Arial", size=18, color="black"),
-            margin=dict(l=120, r=220, t=220, b=140),
-            paper_bgcolor="white",
-            plot_bgcolor="white"
-        )
+    pdf_buffer = BytesIO()
 
-        fig.write_image(
-            pdf_buffer,
-            format="pdf",
-            width=7000,
-            height=5000,
-            scale=1
-        )
+    fig.write_image(
+        pdf_buffer,
+        format="pdf",
+        width=7000,
+        height=5000,
+        scale=1
+    )
 
-        pdf_buffer.seek(0)
+    pdf_buffer.seek(0)
 
-        st.download_button(
-            label="Download publication-quality PDF",
-            data=pdf_buffer.getvalue(),
-            file_name="INDRA_Projection_publication.pdf",
-            mime="application/pdf"
-        )
+    st.download_button(
+        label="Download publication-quality PDF",
+        data=pdf_buffer.getvalue(),
+        file_name="INDRA_Projection_publication.pdf",
+        mime="application/pdf"
+    )
