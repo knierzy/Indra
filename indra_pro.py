@@ -310,28 +310,15 @@ df = df.reset_index(drop=True)
 # Create ID column from the first column
 
 df['ID'] = df.iloc[:, 0].astype(str).str.strip()
-print("✅ ID extracted from the first column.")
-
 
 # Create measurement station column from the second column
 
-station_col_raw = df.columns[1]
 df['Messstation'] = df.iloc[:, 1].astype(str).str.strip()
-
-print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
-
 
 # Create municipality name column from the fourth column
 
 gemeinde_col_raw = df.columns[3]
 df['Gemeindename'] = df.iloc[:, 3].astype(str).str.strip()
-
-print(f"✅ Municipality name extracted from column '{gemeinde_col_raw}'.")
-
-
-print(f"📑 Sheets: {xls.sheet_names}")
-print(f"➡️ Used sheet: {sheet}")
-print(f"🧭 Used header row: {hrow}")
 
 
 # Find relevant columns
@@ -352,7 +339,6 @@ mapping = {
     'pH': pick(cols, r'\bph\b'),
 }
 
-print("\n🔎 Column mapping:")
 for k, v in mapping.items():
     print(f"{k:30s} -> {v}")
 
