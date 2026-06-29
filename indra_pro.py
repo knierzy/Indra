@@ -2342,51 +2342,54 @@ try:
         }
     )
 
-    components.html(
+        components.html(
         html,
         height=750,
         scrolling=True
     )
-   
-  # ============================================================
-# PUBLICATION PDF EXPORT
-# ============================================================
 
-from io import BytesIO
+    # ============================================================
+    # PUBLICATION PDF EXPORT
+    # ============================================================
 
-pdf_buffer = BytesIO()
+    from io import BytesIO
 
-fig.update_layout(
-    width=7000,
-    height=5000,
-    font=dict(
-        family="Arial",
-        size=18,
-        color="black"
-    ),
-    margin=dict(
-        l=120,
-        r=220,
-        t=220,
-        b=140
-    ),
-    paper_bgcolor="white",
-    plot_bgcolor="white"
-)
+    pdf_buffer = BytesIO()
 
-fig.write_image(
-    pdf_buffer,
-    format="pdf",
-    width=7000,
-    height=5000,
-    scale=1
-)
+    fig.update_layout(
+        width=7000,
+        height=5000,
+        font=dict(
+            family="Arial",
+            size=18,
+            color="black"
+        ),
+        margin=dict(
+            l=120,
+            r=220,
+            t=220,
+            b=140
+        ),
+        paper_bgcolor="white",
+        plot_bgcolor="white"
+    )
 
-pdf_buffer.seek(0)
+    fig.write_image(
+        pdf_buffer,
+        format="pdf",
+        width=7000,
+        height=5000,
+        scale=1
+    )
 
-st.download_button(
-    label="Download publication-quality PDF",
-    data=pdf_buffer.getvalue(),
-    file_name="INDRA_Projection_publication.pdf",
-    mime="application/pdf"
-)
+    pdf_buffer.seek(0)
+
+    st.download_button(
+        label="Download publication-quality PDF",
+        data=pdf_buffer.getvalue(),
+        file_name="INDRA_Projection_publication.pdf",
+        mime="application/pdf"
+    )
+
+except Exception as e:
+    print("❌ Fehler beim Plotten:", e)
