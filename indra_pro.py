@@ -2281,21 +2281,14 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # ============================================================
+      # ============================================================
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
     fig.update_layout(
         height=750,
         autosize=True,
-
-        margin=dict(
-            l=45,
-            r=20,
-            t=150,
-            b=70
-        ),
-
+        margin=dict(l=45, r=20, t=150, b=70),
         xaxis=dict(
             domain=[0.01, 0.99],
             title=dict(text="", font=dict(size=12)),
@@ -2306,7 +2299,6 @@ try:
             zeroline=False,
             range=[0, xmax]
         ),
-
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
@@ -2317,7 +2309,6 @@ try:
             zeroline=False,
             range=[-2, ymax]
         ),
-
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2328,9 +2319,9 @@ try:
             bordercolor="black",
             borderwidth=1
         ),
-
         hoverlabel=dict(font_size=16),
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        paper_bgcolor="white"
     )
 
     html = fig.to_html(
@@ -2349,27 +2340,24 @@ try:
         scrolling=True
     )
 
-    # ============================================================
-    # PUBLICATION PDF EXPORT
-    # ============================================================
-
-    from io import BytesIO
-
-    pdf_buffer = BytesIO()
+    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
     fig.write_image(
-        pdf_buffer,
+        str(pdf_file),
         format="pdf",
         width=7000,
         height=5000,
         scale=1
     )
 
-    pdf_buffer.seek(0)
+    with open(pdf_file, "rb") as f:
+        st.download_button(
+            label="Download publication-quality PDF",
+            data=f,
+            file_name="INDRA_Projection_publication.pdf",
+            mime="application/pdf"
+        )
 
-    st.download_button(
-        label="Download publication-quality PDF",
-        data=pdf_buffer.getvalue(),
-        file_name="INDRA_Projection_publication.pdf",
-        mime="application/pdf"
-    )
+except Exception as e:
+    st.error(f"Fehler beim Plotten oder Exportieren: {e}")
+    print("❌ Fehler beim Plotten oder Exportieren:", e)
