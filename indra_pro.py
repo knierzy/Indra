@@ -1638,7 +1638,7 @@ try:
     # === Layout ===
     fig.update_layout(
         xaxis=dict(
-            title=dict(text="", font=dict(size=18)),
+            title=dict(text="", font=dict(size=28)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
             tickfont=dict(size=14),
@@ -1647,7 +1647,7 @@ try:
             range=[0, xmax]
         ),
         yaxis=dict(
-            title=dict(text="", font=dict(size=18)),
+            title=dict(text="", font=dict(size=28)),
             tickvals=[0, 100],
             ticktext=["", ""],
             tickfont=dict(size=14),
