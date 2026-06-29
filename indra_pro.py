@@ -1612,7 +1612,7 @@ try:
 
         # Beschriftung im Plot
         fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-2,
+            x=(x_min + x_max) / 2, y=-3.5,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
             font=dict(size=8, color="blue"),
@@ -2307,7 +2307,7 @@ try:
             tickangle=-90,
             showline=False,
             zeroline=False,
-            range=[-3, ymax]
+            range=[-5, ymax]
         ),
         legend=dict(
             x=1.02,
