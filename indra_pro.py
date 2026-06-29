@@ -695,7 +695,16 @@ df_typisch[[f'Anteil_int_%_{ion}' for ion in ionen]] = (
 
 
 # Calculate correlation matrix values per Art
-
+ions = [
+    "Ca2+",
+    "Mg2+",
+    "Na+",
+    "K+",
+    "Cl-",
+    "SO4_2-",
+    "NO3-",
+    "HCO3-"
+]
 
 corr_results = []
 
