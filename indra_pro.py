@@ -2342,7 +2342,7 @@ try:
 
     pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
-     fig.write_image(
+    fig.write_image
         str(pdf_file),
         format="pdf",
         width=1800,
