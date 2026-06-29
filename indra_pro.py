@@ -1638,19 +1638,19 @@ try:
     # === Layout ===
     fig.update_layout(
         xaxis=dict(
-            title=dict(text="", font=dict(size=12)),
+            title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=12),
+            tickfont=dict(size=14),
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
             range=[0, xmax]
         ),
         yaxis=dict(
-            title=dict(text="", font=dict(size=12)),
+            title=dict(text="", font=dict(size=18)),
             tickvals=[0, 100],
             ticktext=["", ""],
-            tickfont=dict(size=12),
+            tickfont=dict(size=14),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
