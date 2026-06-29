@@ -2305,7 +2305,7 @@ try:
             ticktext=["", f"Ca (≈ {ca_max}%)"],
             tickfont=dict(size=14),
             tickangle=-90,
-            ticklabelstandoff=15,    # <-- neu
+            ticklabelstandoff=10,    # <-- neu
             showline=False,
             zeroline=False,
             range=[-5, ymax]
