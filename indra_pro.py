@@ -2320,13 +2320,14 @@ try:
         }
     )
 
-    components.html(
+
+     components.html(
         html,
         height=750,
         scrolling=True
     )
 
-        pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
+   pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
     with st.spinner("PDF wird erzeugt ..."):
         fig_pdf = go.Figure(fig)
