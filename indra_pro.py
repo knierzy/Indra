@@ -2346,7 +2346,6 @@ try:
 
     fig.write_image(
         OUTPUT_DIR / "INDRA_Projection_publication.pdf",
-        pdf_path,
         format="pdf",
         width=1800,
         height=1000,
