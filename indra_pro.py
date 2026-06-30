@@ -2345,6 +2345,7 @@ try:
 )
 
     fig.write_image(
+        OUTPUT_DIR / "INDRA_Diagram.pdf",
         pdf_path,
         format="pdf",
         width=1800,
