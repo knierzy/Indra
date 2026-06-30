@@ -2326,18 +2326,18 @@ try:
         scrolling=True
     )
 
-        pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
+    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
-        fig.write_image(
-            str(pdf_file),
-            format="pdf",
-            width=1800,
-            height=1000,
-            scale=2
+    fig.write_image(
+        str(pdf_file),
+        format="pdf", 
+        width=1800,
+        height=1000,
+        scale=2
     )
 
     with open(pdf_file, "rb") as f:
-         st.download_button(
+        st.download_button(
             label="Download publication-quality PDF",
             data=f,
             file_name="INDRA_Projection_publication.pdf",
