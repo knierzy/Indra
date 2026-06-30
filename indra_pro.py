@@ -2266,7 +2266,7 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-      # ============================================================
+        # ============================================================
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
@@ -2290,7 +2290,7 @@ try:
             ticktext=["", f"Ca (≈ {ca_max}%)"],
             tickfont=dict(size=14),
             tickangle=-90,
-            ticklabelstandoff=10,    # <-- neu
+            ticklabelstandoff=10,
             showline=False,
             zeroline=False,
             range=[-5, ymax]
@@ -2320,14 +2320,13 @@ try:
         }
     )
 
-
-     components.html(
+    components.html(
         html,
         height=750,
         scrolling=True
     )
 
-   pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
+    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
     with st.spinner("PDF wird erzeugt ..."):
         fig_pdf = go.Figure(fig)
