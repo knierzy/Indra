@@ -2326,46 +2326,23 @@ try:
         scrolling=True
     )
 
-    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
+        pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
-    with st.spinner("PDF wird erzeugt ..."):
-        fig_pdf = go.Figure(fig)
-
-        fig_pdf.update_layout(
-            width=1800,
-            height=1000,
-            autosize=False,
-            margin=dict(l=170, r=260, t=170, b=90),
-        )
-
-        fig_pdf.update_traces(
-            marker_colorbar=dict(
-                x=-0.04,
-                xanchor="right",
-                y=0.5,
-                yanchor="middle",
-                len=0.80,
-                thickness=24
-            ),
-            selector=dict(type="scatter")
-        )
-
-        fig_pdf.write_image(
+        fig.write_image(
             str(pdf_file),
             format="pdf",
-            engine="kaleido"
-        )
+            width=1800,
+            height=1000,
+            scale=2
+    )
 
-    if pdf_file.exists():
-        with open(pdf_file, "rb") as f:
-            st.download_button(
-                label="Download publication-quality PDF",
-                data=f.read(),
-                file_name=pdf_file.name,
-                mime="application/pdf"
-            )
-    else:
-        st.error("PDF wurde nicht erzeugt.")
+    with open(pdf_file, "rb") as f:
+         st.download_button(
+            label="Download publication-quality PDF",
+            data=f,
+            file_name="INDRA_Projection_publication.pdf",
+            mime="application/pdf"
+        )
 
 except Exception as e:
     st.error(f"Fehler beim Plotten oder Exportieren: {e}")
