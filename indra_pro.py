@@ -92,21 +92,6 @@ show_overlap_markers = st.checkbox(
     value=True
 )
 
-# ============================================================
-# Export settings
-# ============================================================
-
-export_format = st.selectbox(
-    "Export format",
-    ["PNG", "PDF", "SVG", "TIFF"],
-    index=1
-)
-
-export_dpi = st.selectbox(
-    "Export quality",
-    [150, 300, 600],
-    index=1
-)
 
 
 
