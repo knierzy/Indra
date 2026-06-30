@@ -2328,13 +2328,29 @@ try:
 
     pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
+    fig.update_layout(
+        margin=dict(l=140, r=120, t=80, b=60)
+)
+
+    fig.update_traces(
+    marker_colorbar=dict(
+        x=-0.035,
+        xanchor="right",
+        y=0.5,
+        yanchor="middle",
+        len=0.85,
+        thickness=24
+    ),
+    selector=dict(type="scatter")
+)
+
     fig.write_image(
-        str(pdf_file),
+        pdf_path,
         format="pdf",
         width=1800,
         height=1000,
-        scale=2
-    )
+        scale=1
+)
 
     with open(pdf_file, "rb") as f:
         st.download_button(
