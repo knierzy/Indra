@@ -2333,13 +2333,13 @@ try:
         format="pdf", 
         width=1800,
         height=1000,
-        scale=2
+        scale=1
     )
 
     with open(pdf_file, "rb") as f:
         st.download_button(
             label="Download publication-quality PDF",
-            data=f,
+            data=f.read(),
             file_name="INDRA_Projection_publication.pdf",
             mime="application/pdf"
         )
