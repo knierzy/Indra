@@ -2328,8 +2328,8 @@ try:
 
     pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
-with st.spinner("PDF wird erzeugt ..."):
-    fig_pdf = go.Figure(fig)
+    with st.spinner("PDF wird erzeugt ..."):
+        fig_pdf = go.Figure(fig)
 
     fig_pdf.update_layout(
         width=1800,
