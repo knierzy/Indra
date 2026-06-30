@@ -92,21 +92,6 @@ show_overlap_markers = st.checkbox(
     value=True
 )
 
-# ============================================================
-# Export settings
-# ============================================================
-
-export_format = st.selectbox(
-    "Export format",
-    ["PNG", "PDF", "SVG", "TIFF"],
-    index=1
-)
-
-export_dpi = st.selectbox(
-    "Export quality",
-    [150, 300, 600],
-    index=1
-)
 
 
 
@@ -1612,7 +1597,7 @@ try:
 
         # Beschriftung im Plot
         fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-3,
+            x=(x_min + x_max) / 2, y=-3.5,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
             font=dict(size=8, color="blue"),
@@ -1638,19 +1623,19 @@ try:
     # === Layout ===
     fig.update_layout(
         xaxis=dict(
-            title=dict(text="", font=dict(size=12)),
+            title=dict(text="", font=dict(size=28)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=12),
+            tickfont=dict(size=14),
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
             range=[0, xmax]
         ),
         yaxis=dict(
-            title=dict(text="", font=dict(size=12)),
+            title=dict(text="", font=dict(size=28)),
             tickvals=[0, 100],
             ticktext=["", ""],
-            tickfont=dict(size=12),
+            tickfont=dict(size=14),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
@@ -1863,7 +1848,7 @@ try:
                         text=f"Log-Euclidean Distance<br>(to {ref_group})",
                         font=dict(size=12, family="Arial Black", color="black")
                     ),
-                    tickfont=dict(size=10),
+                    tickfont=dict(size=14),
                     tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
                     ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
                     x=0.12,
@@ -2281,43 +2266,35 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # ============================================================
+      # ============================================================
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
     fig.update_layout(
         height=750,
         autosize=True,
-
-        margin=dict(
-            l=45,
-            r=20,
-            t=150,
-            b=70
-        ),
-
+        margin=dict(l=45, r=20, t=150, b=70),
         xaxis=dict(
             domain=[0.01, 0.99],
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=8),
+            tickfont=dict(size=14),
             showline=False,
             zeroline=False,
             range=[0, xmax]
         ),
-
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=8),
+            tickfont=dict(size=14),
             tickangle=-90,
+            ticklabelstandoff=10,    # <-- neu
             showline=False,
             zeroline=False,
-            range=[-2, ymax]
+            range=[-5, ymax]
         ),
-
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2328,10 +2305,11 @@ try:
             bordercolor="black",
             borderwidth=1
         ),
-
         hoverlabel=dict(font_size=16),
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        paper_bgcolor="white"
     )
+
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
@@ -2347,90 +2325,25 @@ try:
         height=750,
         scrolling=True
     )
-   
-    from io import BytesIO
-    from PIL import Image
 
-    export_width = 3500
-    export_height = 3500
-    export_scale = export_dpi / 150
-
-    export_buffer = BytesIO()
-
-    if export_format == "TIFF":
-
-        png_buffer = BytesIO()
-
-        fig.write_image(
-            png_buffer,
-            format="png",
-            width=export_width,
-            height=export_height,
-            scale=export_scale
-        )
-
-        png_buffer.seek(0)
-        img = Image.open(png_buffer)
-
-        img.save(
-            export_buffer,
-            format="TIFF",
-            dpi=(export_dpi, export_dpi)
-        )
-
-        file_ext = "tiff"
-        mime_type = "image/tiff"
-
-    else:
-
-        fig.write_image(
-            export_buffer,
-            format=export_format.lower(),
-            width=export_width,
-            height=export_height,
-            scale=export_scale
-        )
-
-        file_ext = export_format.lower()
-
-        mime_type = {
-            "PNG": "image/png",
-            "PDF": "application/pdf",
-            "SVG": "image/svg+xml"
-        }[export_format]
-
-    st.write("Export bereit:")
-  
-    st.download_button(
-        label=f"Download {export_format} ({export_dpi} dpi)",
-        data=export_buffer.getvalue(),
-        file_name=f"INDRA_Projection.{file_ext}",
-        mime=mime_type
-    )
+    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
 
     fig.write_image(
-        export_buffer,
+        str(pdf_file),
         format="pdf",
-        width=3500,
-        height=3500,
-        scale=1
+        width=1800,
+        height=1000,
+        scale=2
     )
 
-    st.download_button(
-        label="Download PDF",
-        data=export_buffer.getvalue(),
-        file_name="INDRA_Projection.pdf",
-        mime="application/pdf"
-    )
-
-
-    print("\nCa-Grenzen aus Daten:")
-    for r in results_ca:
-        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
-
-    print("\nHCO3-Grenzen aus Daten:")
-    for r in results_hco3:
-        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
+    with open(pdf_file, "rb") as f:
+        st.download_button(
+            label="Download publication-quality PDF",
+            data=f,
+            file_name="INDRA_Projection_publication.pdf",
+            mime="application/pdf"
+        )
 
 except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
+    st.error(f"Fehler beim Plotten oder Exportieren: {e}")
+    print("❌ Fehler beim Plotten oder Exportieren:", e)
