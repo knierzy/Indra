@@ -2258,7 +2258,7 @@ try:
     pdf_buffer = io.BytesIO()
     png_buffer = io.BytesIO()
 
-  
+    
 
     fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=2)
     fig_pdf.write_image(png_buffer, format="png", width=1800, height=1000, scale=3)
