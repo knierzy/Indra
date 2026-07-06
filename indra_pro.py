@@ -2278,56 +2278,51 @@ try:
     )
 
 
-    components.html(
+        components.html(
         html,
         height=750,
         scrolling=True
     )
 
-# ============================================================
-# DOWNLOADS: PNG + PDF für Publikation
-# ============================================================
+    # ============================================================
+    # DOWNLOADS: PNG + PDF für Publikation
+    # ============================================================
 
-import io
+    import io
 
-# Wichtig: benötigt kaleido
-# pip install -U kaleido
+    pdf_buffer = io.BytesIO()
+    png_buffer = io.BytesIO()
 
-pdf_buffer = io.BytesIO()
-png_buffer = io.BytesIO()
+    fig.write_image(
+        pdf_buffer,
+        format="pdf",
+        width=1600,
+        height=1200,
+        scale=2
+    )
 
-fig.write_image(
-    pdf_buffer,
-    format="pdf",
-    width=1600,
-    height=1200,
-    scale=2
-)
+    fig.write_image(
+        png_buffer,
+        format="png",
+        width=1600,
+        height=1200,
+        scale=3
+    )
 
-fig.write_image(
-    png_buffer,
-    format="png",
-    width=1600,
-    height=1200,
-    scale=3
-)
+    st.download_button(
+        label="📄 Plot als PDF herunterladen",
+        data=pdf_buffer.getvalue(),
+        file_name="INDRA_Projection_publication.pdf",
+        mime="application/pdf"
+    )
 
-st.download_button(
-    label="📄 Plot als PDF herunterladen",
-    data=pdf_buffer.getvalue(),
-    file_name="INDRA_Projection_publication.pdf",
-    mime="application/pdf"
-)
+    st.download_button(
+        label="🖼️ Plot als PNG herunterladen",
+        data=png_buffer.getvalue(),
+        file_name="INDRA_Projection_publication.png",
+        mime="image/png"
+    )
 
-st.download_button(
-    label="🖼️ Plot als PNG herunterladen",
-    data=png_buffer.getvalue(),
-    file_name="INDRA_Projection_publication.png",
-    mime="image/png"
-)
-
-
-  
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
         print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
@@ -2335,6 +2330,9 @@ st.download_button(
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
+
+except Exception as e:
+    print("❌ Fehler beim Plotten:", e)
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
