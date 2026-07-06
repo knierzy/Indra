@@ -43,12 +43,12 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 uploaded_file = st.file_uploader(
-    "Upload xlsx.file",
+    "Compendium Excel-Datei hochladen",
     type=["xlsx"]
 )
 
 if uploaded_file is None:
-    st.info("Upload xlsx.file")
+    st.info("Bitte eine Excel-Datei hochladen.")
     st.stop()
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
@@ -56,7 +56,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     input_file = Path(tmp.name)
 
 base_addition = st.number_input(
-    "Transformation base: e + n",
+    "Transformationsbasis: e + n",
     min_value=-1,
     max_value=97,
     value=17,
@@ -65,42 +65,25 @@ base_addition = st.number_input(
 
 selected_base = math.e + base_addition
 
-st.write(f"Current base: e + {base_addition} = {selected_base:.4f}")
+st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
-    "Point size factor",
+    "Punktgrößen-Faktor",
     min_value=0.5,
     max_value=3.0,
     value=1.0,
     step=0.1
 )
 
-st.write(f"Point size factor: {marker_scale:.1f}×")
-
-show_overlap_stats = st.checkbox(
-    "Show overlap statistics",
-    value=True
-)
-
-show_overlap_groups = st.checkbox(
-    "Show overlapping groups",
-    value=True
-)
-
-show_overlap_markers = st.checkbox(
-    "Highlight overlap points",
-    value=True
-)
-
-
-
+st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 
 
 preferred_sheet = "Sheet1"
+
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 output_file_cartesian = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
 
-if not st.button("Generate diagram"):
+if not st.button("Diagramm erzeugen"):
     st.stop()
 # Helper Functions
 
@@ -295,15 +278,28 @@ df = df.reset_index(drop=True)
 # Create ID column from the first column
 
 df['ID'] = df.iloc[:, 0].astype(str).str.strip()
+print("✅ ID extracted from the first column.")
+
 
 # Create measurement station column from the second column
 
+station_col_raw = df.columns[1]
 df['Messstation'] = df.iloc[:, 1].astype(str).str.strip()
+
+print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
+
 
 # Create municipality name column from the fourth column
 
 gemeinde_col_raw = df.columns[3]
 df['Gemeindename'] = df.iloc[:, 3].astype(str).str.strip()
+
+print(f"✅ Municipality name extracted from column '{gemeinde_col_raw}'.")
+
+
+print(f"📑 Sheets: {xls.sheet_names}")
+print(f"➡️ Used sheet: {sheet}")
+print(f"🧭 Used header row: {hrow}")
 
 
 # Find relevant columns
@@ -324,6 +320,7 @@ mapping = {
     'pH': pick(cols, r'\bph\b'),
 }
 
+print("\n🔎 Column mapping:")
 for k, v in mapping.items():
     print(f"{k:30s} -> {v}")
 
@@ -484,9 +481,18 @@ required_ions = [
     'HCO3_mg_L'
 ]
 
-
+print("\n🔎 Availability before complete-ion filter:")
 for c in required_ions:
     print(c, df[c].notna().sum())
+
+print("\n🔎 Bicarbonate sources:")
+print("HCO3 original:", df['HCO3_mg_L_original'].notna().sum())
+print("ANC:", df['ANC_mmol_L'].notna().sum())
+print("HCO3 quick:", df['HCO3_mg_L_quick'].notna().sum())
+print("HCO3 final:", df['HCO3_mg_L_final'].notna().sum())
+
+
+
 
 
 n_before = len(df)
@@ -659,6 +665,16 @@ df_typisch['Summe_Gesamt_meq_L'] = (
     df_typisch['meq_L_HCO3-']
 )
 
+ionen = [
+    'Ca2+',
+    'Mg2+',
+    'Na+',
+    'K+',
+    'Cl-',
+    'SO4_2-',
+    'NO3-',
+    'HCO3-'
+]
 
 for ion in ionen:
 
@@ -680,6 +696,7 @@ df_typisch[[f'Anteil_int_%_{ion}' for ion in ionen]] = (
 
 
 # Calculate correlation matrix values per Art
+
 ions = [
     "Ca2+",
     "Mg2+",
@@ -1597,7 +1614,7 @@ try:
 
         # Beschriftung im Plot
         fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-3.5,
+            x=(x_min + x_max) / 2, y=-3,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
             showarrow=False,
             font=dict(size=8, color="blue"),
@@ -1623,19 +1640,19 @@ try:
     # === Layout ===
     fig.update_layout(
         xaxis=dict(
-            title=dict(text="", font=dict(size=28)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=14),
+            tickfont=dict(size=12),
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
             range=[0, xmax]
         ),
         yaxis=dict(
-            title=dict(text="", font=dict(size=28)),
+            title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", ""],
-            tickfont=dict(size=14),
+            tickfont=dict(size=12),
             tickangle=-90,
             showline=False,  # ❌ schwarze Achsenlinie ausschalten
             zeroline=False,
@@ -1780,34 +1797,6 @@ try:
         .index
     )
 
-    # ============================================================
-    # 🎨 Colormap auswählen
-    # ============================================================
-
-    colormap = st.selectbox(
-        "Color map",
-        [
-            "Custom",
-            "Viridis",
-            "Plasma",
-            "Turbo",
-            "Cividis",
-            "Magma",
-            "RdYlBu",
-            "Inferno",
-            "IceFire",
-            "Spectral",
-            "Balance"
-        ],
-        index=0
-    )
-
-    plotly_colorscale = (
-        custom_scale
-        if colormap == "Custom"
-        else colormap
-    )
-
     for i, art in enumerate(art_order):
 
         sub = df[df["Art"] == art]
@@ -1839,7 +1828,7 @@ try:
                 symbol=symbol_shape,
                 size=marker_size,
                 color=sub["LogEuclid"],
-                colorscale=plotly_colorscale,
+                colorscale=custom_scale,
                 cmin=0,
                 cmax=max_maha,
                 showscale=(i == 0),
@@ -1848,7 +1837,7 @@ try:
                         text=f"Log-Euclidean Distance<br>(to {ref_group})",
                         font=dict(size=12, family="Arial Black", color="black")
                     ),
-                    tickfont=dict(size=14),
+                    tickfont=dict(size=10),
                     tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
                     ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
                     x=0.12,
@@ -1866,65 +1855,32 @@ try:
 
               
 
-                # Überlappungen (Ringe)
-        if show_overlap_markers:
+        # Überlappungen (Ringe)
+        overlaps = df[df["Symbol"] == "star"].copy()
+        if not overlaps.empty:
+            base_size = 6
+            ring_width = 4
 
-            overlaps = df[df["Symbol"] == "star"].copy()
+            grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
 
-            if not overlaps.empty:
+            for (y0, x0), g in grouped:
+                arts = list(g["Art"])
+                n = len(arts)
 
-                base_size = 6
-                ring_width = 4
-
-                grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
-
-                for (y0, x0), g in grouped:
-
-                    arts = list(g["Art"])
-                    n = len(arts)
-
-                    # zentrales X
-                    fig.add_trace(go.Scatter(
-                        x=[x0],
-                        y=[y0],
-                        mode="markers",
-                        marker=dict(
-                            symbol="x",
-                            size=8,
-                            color="red",
-                            line=dict(
-                                width=3,
-                                color="darkred"
-                            )
-                        ),
-                        text=[f"Overlap with {n} groups"],
-                        hoverinfo="text",
-                        showlegend=False
-                    ))
-
-                    # konzentrische rote Ringe
-                    for i, art in enumerate(arts):
-
-                        row = g[g["Art"] == art].iloc[0]
-                        size = base_size + i * ring_width
-
-                        fig.add_trace(go.Scatter(
-                            x=[x0],
-                            y=[y0],
-                            mode="markers",
-                            marker=dict(
-                                symbol="circle",
-                                size=size,
-                                color="rgba(0,0,0,0)",
-                                line=dict(
-                                    width=5,
-                                    color="red"
-                                )
-                            ),
-                            text=[row["hover_text"]],
-                            hoverinfo="text",
-                            showlegend=False
-                        ))
+                # zentrales X
+                fig.add_trace(go.Scatter(
+                    x=[x0], y=[y0],
+                    mode="markers",
+                    marker=dict(
+                        symbol="x",
+                        size=8,
+                        color="red",
+                        line=dict(width=3, color="darkred")
+                    ),
+                    text=[f"Overlap with {n} groups"],
+                    hoverinfo="text",
+                    showlegend=False
+                ))
 
                 # konzentrische rote Halos
                 for i, art in enumerate(arts):
@@ -2117,43 +2073,40 @@ try:
             for a, b in combinations(arts_here, 2):
                 pair_set.add(f"{a} × {b}")
 
-       # Text für Box
+    # Text für Box
     if pair_set:
         overlap_text = (
-            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
-            f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
-            f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
-            f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}"
-        )
-
-        if show_overlap_groups:
-            overlap_text += (
-                "<br><b>Overlapping groups:</b><br>"
+                f"<span style='font-size:15px;'><b>Overlap statistic</b></span><br>"
+                f"Points in overlaps: {overlap_points} / {total_points} ({pct_overlap_points:.1f}%)<br>"
+                f"Coordinates with overlaps: {n_overlap_coords} / {total_coords} ({pct_overlap_coords:.1f}%)<br>"
+                f"Ø Types per overlap coordinate: {avg_arts_per_overlap:.2f}<br>"
+                f"<b>Overlapping groups:</b><br>"
                 + "<br>".join(f"• {p}" for p in sorted(pair_set))
-            )
-
+        )
     else:
         overlap_text = (
-            f"<span style='font-size:15px;'><b>Overlap statistics</b></span><br>"
+            f"<b>Overlap statistic</b><br>"
             f"No overlapping determined"
         )
 
+
+
+
     # Box oben links einfügen
-    if show_overlap_stats:
-        fig.add_annotation(
-            xref="paper", yref="paper",
-            x=0.38, y=1.15,
-            xanchor="center",
-            yanchor="top",
-            text=overlap_text,
-            showarrow=False,
-            font=dict(size=16),
-            align="left",
-            bgcolor="rgba(255,255,255,0.95)",
-            bordercolor="black",
-            borderwidth=1.5,
-            width=400
-        )
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.38, y=1.15,  # 🔼 höher & zentriert
+        xanchor="center", yanchor="top",
+        text=overlap_text,
+        showarrow=False,
+        font=dict(size=16),
+        align="left",
+        bgcolor="rgba(255,255,255,0.95)",
+        bordercolor="black",
+        borderwidth=1.5,
+        width=400  # 🔥 macht die Box breit!
+    )
+
 
     def smart_label(name):
 
@@ -2266,35 +2219,43 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-      # ============================================================
+    # ============================================================
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
     fig.update_layout(
         height=750,
         autosize=True,
-        margin=dict(l=45, r=20, t=150, b=70),
+
+        margin=dict(
+            l=45,
+            r=20,
+            t=150,
+            b=70
+        ),
+
         xaxis=dict(
             domain=[0.01, 0.99],
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
-            tickfont=dict(size=14),
+            tickfont=dict(size=8),
             showline=False,
             zeroline=False,
             range=[0, xmax]
         ),
+
         yaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"Ca (≈ {ca_max}%)"],
-            tickfont=dict(size=14),
+            tickfont=dict(size=8),
             tickangle=-90,
-            ticklabelstandoff=10,    # <-- neu
             showline=False,
             zeroline=False,
-            range=[-5, ymax]
+            range=[-2, ymax]
         ),
+
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2305,20 +2266,17 @@ try:
             bordercolor="black",
             borderwidth=1
         ),
+
         hoverlabel=dict(font_size=16),
-        plot_bgcolor="white",
-        paper_bgcolor="white"
+        plot_bgcolor="white"
     )
 
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
-        config={
-            "responsive": False,
-            "displaylogo": False,
-            "modeBarButtonsToRemove": ["toImage"]
-        }
+        config={"responsive": False}
     )
+
 
     components.html(
         html,
@@ -2326,24 +2284,13 @@ try:
         scrolling=True
     )
 
-    pdf_file = OUTPUT_DIR / "INDRA_Projection_publication.pdf"
+    print("\nCa-Grenzen aus Daten:")
+    for r in results_ca:
+        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
 
-    fig.write_image(
-        str(pdf_file),
-        format="pdf",
-        width=1800,
-        height=1000,
-        scale=2
-    )
-
-    with open(pdf_file, "rb") as f:
-        st.download_button(
-            label="Download publication-quality PDF",
-            data=f,
-            file_name="INDRA_Projection_publication.pdf",
-            mime="application/pdf"
-        )
+    print("\nHCO3-Grenzen aus Daten:")
+    for r in results_hco3:
+        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
 
 except Exception as e:
-    st.error(f"Fehler beim Plotten oder Exportieren: {e}")
-    print("❌ Fehler beim Plotten oder Exportieren:", e)
+    print("❌ Fehler beim Plotten:", e)
