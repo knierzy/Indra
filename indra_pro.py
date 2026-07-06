@@ -2248,8 +2248,8 @@ try:
     pdf_buffer = io.BytesIO()
     png_buffer = io.BytesIO()
 
-    fig.write_image(pdf_buffer, format="pdf", width=1600, height=1200, scale=2)
-    fig.write_image(png_buffer, format="png", width=1600, height=1200, scale=3)
+    fig.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=2)
+    fig.write_image(png_buffer, format="png", width=1800, height=1000, scale=3)
 
     st.download_button(
         "📄 Plot als PDF herunterladen",
