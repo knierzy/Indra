@@ -2223,7 +2223,7 @@ try:
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
-       fig.update_layout(
+    fig.update_layout(
         height=750,
         autosize=True,
         margin=dict(l=45, r=20, t=150, b=70),
