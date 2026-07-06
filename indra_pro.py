@@ -2223,14 +2223,24 @@ try:
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
 
-    fig.update_layout(
+       fig.update_layout(
         height=750,
         autosize=True,
         margin=dict(l=45, r=20, t=150, b=70),
+        legend=dict(
+            x=1.02,
+            y=0.98,
+            xanchor="left",
+            yanchor="top",
+            font=dict(size=14, color="black", family="Arial"),
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="black",
+            borderwidth=1
+        ),
         hoverlabel=dict(font_size=16),
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        paper_bgcolor="white"
     )
-
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
