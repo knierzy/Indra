@@ -2219,52 +2219,52 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-   # ============================================================
-# FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
-# ============================================================
+    # ============================================================
+    # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
+    # ============================================================
 
-fig.update_layout(
-    height=750,
-    autosize=True,
-    margin=dict(l=45, r=20, t=150, b=70),
-    hoverlabel=dict(font_size=16),
-    plot_bgcolor="white"
-)
+    fig.update_layout(
+        height=750,
+        autosize=True,
+        margin=dict(l=45, r=20, t=150, b=70),
+        hoverlabel=dict(font_size=16),
+        plot_bgcolor="white"
+    )
 
-html = fig.to_html(
-    include_plotlyjs="cdn",
-    full_html=False,
-    config={"responsive": False}
-)
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config={"responsive": False}
+    )
 
-components.html(
-    html,
-    height=750,
-    scrolling=True
-)
+    components.html(
+        html,
+        height=750,
+        scrolling=True
+    )
 
-# ============================================================
-# DOWNLOADS: PNG + PDF
-# ============================================================
+    import io
 
-import io
+    pdf_buffer = io.BytesIO()
+    png_buffer = io.BytesIO()
 
-pdf_buffer = io.BytesIO()
-png_buffer = io.BytesIO()
+    fig.write_image(pdf_buffer, format="pdf", width=1600, height=1200, scale=2)
+    fig.write_image(png_buffer, format="png", width=1600, height=1200, scale=3)
 
-fig.write_image(pdf_buffer, format="pdf", width=1600, height=1200, scale=2)
-fig.write_image(png_buffer, format="png", width=1600, height=1200, scale=3)
+    st.download_button(
+        "📄 Plot als PDF herunterladen",
+        pdf_buffer.getvalue(),
+        "INDRA_Projection_publication.pdf",
+        "application/pdf"
+    )
 
-st.download_button(
-    "📄 Plot als PDF herunterladen",
-    pdf_buffer.getvalue(),
-    "INDRA_Projection_publication.pdf",
-    "application/pdf"
-)
+    st.download_button(
+        "🖼️ Plot als PNG herunterladen",
+        png_buffer.getvalue(),
+        "INDRA_Projection_publication.png",
+        "image/png"
+    )
 
-st.download_button(
-    "🖼️ Plot als PNG herunterladen",
-    png_buffer.getvalue(),
-    "INDRA_Projection_publication.png",
-    "image/png"
-)
+except Exception as e:
+    print("❌ Fehler beim Plotten:", e)
+    st.exception(e)
