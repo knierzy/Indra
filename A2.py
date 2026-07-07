@@ -968,7 +968,7 @@ try:
 
 
 
-    import numpy as np
+       import numpy as np
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -976,26 +976,11 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # Export & Show
-        # Export & Show
-        # Export & Show
+    # Export
     fig.write_html(plot_output)
 
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    print("✅ Nur HTML exportiert. Kein PNG/PDF/SVG.")
-
-    # fig.show()
-
-    # Vektor-Export vorerst deaktiviert, weil er hängen kann
-    # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf")
-    # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg")
-
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-        # Export
-    fig.write_html(plot_output)
-
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    print("✅ Nur HTML exportiert. Kein PNG/PDF/SVG. Keine Anzeige.")
+    print("✅ Nur HTML exportiert. Keine Anzeige.")
 
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
@@ -1005,8 +990,6 @@ try:
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
