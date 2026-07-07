@@ -978,14 +978,13 @@ try:
 
     # Export & Show
         # Export & Show
+        # Export & Show
     fig.write_html(plot_output)
 
-    fig.write_image(
-        OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png",
-        width=3000,
-        height=2400,
-        scale=2
-    )
+    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
+    print("✅ Nur HTML exportiert. Kein PNG/PDF/SVG.")
+
+    # fig.show()
 
     # Vektor-Export vorerst deaktiviert, weil er hängen kann
     # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf")
