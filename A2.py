@@ -978,6 +978,8 @@ try:
 
     # Export & Show
     fig.write_html(plot_output)
+    fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf")
+    fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg")
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
     fig.show()
 
