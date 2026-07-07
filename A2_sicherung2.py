@@ -189,11 +189,17 @@ try:
 
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
-    ref_candidates = [g for g in group_means_log.index if "hall" in g.lower()]
+    # --- Referenz (Lake Hallstatt) ---
+    ref_candidates = [
+        g for g in group_means.index
+        if str(g).strip().lower() == "lake hallstatt"
+]
+
     if not ref_candidates:
-        raise ValueError("❌ Keine Hallstatt-Gruppe gefunden!")
+    raise ValueError("❌ Lake Hallstatt nicht gefunden!")
 
     ref_group = ref_candidates[0]
+
     print(f"\n✅ Referenz: {ref_group}")
 
         # LOG-Version für Plot verwenden
