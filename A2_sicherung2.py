@@ -571,7 +571,6 @@ try:
             y=sub["Kationen_trans"],
             mode="markers",
             name=art,
-            showlegend=False,
             marker=dict(
                 symbol=symbol_shape,
                 size=marker_size,
