@@ -991,7 +991,11 @@ try:
     # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg")
 
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    fig.show()
+        # Export
+    fig.write_html(plot_output)
+
+    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
+    print("✅ Nur HTML exportiert. Kein PNG/PDF/SVG. Keine Anzeige.")
 
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
