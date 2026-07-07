@@ -218,7 +218,7 @@ try:
         name = str(name).strip().lower()
          # 1️⃣ exakter Match zuerst!
         if name in mah_dict:
-        return mah_dict[name]
+            return mah_dict[name]
 
         mapping = {
             "da_altheim": "tgw_altheim",
