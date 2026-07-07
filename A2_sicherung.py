@@ -1023,7 +1023,21 @@ try:
 
     # Export & Show
     fig.write_html(plot_output)
+
+    fig.write_image(
+        OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg",
+        width=2400,
+        height=2400
+)
+
+    fig.write_image(
+        OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf",
+        width=2400,
+        height=2400
+)
+
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
+
     fig.show()
 
     # Ergebnisse (Grenzen) auch ausgeben
