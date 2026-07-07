@@ -593,7 +593,13 @@ try:
                     thickness=24
                 ),
 
-                line=dict(width=0.5, color="black")
+                # Lake Constance optional goldgelb umranden
+highlight_lake_constance = True
+
+line=dict(
+    width=3 if highlight_lake_constance and str(art).strip().lower() == "lake constance" else 0.5,
+    color="goldenrod" if highlight_lake_constance and str(art).strip().lower() == "lake constance" else "black"
+)
             ),
             text=sub["hover_text"],
             hoverinfo="text"
