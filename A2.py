@@ -599,6 +599,40 @@ try:
             hoverinfo="text"
         ))
 
+fig.add_trace(go.Scatter(
+    x=sub["Anionen_trans"],
+    y=sub["Kationen_trans"],
+    mode="markers",
+    ...
+    hoverinfo="text"
+))
+
+# <<< HIER EINFÜGEN >>>
+
+# === Lake Constance hervorheben ===
+lc = sub[sub["Art"].astype(str).str.lower() == "lake constance"]
+
+if not lc.empty:
+    fig.add_trace(go.Scatter(
+        x=lc["Anionen_trans"],
+        y=lc["Kationen_trans"],
+        mode="markers",
+        marker=dict(
+            symbol=symbol_shape,
+            size=marker_size + 4,
+            color="rgba(0,0,0,0)",
+            line=dict(color="gold", width=3)
+        ),
+        showlegend=False,
+        hoverinfo="skip"
+    ))
+
+# danach geht dein Code normal weiter
+# Überlappungen (Ringe)
+overlaps = df[df["Symbol"] == "star"].copy()
+...
+        
+
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
         if not overlaps.empty:
