@@ -216,6 +216,9 @@ try:
     def match_maha(name):
 
         name = str(name).strip().lower()
+         # 1️⃣ exakter Match zuerst!
+        if name in mah_dict:
+            return mah_dict[name]
 
         mapping = {
             "da_altheim": "tgw_altheim",
@@ -245,10 +248,6 @@ try:
         # 1️⃣ direkte Zuordnung
         if name in mapping:
             return mah_dict.get(mapping[name], np.nan)
-
-        # 2️⃣ exakter Match
-        if name in mah_dict:
-            return mah_dict[name]
 
         # 3️⃣ unscharfer Match
         for key in mah_dict.keys():
@@ -520,39 +519,16 @@ try:
     # 🎨 NICHTLINEARE COLORBAR (0–4 gestreckt)
     # ============================================================
 
-    t = 1.2 / max_maha if max_maha > 0 else 0.5
-    gamma = 0.5  # 🔥 Stärke der Verzerrung (0.3 = sehr stark, 0.6 = moderat)
-
-
-    def stretch(x):
-        return (x ** gamma) * t
-
+  
 
     custom_scale = [
-        [0.0, "rgb(49,54,149)"],
+    [0.0, "rgb(49,54,149)"],
+    [0.25, "rgb(69,117,180)"],
+    [0.50, "rgb(255,255,191)"],
+    [0.75, "rgb(253,174,97)"],
+    [1.0, "rgb(165,0,38)"]
+]
 
-        # 🔥 EXTREM fein 0–1
-        [stretch(0.01), "rgb(55,70,160)"],
-        [stretch(0.02), "rgb(60,90,170)"],
-        [stretch(0.03), "rgb(65,105,175)"],
-        [stretch(0.05), "rgb(69,117,180)"],
-        [stretch(0.07), "rgb(80,130,190)"],
-        [stretch(0.10), "rgb(100,150,205)"],
-        [stretch(0.15), "rgb(120,170,215)"],
-        [stretch(0.20), "rgb(140,190,225)"],
-        [stretch(0.25), "rgb(160,210,230)"],
-        [stretch(0.30), "rgb(180,225,235)"],
-        [stretch(0.35), "rgb(200,235,240)"],
-        [stretch(0.40), "rgb(215,240,245)"],
-        [stretch(0.45), "rgb(224,243,248)"],
-
-        [t, "rgb(255,255,191)"],
-
-        # 🔽 stark komprimiert oben
-        [t + (1 - t) * 0.2, "rgb(253,174,97)"],
-        [t + (1 - t) * 0.5, "rgb(244,109,67)"],
-        [1.0, "rgb(165,0,38)"]
-    ]
 
     # ============================================================
     # 🎯 PUNKTE MIT MAHALANOBIS-FARBEN
@@ -599,9 +575,10 @@ try:
                 symbol=symbol_shape,
                 size=marker_size,
 
-                # 🔥 ORIGINALWERTE (kein sqrt!)
                 color=sub["LogEuclid"],
                 colorscale=custom_scale,
+
+            
 
                 cmin=0,
                 cmax=max_maha,  # 🔥 wieder korrekt
