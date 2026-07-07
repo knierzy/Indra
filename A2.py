@@ -977,9 +977,20 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # Export & Show
+        # Export & Show
     fig.write_html(plot_output)
-    fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf")
-    fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg")
+
+    fig.write_image(
+        OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png",
+        width=3000,
+        height=2400,
+        scale=2
+    )
+
+    # Vektor-Export vorerst deaktiviert, weil er hängen kann
+    # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.pdf")
+    # fig.write_image(OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.svg")
+
     print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
     fig.show()
 
