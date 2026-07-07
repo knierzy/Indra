@@ -580,9 +580,7 @@ try:
                 color=sub["LogEuclid"],
                 colorscale=custom_scale,
 
-                # 🔥 ORIGINALWERTE (kein sqrt!)
-                color=[sub["LogEuclid"].median()] * len(sub),
-                colorscale=custom_scale,
+            
 
                 cmin=0,
                 cmax=max_maha,  # 🔥 wieder korrekt
