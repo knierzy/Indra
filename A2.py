@@ -599,13 +599,6 @@ try:
             hoverinfo="text"
         ))
 
-fig.add_trace(go.Scatter(
-    x=sub["Anionen_trans"],
-    y=sub["Kationen_trans"],
-    mode="markers",
-    ...
-    hoverinfo="text"
-))
 
 # <<< HIER EINFÜGEN >>>
 
@@ -628,10 +621,7 @@ if not lc.empty:
     ))
 
 # danach geht dein Code normal weiter
-# Überlappungen (Ringe)
-overlaps = df[df["Symbol"] == "star"].copy()
-...
-        
+
 
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
