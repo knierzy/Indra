@@ -634,7 +634,18 @@ try:
                     thickness=24
                 ),
 
-                line=dict(width=0.5, color="black")
+                line=dict(
+                    width=np.where(
+                        sub["Art"].astype(str).str.lower() == "lake constance",
+                        3,
+                        0.5
+                    ),
+                color=np.where(
+                    sub["Art"].astype(str).str.lower() == "lake constance",
+                   "gold",
+                   "black"
+                )
+            )
             ),
             text=sub["hover_text"],
             hoverinfo="text"
