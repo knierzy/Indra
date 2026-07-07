@@ -577,7 +577,7 @@ try:
                 size=marker_size,
 
                 # 🔥 ORIGINALWERTE (kein sqrt!)
-                color=sub["LogEuclid"],
+                color=[sub["LogEuclid"].median()] * len(sub),
                 colorscale=custom_scale,
 
                 cmin=0,
