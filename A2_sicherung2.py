@@ -190,15 +190,10 @@ try:
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Lake Hallstatt) ---
-    ref_candidates = [
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake hallstatt"
-]
+ref_group = "Lake Hallstatt"
 
-    if not ref_candidates:
+if ref_group not in group_means.index:
     raise ValueError("❌ Lake Hallstatt nicht gefunden!")
-
-    ref_group = ref_candidates[0]
 
     print(f"\n✅ Referenz: {ref_group}")
 
