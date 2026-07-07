@@ -190,10 +190,10 @@ try:
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Lake Hallstatt) ---
-ref_group = "Lake Hallstatt"
+    ref_group = "Lake Hallstatt"
 
-if ref_group not in group_means.index:
-    raise ValueError("❌ Lake Hallstatt nicht gefunden!")
+    if ref_group not in group_means.index:
+        raise ValueError("❌ Lake Hallstatt nicht gefunden!")
 
     print(f"\n✅ Referenz: {ref_group}")
 
