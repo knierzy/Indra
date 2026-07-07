@@ -642,7 +642,7 @@ try:
                     ),
                 color=np.where(
                     sub["Art"].astype(str).str.lower() == "lake constance",
-                   "gold",
+                   "green",
                    "black"
                 )
             )
