@@ -592,6 +592,14 @@ try:
                     len=1,
                     thickness=24
                 ),
+                                line=dict(
+                    width=2.5 if str(art).strip().lower() == "lake constance" else 0.5,
+                    color="goldenrod" if str(art).strip().lower() == "lake constance" else "black"
+                )
+            ),
+            text=sub["hover_text"],
+            hoverinfo="text"
+        ))
 
 
 
