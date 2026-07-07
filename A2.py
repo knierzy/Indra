@@ -964,11 +964,7 @@ try:
             yanchor="middle"
         )
 
-
-
-
-
-       import numpy as np
+    import numpy as np
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
