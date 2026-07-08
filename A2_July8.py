@@ -1036,7 +1036,28 @@ try:
     )
     print(f"✅ PNG fertig: {png_output}", flush=True)
 
-    # fig.show()
+    config = {
+    "toImageButtonOptions": {
+        "format": "png",
+        "filename": "Metanumber_Plot_Ca_HCO3_Bands_highres",
+        "height": 3600,
+        "width": 5000,
+        "scale": 1
+    }
+}
+
+html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
+
+print("Exportiere HTML mit High-Res-Downloadbutton...", flush=True)
+
+fig.write_html(
+    html_output,
+    include_plotlyjs=True,
+    config=config,
+    auto_open=True
+)
+
+print(f"✅ HTML fertig: {html_output}", flush=True)
 
 # Erst danach anzeigen – oder für Batch-Export auskommentieren
 # fig.show()
