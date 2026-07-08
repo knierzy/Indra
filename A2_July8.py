@@ -1011,74 +1011,22 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    print("1 - Plot fertig", flush=True)
-
-    print("2 - vor write_html", flush=True)
-    fig.write_html(html_output)
-
-    print("3 - nach write_html", flush=True)
-
-# ============================================================
-# 📤 EXPORT: HTML + hochauflösendes PNG + TIFF
-# ============================================================
-
-       # ============================================================
-    # 📤 EXPORT: erst stabil testen
+        # ============================================================
+    # 📤 NUR PNG EXPORT
     # ============================================================
 
-    html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-    png_output  = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands_TEST.png"
+    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png"
 
-    print("Exportiere HTML...", flush=True)
-    fig.write_html(html_output, include_plotlyjs="cdn")
-    print(f"✅ HTML fertig: {html_output}", flush=True)
+    print("Exportiere PNG...", flush=True)
 
-    print("Exportiere PNG klein...", flush=True)
     fig.write_image(
-        png_output,
-        width=1600,
-        height=1100,
-        scale=1,
-        engine="kaleido"
+        str(png_output),
+        width=2000,
+        height=1400,
+        scale=1
     )
-    print(f"✅ PNG fertig: {png_output}", flush=True)
 
-    config = {
-    "toImageButtonOptions": {
-        "format": "png",
-        "filename": "Metanumber_Plot_Ca_HCO3_Bands_highres",
-        "height": 3600,
-        "width": 5000,
-        "scale": 1
-    }
-}
-
-html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-
-print("Exportiere HTML mit High-Res-Downloadbutton...", flush=True)
-
-fig.write_html(
-    html_output,
-    include_plotlyjs=True,
-    config=config,
-    auto_open=True
-)
-
-print(f"✅ HTML fertig: {html_output}", flush=True)
-
-# Erst danach anzeigen – oder für Batch-Export auskommentieren
-# fig.show()
-
-    # Ergebnisse (Grenzen) auch ausgeben
-    print("\nCa-Grenzen aus Daten:")
-    for r in results_ca:
-        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
-
-    print("\nHCO3-Grenzen aus Daten:")
-    for r in results_hco3:
-        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-
+    print(f"✅ PNG gespeichert unter: {png_output}", flush=True)
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
