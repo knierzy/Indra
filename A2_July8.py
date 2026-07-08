@@ -636,7 +636,7 @@ try:
 
                 line=dict(
                     width=2.8 if art.lower() == "lake constance" else 0.5,
-                    color="#00FF00" if art.lower() == "lake constance" else "black"
+                    color="#00CC00" if art.lower() == "lake constance" else "black"
                 )
             ),
             text=sub["hover_text"],
