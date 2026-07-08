@@ -1014,6 +1014,15 @@ try:
     # EXPORT: HTML + PNG per Browser-Screenshot
     # ============================================================
 
+
+
+
+    
+    # Ausschnitt setzen
+    fig.update_xaxes(range=[20, 90])
+    fig.update_yaxes(range=[0, 5.5])
+
+# danach erst Export
     fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
     print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
