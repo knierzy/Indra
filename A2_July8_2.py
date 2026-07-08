@@ -1017,7 +1017,7 @@ try:
 
     png_name = "Metanumber_Plot_Ca_HCO3_Bands"
 
-        post_script = f"""
+    post_script = f"""
     window.addEventListener('load', function() {{
         setTimeout(function() {{
             var gd = document.querySelector('.plotly-graph-div');
