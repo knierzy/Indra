@@ -1019,7 +1019,7 @@ try:
 
     
     # Ausschnitt setzen
-    fig.update_xaxes(range=[71.5, 79.5])
+    fig.update_xaxes(range=[70.5, 79.5])
     fig.update_yaxes(range=[79, 91])
 
 # danach erst Export
