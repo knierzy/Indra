@@ -14,7 +14,8 @@ from scipy.spatial.distance import euclidean
 def log_euclid(a, b):
     return euclidean(np.log1p(a), np.log1p(b))
 
-
+import plotly.io as pio
+pio.renderers.default = "browser"
 
 from pathlib import Path
 
