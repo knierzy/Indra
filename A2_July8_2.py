@@ -1003,62 +1003,30 @@ try:
 
 
     import numpy as np
-    import webbrowser
 
-    print("Varianzen:")
-    print(np.var(raw_df[ion_cols], axis=0))
+print("Varianzen:")
+print(np.var(raw_df[ion_cols], axis=0))
 
-    print("\nKorrelationsmatrix:")
-    print(np.corrcoef(raw_df[ion_cols].values.T))
+print("\nKorrelationsmatrix:")
+print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # ============================================================
-    # EXPORT: HTML wie früher + PNG-Download ohne Layoutänderung
-    # ============================================================
+# ============================================================
+# EXPORT
+# ============================================================
 
-    png_name = "Metanumber_Plot_Ca_HCO3_Bands"
+fig.write_html(plot_output)
+print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
 
-    post_script = f"""
-    window.addEventListener('load', function() {{
-        setTimeout(function() {{
-            var gd = document.querySelector('.plotly-graph-div');
+fig.show()
 
-            Plotly.Plots.resize(gd).then(function() {{
-                var rect = gd.getBoundingClientRect();
+# Ergebnisse (Grenzen) auch ausgeben
+print("\nCa-Grenzen aus Daten:")
+for r in results_ca:
+    print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
 
-                Plotly.downloadImage(gd, {{
-                    format: 'png',
-                    filename: '{png_name}',
-                    width: Math.round(rect.width),
-                    height: Math.round(rect.height),
-                    scale: 3
-                }});
-            }});
-        }}, 5000);
-    }});
-    """
-
-    fig.write_html(
-        plot_output,
-        include_plotlyjs=True,
-        full_html=True,
-        post_script=post_script,
-        auto_open=False
-    )
-
-    print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
-
-    webbrowser.open(plot_output.as_uri())
-
-    print("✅ Browser geöffnet. PNG sollte im Downloads-Ordner landen.")
-
-    # Ergebnisse (Grenzen) auch ausgeben
-    print("\nCa-Grenzen aus Daten:")
-    for r in results_ca:
-        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
-
-    print("\nHCO3-Grenzen aus Daten:")
-    for r in results_hco3:
-        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
+print("\nHCO3-Grenzen aus Daten:")
+for r in results_hco3:
+    print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
