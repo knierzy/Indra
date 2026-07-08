@@ -1011,6 +1011,13 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
+    print("1 - Plot fertig", flush=True)
+
+    print("2 - vor write_html", flush=True)
+    fig.write_html(html_output)
+
+    print("3 - nach write_html", flush=True)
+
 # ============================================================
 # 📤 EXPORT: HTML + hochauflösendes PNG + TIFF
 # ============================================================
