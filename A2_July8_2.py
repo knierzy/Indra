@@ -1003,6 +1003,7 @@ try:
 
 
     import numpy as np
+    import webbrowser
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -1010,17 +1011,11 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # Export & Show
-       # ============================================================
-    # EXPORT: HTML öffnen + PNG per Browser-Download
-    # OHNE kaleido, OHNE playwright, OHNE fig.write_image
+    # ============================================================
+    # EXPORT: HTML wie früher + PNG-Download ohne Layoutänderung
     # ============================================================
 
-    import webbrowser
-
-    html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-
-    png_name = "Metanumber_Plot_Ca_HCO3_Bands_highres"
+    png_name = "Metanumber_Plot_Ca_HCO3_Bands"
 
     post_script = f"""
     setTimeout(function() {{
@@ -1029,28 +1024,24 @@ try:
         Plotly.downloadImage(gd, {{
             format: 'png',
             filename: '{png_name}',
-            width: 5000,
-            height: 3600,
-            scale: 1
+            scale: 3
         }});
     }}, 3000);
     """
 
-    print("Schreibe HTML mit automatischem PNG-Download...", flush=True)
-
     fig.write_html(
-        str(html_output),
+        plot_output,
         include_plotlyjs=True,
         full_html=True,
         post_script=post_script,
         auto_open=False
     )
 
-    print(f"✅ HTML gespeichert unter:\n→ {html_output}", flush=True)
+    print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
-    webbrowser.open(html_output.as_uri())
+    webbrowser.open(plot_output.as_uri())
 
-    print("✅ Browser geöffnet. PNG sollte automatisch im Downloads-Ordner landen.", flush=True)
+    print("✅ Browser geöffnet. PNG sollte im Downloads-Ordner landen.")
 
     # Ergebnisse (Grenzen) auch ausgeben
     print("\nCa-Grenzen aus Daten:")
@@ -1060,8 +1051,6 @@ try:
     print("\nHCO3-Grenzen aus Daten:")
     for r in results_hco3:
         print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
-
-
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
