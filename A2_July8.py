@@ -1015,35 +1015,35 @@ try:
 # 📤 EXPORT: HTML + hochauflösendes PNG + TIFF
 # ============================================================
 
-html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-png_output  = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands_600dpi.png"
-tiff_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands_600dpi.tiff"
+    html_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
+    png_output  = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands_600dpi.png"
+    tiff_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands_600dpi.tiff"
 
 # Interaktive Version
-fig.write_html(html_output, include_plotlyjs="cdn")
+    fig.write_html(html_output, include_plotlyjs="cdn")
 
 # Für Journal / Publikation
 # Beispiel: ca. 17 cm Breite bei 600 dpi ≈ 4000 px
-export_width = 5000
-export_height = 3600
+    export_width = 5000
+    export_height = 3600
 
-fig.write_image(
-    png_output,
-    width=export_width,
-    height=export_height,
-    scale=1
+    fig.write_image(
+        png_output,
+        width=export_width,
+        height=export_height,
+        scale=1
 )
 
-fig.write_image(
-    tiff_output,
-    width=export_width,
-    height=export_height,
-    scale=1
+    fig.write_image(
+        tiff_output,
+        width=export_width,
+        height=export_height,
+        scale=1
 )
 
-print(f"\n✅ HTML gespeichert unter:\n→ {html_output}")
-print(f"✅ PNG gespeichert unter:\n→ {png_output}")
-print(f"✅ TIFF gespeichert unter:\n→ {tiff_output}")
+    print(f"\n✅ HTML gespeichert unter:\n→ {html_output}")
+    print(f"✅ PNG gespeichert unter:\n→ {png_output}")
+    print(f"✅ TIFF gespeichert unter:\n→ {tiff_output}")
 
 # Erst danach anzeigen – oder für Batch-Export auskommentieren
 # fig.show()
