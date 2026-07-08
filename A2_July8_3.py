@@ -1011,10 +1011,16 @@ try:
     # EXPORT: HTML + PNG per Browser-Screenshot
     # ============================================================
 
+
+  # Ausschnitt setzen
+    fig.update_xaxes(range=[62, 83])
+    fig.update_yaxes(range=[77, 99])
+
+    
     fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
     print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
-    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png"
+    png_output = OUTPUT_DIR / "Metanumber_Plot_3_damen.png"
     html_path = "file:///" + str(plot_output).replace("\\", "/")
 
     with sync_playwright() as p:
