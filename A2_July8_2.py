@@ -998,11 +998,8 @@ try:
             yanchor="middle"
         )
 
-
-
-
-
     import numpy as np
+    from playwright.sync_api import sync_playwright
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -1011,11 +1008,30 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # ============================================================
-    # EXPORT
+    # EXPORT: HTML + PNG per Browser-Screenshot
     # ============================================================
 
-    fig.write_html(plot_output)
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
+    fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
+    print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
+
+    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png"
+    html_path = "file:///" + str(plot_output).replace("\\", "/")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+
+        page = browser.new_page(
+            viewport={"width": 2260, "height": 1210},
+            device_scale_factor=2
+        )
+
+        page.goto(html_path)
+        page.wait_for_timeout(3000)
+        page.screenshot(path=str(png_output), full_page=True)
+
+        browser.close()
+
+    print(f"✅ PNG gespeichert unter:\n→ {png_output}")
 
     fig.show()
 
