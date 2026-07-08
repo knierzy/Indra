@@ -1004,6 +1004,8 @@ try:
 
 
     import numpy as np
+    import webbrowser
+    from pathlib import Path
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -1011,58 +1013,23 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-       # ============================================================
-    # 📤 EXPORT: HTML anzeigen + PNG nach Downloads
-    # OHNE kaleido / OHNE fig.write_image()
+    # ============================================================
+    # 📤 NUR HTML EXPORT
     # ============================================================
 
-    import webbrowser
-    from pathlib import Path
-    from playwright.sync_api import sync_playwright
-
     downloads_dir = Path.home() / "Downloads"
-
     html_output = downloads_dir / "Metanumber_Plot_Ca_HCO3_Bands.html"
-    png_output  = downloads_dir / "Metanumber_Plot_Ca_HCO3_Bands.png"
-
-    export_width = 5000
-    export_height = 3600
-
-    fig.update_layout(
-        width=export_width,
-        height=export_height
-    )
 
     print("Schreibe HTML...", flush=True)
 
     fig.write_html(
         str(html_output),
-        include_plotlyjs=True,
-        full_html=True,
-        auto_open=False
+        include_plotlyjs="cdn",
+        full_html=True
     )
 
     print(f"✅ HTML gespeichert: {html_output}", flush=True)
 
-    # HTML im normalen Browser öffnen
     webbrowser.open(html_output.as_uri())
 
-    print("Erzeuge PNG über Browser-Screenshot...", flush=True)
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page(
-            viewport={"width": export_width, "height": export_height},
-            device_scale_factor=1
-        )
-
-        page.goto(html_output.as_uri(), wait_until="networkidle", timeout=120000)
-        page.wait_for_selector(".plotly-graph-div", timeout=120000)
-        page.wait_for_timeout(3000)
-
-        graph = page.locator(".plotly-graph-div").first
-        graph.screenshot(path=str(png_output))
-
-        browser.close()
-
-    print(f"✅ PNG gespeichert: {png_output}", flush=True)
+    print("✅ Browser geöffnet.", flush=True)
