@@ -1011,22 +1011,58 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-        # ============================================================
-    # 📤 NUR PNG EXPORT
+       # ============================================================
+    # 📤 EXPORT: HTML anzeigen + PNG nach Downloads
+    # OHNE kaleido / OHNE fig.write_image()
     # ============================================================
 
-    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png"
+    import webbrowser
+    from pathlib import Path
+    from playwright.sync_api import sync_playwright
 
-    print("Exportiere PNG...", flush=True)
+    downloads_dir = Path.home() / "Downloads"
 
-    fig.write_image(
-        str(png_output),
-        width=2000,
-        height=1400,
-        scale=1
+    html_output = downloads_dir / "Metanumber_Plot_Ca_HCO3_Bands.html"
+    png_output  = downloads_dir / "Metanumber_Plot_Ca_HCO3_Bands.png"
+
+    export_width = 5000
+    export_height = 3600
+
+    fig.update_layout(
+        width=export_width,
+        height=export_height
     )
 
-    print(f"✅ PNG gespeichert unter: {png_output}", flush=True)
+    print("Schreibe HTML...", flush=True)
 
-except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
+    fig.write_html(
+        str(html_output),
+        include_plotlyjs=True,
+        full_html=True,
+        auto_open=False
+    )
+
+    print(f"✅ HTML gespeichert: {html_output}", flush=True)
+
+    # HTML im normalen Browser öffnen
+    webbrowser.open(html_output.as_uri())
+
+    print("Erzeuge PNG über Browser-Screenshot...", flush=True)
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(
+            viewport={"width": export_width, "height": export_height},
+            device_scale_factor=1
+        )
+
+        page.goto(html_output.as_uri(), wait_until="networkidle", timeout=120000)
+        page.wait_for_selector(".plotly-graph-div", timeout=120000)
+        page.wait_for_timeout(3000)
+
+        graph = page.locator(".plotly-graph-div").first
+        graph.screenshot(path=str(png_output))
+
+        browser.close()
+
+    print(f"✅ PNG gespeichert: {png_output}", flush=True)
