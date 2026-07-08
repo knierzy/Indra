@@ -1013,8 +1013,8 @@ try:
 
 
   # Ausschnitt setzen
-    fig.update_xaxes(range=[60, 76])
-    fig.update_yaxes(range=[70, 85])
+    fig.update_xaxes(range=[58, 76])
+    fig.update_yaxes(range=[75, 88])
 
     
     fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
