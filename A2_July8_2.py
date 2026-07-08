@@ -1025,7 +1025,7 @@ try:
             device_scale_factor=2
         )
 
-        page.goto(html_path)
+        page.goto(html_path, wait_until="domcontentloaded", timeout=120000)
         page.wait_for_timeout(3000)
         page.screenshot(path=str(png_output), full_page=True)
 
