@@ -1017,16 +1017,24 @@ try:
 
     png_name = "Metanumber_Plot_Ca_HCO3_Bands"
 
-    post_script = f"""
-    setTimeout(function() {{
-        var gd = document.querySelector('.plotly-graph-div');
+        post_script = f"""
+    window.addEventListener('load', function() {{
+        setTimeout(function() {{
+            var gd = document.querySelector('.plotly-graph-div');
 
-        Plotly.downloadImage(gd, {{
-            format: 'png',
-            filename: '{png_name}',
-            scale: 3
-        }});
-    }}, 3000);
+            Plotly.Plots.resize(gd).then(function() {{
+                var rect = gd.getBoundingClientRect();
+
+                Plotly.downloadImage(gd, {{
+                    format: 'png',
+                    filename: '{png_name}',
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height),
+                    scale: 3
+                }});
+            }});
+        }}, 5000);
+    }});
     """
 
     fig.write_html(
