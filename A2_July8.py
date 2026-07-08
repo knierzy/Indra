@@ -14,8 +14,7 @@ from scipy.spatial.distance import euclidean
 def log_euclid(a, b):
     return euclidean(np.log1p(a), np.log1p(b))
 
-import plotly.io as pio
-pio.renderers.default = "browser"
+
 
 from pathlib import Path
 
@@ -635,7 +634,10 @@ try:
                     thickness=24
                 ),
 
-                line=dict(width=0.5, color="black")
+                line=dict(
+                    width=1.8 if art.lower() == "lake constance" else 0.5,
+                    color="green" if art.lower() == "lake constance" else "black"
+                )
             ),
             text=sub["hover_text"],
             hoverinfo="text"
@@ -999,13 +1001,8 @@ try:
             yanchor="middle"
         )
 
-
-
-
-
     import numpy as np
-    import webbrowser
-    from pathlib import Path
+    from playwright.sync_api import sync_playwright
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -1014,22 +1011,40 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # ============================================================
-    # 📤 NUR HTML EXPORT
+    # EXPORT: HTML + PNG per Browser-Screenshot
     # ============================================================
 
-    downloads_dir = Path.home() / "Downloads"
-    html_output = downloads_dir / "Metanumber_Plot_Ca_HCO3_Bands.html"
+    fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
+    print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
-    print("Schreibe HTML...", flush=True)
+    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Green.png""
+    html_path = "file:///" + str(plot_output).replace("\\", "/")
 
-    fig.write_html(
-        str(html_output),
-        include_plotlyjs="cdn",
-        full_html=True
-    )
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
 
-    print(f"✅ HTML gespeichert: {html_output}", flush=True)
+        page = browser.new_page(
+            viewport={"width": 2260, "height": 1210},
+            device_scale_factor=2
+        )
 
-    webbrowser.open(html_output.as_uri())
+        page.goto(html_path, wait_until="domcontentloaded", timeout=120000)
+        page.wait_for_timeout(3000)
+        page.screenshot(path=str(png_output), full_page=True)
 
-    print("✅ Browser geöffnet.", flush=True)
+        browser.close()
+
+    print(f"✅ PNG gespeichert unter:\n→ {png_output}")
+
+    fig.show()
+
+    print("\nCa-Grenzen aus Daten:")
+    for r in results_ca:
+        print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
+
+    print("\nHCO3-Grenzen aus Daten:")
+    for r in results_hco3:
+        print(f"HCO3={r['HCO3']}%  ->  x_min={r['x_min']:.2f}  x_max={r['x_max']:.2f}")
+
+except Exception as e:
+    print("❌ Fehler beim Plotten:", e)
