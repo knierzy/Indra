@@ -1017,7 +1017,7 @@ try:
     fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
     print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
-    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Green.png""
+    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Green.png"
     html_path = "file:///" + str(plot_output).replace("\\", "/")
 
     with sync_playwright() as p:
