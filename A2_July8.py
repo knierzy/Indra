@@ -1019,8 +1019,8 @@ try:
 
     
     # Ausschnitt setzen
-    fig.update_xaxes(range=[72, 77])
-    fig.update_yaxes(range=[80, 85])
+    fig.update_xaxes(range=[73, 81])
+    fig.update_yaxes(range=[81, 89])
 
 # danach erst Export
     fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
