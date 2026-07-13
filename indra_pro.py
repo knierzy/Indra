@@ -1100,9 +1100,9 @@ for _, row in minmax_typisch.iterrows():
 
     valid = []
 
-    MAX_COMBINATIONS_PER_GROUP = 2_000
-
     for combo in combos:
+
+        # Keep only combinations where all ion percentages sum to 100
 
         if sum(combo) != 100:
             continue
@@ -1111,21 +1111,18 @@ for _, row in minmax_typisch.iterrows():
 
         d = dict(zip(all_ions, combo))
 
+
+        # Apply learned ion-pair constraints
+
         if not ok_constraints(gid, d):
             continue
 
         count_final += 1
+
         valid.append(combo)
 
-        # WICHTIG: innerhalb der combo-Schleife abbrechen
-        if len(valid) >= MAX_COMBINATIONS_PER_GROUP:
-            print(
-                f"⚠️ {gid}: auf "
-                f"{MAX_COMBINATIONS_PER_GROUP:,} Kombinationen begrenzt"
-            )
-            break
 
-    if not valid:
+    if len(valid) == 0:
         continue
 
 
@@ -1227,23 +1224,22 @@ else:
 
 
 # Export Cartesian product results
-# auskommentiert vorübergehend ? 
-# with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
 
-  #  if not df_cartesian.empty:
+with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
 
-   #     df_cartesian.to_excel(
-    #        writer,
-     #       sheet_name="Meta_Kombinationen",
-      #      index=False
-      #  )
+    if not df_cartesian.empty:
 
-   # df_segstats.to_excel(
-    #    writer,
-     #   sheet_name="Segment_Maxima",
-      #  index=False
-   # )
+        df_cartesian.to_excel(
+            writer,
+            sheet_name="Meta_Kombinationen",
+            index=False
+        )
 
+    df_segstats.to_excel(
+        writer,
+        sheet_name="Segment_Maxima",
+        index=False
+    )
 
 
 print("✔️ Constrained Cartesian product file saved.")
@@ -1272,30 +1268,15 @@ from pathlib import Path
 input_file = output_file_cartesian
 raw_file = output_file
 plot_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-# Bereits vorhandene DataFrames direkt weiterverwenden.
-# Keine Excel-Dateien erneut einlesen.
-df = df_cartesian[
-    [
-        "Metazahl_Kationen",
-        "Metazahl_Anionen",
-        "Art",
-        "Gemeindename"
-    ]
-].copy()
+df = pd.read_excel(
+    input_file,
+    sheet_name="Meta_Kombinationen"
+)
 
-raw_df = df_typisch[
-    [
-        "Art",
-        "meq_L_Ca2+",
-        "meq_L_Mg2+",
-        "meq_L_Na+",
-        "meq_L_K+",
-        "meq_L_Cl-",
-        "meq_L_SO4_2-",
-        "meq_L_NO3-",
-        "meq_L_HCO3-"
-    ]
-].copy()
+raw_df = pd.read_excel(
+    raw_file,
+    sheet_name="Typical_Data_5_95"
+)
 
 
 
@@ -1336,12 +1317,14 @@ def format_hover(row):
         f"<b>Anionen</b> (aus {str(row['Metazahl_Anionen']).zfill(8)}):<br>{a_lines}"
     )
 
+try:
+    # Excel einlesen
+    df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
 
-
-required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
-for col in required_cols:
-    if col not in df.columns:
-        raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
+    required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
+    for col in required_cols:
+        if col not in df.columns:
+            raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
 
     # Transformation anwenden
     df["Kationen_trans_raw"] = df["Metazahl_Kationen"].apply(custom_transform_optimal)
@@ -1870,66 +1853,57 @@ for col in required_cols:
             hoverinfo="text"
         ))
 
-# HIER ist die for-Schleife beendet.
-# Ab hier keine 4 zusätzlichen Leerzeichen mehr.
+              
 
-overlaps = df[df["Symbol"] == "star"].copy()
+        # Überlappungen (Ringe)
+        overlaps = df[df["Symbol"] == "star"].copy()
+        if not overlaps.empty:
+            base_size = 6
+            ring_width = 4
 
-if not overlaps.empty:
-    base_size = 6
-    ring_width = 4
+            grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
 
-    grouped = overlaps.groupby(
-        ["Kationen_trans", "Anionen_trans"]
-    )
+            for (y0, x0), g in grouped:
+                arts = list(g["Art"])
+                n = len(arts)
 
-    for (y0, x0), g in grouped:
-        arts = list(g["Art"].unique())
-        n = len(arts)
-
-        fig.add_trace(
-            go.Scatter(
-                x=[x0],
-                y=[y0],
-                mode="markers",
-                marker=dict(
-                    symbol="x",
-                    size=8,
-                    color="red",
-                    line=dict(
-                        width=3,
-                        color="darkred"
-                    )
-                ),
-                text=[f"Overlap with {n} groups"],
-                hoverinfo="text",
-                showlegend=False
-            )
-        )
-
-        for ring_index, art_name in enumerate(arts):
-            row = g[g["Art"] == art_name].iloc[0]
-            size = base_size + ring_index * ring_width
-
-            fig.add_trace(
-                go.Scatter(
-                    x=[x0],
-                    y=[y0],
+                # zentrales X
+                fig.add_trace(go.Scatter(
+                    x=[x0], y=[y0],
                     mode="markers",
                     marker=dict(
-                        symbol="circle",
-                        size=size,
-                        color="rgba(0,0,0,0)",
-                        line=dict(
-                            width=3,
-                            color="red"
-                        )
+                        symbol="x",
+                        size=8,
+                        color="red",
+                        line=dict(width=3, color="darkred")
                     ),
-                    text=[row["hover_text"]],
+                    text=[f"Overlap with {n} groups"],
                     hoverinfo="text",
                     showlegend=False
-                )
-            )
+                ))
+
+                # konzentrische rote Halos
+                for i, art in enumerate(arts):
+                    row = g[g["Art"] == art].iloc[0]
+                    size = base_size + i * ring_width
+
+                    fig.add_trace(go.Scatter(
+                        x=[x0], y=[y0],
+                        mode="markers",
+                        marker=dict(
+                            symbol="circle",
+                            size=size,
+                            color="rgba(0,0,0,0)",  # transparent innen
+                            line=dict(
+                                width=5,
+                                color="red"
+                            ),
+                        ),
+                        text=[row["hover_text"]],
+                        hoverinfo="text",
+                        showlegend=False
+                    ))
+
     # ============================================================
     # 📍 ZENTRALE PUNKTE DER SUBGRUPPEN
     # ============================================================
@@ -2246,36 +2220,19 @@ if not overlaps.empty:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # ============================================================
-    # FINAL LAYOUT + STREAMLIT DISPLAY
+    # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
     # ============================================================
-
-       # ============================================================
-    # FINAL LAYOUT + STREAMLIT DISPLAY
-    # ============================================================
-
-    plot_width = 1800
-    plot_height = 750
 
     fig.update_layout(
-        autosize=False,
-        width=plot_width,
-        height=plot_height,
-        margin=dict(
-            l=45,
-            r=260,
-            t=150,
-            b=70
-        ),
+        height=750,
+        autosize=True,
+        margin=dict(l=45, r=20, t=150, b=70),
         legend=dict(
             x=1.02,
             y=0.98,
             xanchor="left",
             yanchor="top",
-            font=dict(
-                size=14,
-                color="black",
-                family="Arial"
-            ),
+            font=dict(size=14, color="black", family="Arial"),
             bgcolor="rgba(255,255,255,0.95)",
             bordercolor="black",
             borderwidth=1
@@ -2284,25 +2241,58 @@ if not overlaps.empty:
         plot_bgcolor="white",
         paper_bgcolor="white"
     )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={
-            "responsive": False,
-            "displaylogo": False,
-            "toImageButtonOptions": {
-                "format": "png",
-                "filename": "INDRA_Projection_publication",
-                "width": 3600,
-                "height": 1500,
-                "scale": 1
-            }
-        }
+    html = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config={"responsive": False}
     )
 
-    st.info(
-        "PNG-Export über das Kamera-Symbol. "
-        "Exportgröße: 3600 × 1500 Pixel."
+    components.html(
+        html,
+        height=750,
+        scrolling=True
     )
-  
+
+    import io
+
+
+    pdf_buffer = io.BytesIO()
+    png_buffer = io.BytesIO()
+
+    # PDF/PNG-Kopie erzeugen
+    fig_pdf = go.Figure(fig)
+
+    fig_pdf.update_layout(
+        margin=dict(l=170, r=20, t=150, b=70)
+    )
+
+    for tr in fig_pdf.data:
+        if hasattr(tr, "marker") and tr.marker is not None:
+            if hasattr(tr.marker, "colorbar") and tr.marker.colorbar is not None:
+                tr.marker.colorbar.x = -0.10
+                tr.marker.colorbar.xanchor = "right"
+                tr.marker.colorbar.len = 0.82
+
+    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=1)
+    
+
+    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=2)
+    fig_pdf.write_image(png_buffer, format="png", width=1800, height=1000, scale=3)
+
+    st.download_button(
+        "📄 Plot als PDF herunterladen",
+        pdf_buffer.getvalue(),
+        "INDRA_Projection_publication.pdf",
+        "application/pdf"
+    )
+
+    st.download_button(
+        "🖼️ Plot als PNG herunterladen",
+        png_buffer.getvalue(),
+        "INDRA_Projection_publication.png",
+        "image/png"
+    )
+
+except Exception as e:
+    print("❌ Fehler beim Plotten:", e)
+    st.exception(e)
