@@ -1100,7 +1100,7 @@ for _, row in minmax_typisch.iterrows():
 
     valid = []
 
-    MAX_COMBINATIONS_PER_GROUP = 20_000
+    MAX_COMBINATIONS_PER_GROUP = 2_000
 
     for combo in combos:
 
