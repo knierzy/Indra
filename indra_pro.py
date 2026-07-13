@@ -1336,7 +1336,7 @@ def format_hover(row):
         f"<b>Anionen</b> (aus {str(row['Metazahl_Anionen']).zfill(8)}):<br>{a_lines}"
     )
 
-try:
+
 
     required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
     for col in required_cols:
