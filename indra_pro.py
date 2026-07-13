@@ -1338,10 +1338,10 @@ def format_hover(row):
 
 
 
-    required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
-    for col in required_cols:
-        if col not in df.columns:
-            raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
+required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
+for col in required_cols:
+    if col not in df.columns:
+        raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
 
     # Transformation anwenden
     df["Kationen_trans_raw"] = df["Metazahl_Kationen"].apply(custom_transform_optimal)
@@ -2306,6 +2306,3 @@ if not overlaps.empty:
         "Exportgröße: 3600 × 1500 Pixel."
     )
   
-except Exception as e:
-    st.error("Fehler bei der Diagrammerzeugung.")
-    st.exception(e)
