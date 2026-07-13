@@ -1271,15 +1271,30 @@ from pathlib import Path
 input_file = output_file_cartesian
 raw_file = output_file
 plot_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
-df = pd.read_excel(
-    input_file,
-    sheet_name="Meta_Kombinationen"
-)
+# Bereits vorhandene DataFrames direkt weiterverwenden.
+# Keine Excel-Dateien erneut einlesen.
+df = df_cartesian[
+    [
+        "Metazahl_Kationen",
+        "Metazahl_Anionen",
+        "Art",
+        "Gemeindename"
+    ]
+].copy()
 
-raw_df = pd.read_excel(
-    raw_file,
-    sheet_name="Typical_Data_5_95"
-)
+raw_df = df_typisch[
+    [
+        "Art",
+        "meq_L_Ca2+",
+        "meq_L_Mg2+",
+        "meq_L_Na+",
+        "meq_L_K+",
+        "meq_L_Cl-",
+        "meq_L_SO4_2-",
+        "meq_L_NO3-",
+        "meq_L_HCO3-"
+    ]
+].copy()
 
 
 
