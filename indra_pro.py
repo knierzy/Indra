@@ -2248,7 +2248,7 @@ try:
         "toImageButtonOptions": {
             "format": "png",
             "filename": "INDRA_Projection",
-            "scale": 3
+            "scale": 4
         }
     }
 )
