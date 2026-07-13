@@ -2253,96 +2253,95 @@ try:
         scrolling=True
     )
 
-   import io
+    import io
 
-# ============================================================
-# EXPORTFÄHIGE KOPIE
-# ============================================================
+    # ============================================================
+    # EXPORTFÄHIGE KOPIE
+    # ============================================================
 
-fig_export = go.Figure(fig)
+    fig_export = go.Figure(fig)
 
-# Für Publikation feste Abmessungen verwenden.
-# autosize=False ist für reproduzierbare Exporte wichtig.
-fig_export.update_layout(
-    autosize=False,
-    width=1800,
-    height=1000,
-    margin=dict(l=170, r=350, t=170, b=90),
-    paper_bgcolor="white",
-    plot_bgcolor="white",
-    font=dict(
-        family="Arial",
-        size=18,
-        color="black"
+    fig_export.update_layout(
+        autosize=False,
+        width=1800,
+        height=1000,
+        margin=dict(l=170, r=350, t=170, b=90),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        font=dict(
+            family="Arial",
+            size=18,
+            color="black"
+        )
     )
-)
 
-# Colorbar für Export nach links verschieben
-for tr in fig_export.data:
-    marker = getattr(tr, "marker", None)
+    # Colorbar für Export nach links verschieben
+    for tr in fig_export.data:
+        marker = getattr(tr, "marker", None)
 
-    if marker is None:
-        continue
+        if marker is None:
+            continue
 
-    colorbar = getattr(marker, "colorbar", None)
+        colorbar = getattr(marker, "colorbar", None)
 
-    if colorbar is not None:
-        colorbar.x = -0.10
-        colorbar.xanchor = "right"
-        colorbar.len = 0.82
+        if colorbar is not None:
+            colorbar.x = -0.10
+            colorbar.xanchor = "right"
+            colorbar.len = 0.82
 
+    # ============================================================
+    # EXPORT NUR EINMAL PRO FORMAT
+    # ============================================================
 
-# ============================================================
-# EXPORT NUR EINMAL PRO FORMAT
-# ============================================================
+    with st.spinner("Publikationsdateien werden erzeugt …"):
 
-with st.spinner("Publikationsdateien werden erzeugt …"):
+        try:
+            png_bytes = fig_export.to_image(
+                format="png",
+                width=1800,
+                height=1000,
+                scale=3
+            )
 
-    try:
-        # PNG: 1800 × 1000 bei scale=3
-        # ergibt effektiv 5400 × 3000 Pixel
-        png_bytes = fig_export.to_image(
-            format="png",
-            width=1800,
-            height=1000,
-            scale=3
-        )
+            pdf_bytes = fig_export.to_image(
+                format="pdf",
+                width=1800,
+                height=1000,
+                scale=1
+            )
 
-        # PDF ist vektorbasiert; scale=1 genügt normalerweise
-        pdf_bytes = fig_export.to_image(
-            format="pdf",
-            width=1800,
-            height=1000,
-            scale=1
-        )
+        except Exception as export_error:
+            st.error(
+                "Der Bildexport ist fehlgeschlagen. "
+                "Prüfe, ob Kaleido korrekt installiert ist."
+            )
+            st.exception(export_error)
+            st.stop()
 
-    except Exception as export_error:
-        st.error(
-            "Der Bildexport ist fehlgeschlagen. "
-            "Prüfe, ob Kaleido korrekt installiert ist."
-        )
-        st.exception(export_error)
-        st.stop()
+    # ============================================================
+    # DOWNLOADS
+    # ============================================================
 
+    st.download_button(
+        label="🖼️ Hochauflösendes PNG herunterladen",
+        data=png_bytes,
+        file_name="INDRA_Projection_5400x3000.png",
+        mime="image/png",
+        use_container_width=True
+    )
 
-# ============================================================
-# DOWNLOADS
-# ============================================================
+    st.download_button(
+        label="📄 Vektor-PDF herunterladen",
+        data=pdf_bytes,
+        file_name="INDRA_Projection_publication.pdf",
+        mime="application/pdf",
+        use_container_width=True
+    )
 
-st.download_button(
-    label="🖼️ Hochauflösendes PNG herunterladen",
-    data=png_bytes,
-    file_name="INDRA_Projection_5400x3000.png",
-    mime="image/png",
-    use_container_width=True
-)
+    st.success(
+        "Diagramm und Publikationsexporte wurden vollständig erzeugt."
+    )
 
-st.download_button(
-    label="📄 Vektor-PDF herunterladen",
-    data=pdf_bytes,
-    file_name="INDRA_Projection_publication.pdf",
-    mime="application/pdf",
-    use_container_width=True
-)
-
-st.success("Diagramm und Publikationsexporte wurden vollständig erzeugt.")
+except Exception as e:
+    st.error("Fehler bei der Diagrammerzeugung.")
+    st.exception(e)
