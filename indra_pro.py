@@ -2253,45 +2253,7 @@ try:
         scrolling=True
     )
 
-    import io
 
-
-    pdf_buffer = io.BytesIO()
-    png_buffer = io.BytesIO()
-
-    # PDF/PNG-Kopie erzeugen
-    fig_pdf = go.Figure(fig)
-
-    fig_pdf.update_layout(
-        margin=dict(l=170, r=20, t=150, b=70)
-    )
-
-    for tr in fig_pdf.data:
-        if hasattr(tr, "marker") and tr.marker is not None:
-            if hasattr(tr.marker, "colorbar") and tr.marker.colorbar is not None:
-                tr.marker.colorbar.x = -0.10
-                tr.marker.colorbar.xanchor = "right"
-                tr.marker.colorbar.len = 0.82
-
-    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=1)
-    
-
-    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=2)
-    fig_pdf.write_image(png_buffer, format="png", width=1800, height=1000, scale=3)
-
-    st.download_button(
-        "📄 Plot als PDF herunterladen",
-        pdf_buffer.getvalue(),
-        "INDRA_Projection_publication.pdf",
-        "application/pdf"
-    )
-
-    st.download_button(
-        "🖼️ Plot als PNG herunterladen",
-        png_buffer.getvalue(),
-        "INDRA_Projection_publication.png",
-        "image/png"
-    )
 
 except Exception as e:
     print("❌ Fehler beim Plotten:", e)
