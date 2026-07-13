@@ -2244,8 +2244,14 @@ try:
     html = fig.to_html(
         include_plotlyjs="cdn",
         full_html=False,
-        config={"responsive": False}
-    )
+        config={"responsive": False,
+        "toImageButtonOptions": {
+            "format": "png",
+            "filename": "INDRA_Projection",
+            "scale": 3
+        }
+    }
+)
 
     components.html(
         html,
