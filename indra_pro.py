@@ -2293,31 +2293,28 @@ try:
     # EXPORT NUR EINMAL PRO FORMAT
     # ============================================================
 
-    with st.spinner("Publikationsdateien werden erzeugt …"):
+    export_config = {
+        "responsive": True,
+        "displaylogo": False,
+        "toImageButtonOptions": {
+            "format": "png",
+            "filename": "INDRA_Projection_publication",
+            "width": 3600,
+            "height": 2000,
+            "scale": 1
+        }
+    }
 
-        try:
-            png_bytes = fig_export.to_image(
-                format="png",
-                width=1800,
-                height=1000,
-                scale=3
-            )
+    st.plotly_chart(
+        fig,
+        use_container_width=True,
+        config=export_config
+    )
 
-            pdf_bytes = fig_export.to_image(
-                format="pdf",
-                width=1800,
-                height=1000,
-                scale=1
-            )
-
-        except Exception as export_error:
-            st.error(
-                "Der Bildexport ist fehlgeschlagen. "
-                "Prüfe, ob Kaleido korrekt installiert ist."
-            )
-            st.exception(export_error)
-            st.stop()
-
+    st.info(
+        "PNG-Export: Bewege den Mauszeiger über das Diagramm "
+        "und klicke rechts oben auf das Kamera-Symbol."
+    )
     # ============================================================
     # DOWNLOADS
     # ============================================================
