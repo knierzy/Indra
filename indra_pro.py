@@ -2253,41 +2253,6 @@ try:
         scrolling=True
     )
 
-    import io
-
-    # ============================================================
-    # EXPORTFÄHIGE KOPIE
-    # ============================================================
-
-    fig_export = go.Figure(fig)
-
-    fig_export.update_layout(
-        autosize=False,
-        width=1800,
-        height=1000,
-        margin=dict(l=170, r=350, t=170, b=90),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        font=dict(
-            family="Arial",
-            size=18,
-            color="black"
-        )
-    )
-
-    # Colorbar für Export nach links verschieben
-    for tr in fig_export.data:
-        marker = getattr(tr, "marker", None)
-
-        if marker is None:
-            continue
-
-        colorbar = getattr(marker, "colorbar", None)
-
-        if colorbar is not None:
-            colorbar.x = -0.10
-            colorbar.xanchor = "right"
-            colorbar.len = 0.82
 
     # ============================================================
     # EXPORT NUR EINMAL PRO FORMAT
