@@ -2220,7 +2220,7 @@ try:
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
     # ============================================================
-    # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
+    # FINAL LAYOUT + STREAMLIT DISPLAY
     # ============================================================
 
     fig.update_layout(
@@ -2232,7 +2232,11 @@ try:
             y=0.98,
             xanchor="left",
             yanchor="top",
-            font=dict(size=14, color="black", family="Arial"),
+            font=dict(
+                size=14,
+                color="black",
+                family="Arial"
+            ),
             bgcolor="rgba(255,255,255,0.95)",
             bordercolor="black",
             borderwidth=1
@@ -2241,22 +2245,6 @@ try:
         plot_bgcolor="white",
         paper_bgcolor="white"
     )
-    html = fig.to_html(
-        include_plotlyjs="cdn",
-        full_html=False,
-        config={"responsive": False}
-    )
-
-    components.html(
-        html,
-        height=750,
-        scrolling=True
-    )
-
-
-    # ============================================================
-    # EXPORT NUR EINMAL PRO FORMAT
-    # ============================================================
 
     export_config = {
         "responsive": True,
@@ -2279,29 +2267,6 @@ try:
     st.info(
         "PNG-Export: Bewege den Mauszeiger über das Diagramm "
         "und klicke rechts oben auf das Kamera-Symbol."
-    )
-    # ============================================================
-    # DOWNLOADS
-    # ============================================================
-
-    st.download_button(
-        label="🖼️ Hochauflösendes PNG herunterladen",
-        data=png_bytes,
-        file_name="INDRA_Projection_5400x3000.png",
-        mime="image/png",
-        use_container_width=True
-    )
-
-    st.download_button(
-        label="📄 Vektor-PDF herunterladen",
-        data=pdf_bytes,
-        file_name="INDRA_Projection_publication.pdf",
-        mime="application/pdf",
-        use_container_width=True
-    )
-
-    st.success(
-        "Diagramm und Publikationsexporte wurden vollständig erzeugt."
     )
 
 except Exception as e:
