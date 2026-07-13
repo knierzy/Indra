@@ -2223,16 +2223,23 @@ try:
     # FINAL LAYOUT + STREAMLIT DISPLAY
     # ============================================================
 
-    # --------------------------------
-    # 1. Browser-Darstellung
-    # --------------------------------
+       # ============================================================
+    # FINAL LAYOUT + STREAMLIT DISPLAY
+    # ============================================================
 
-    fig_display = go.Figure(fig)
+    plot_width = 1800
+    plot_height = 750
 
-    fig_display.update_layout(
-        height=750,
-        autosize=True,
-        margin=dict(l=45, r=260, t=150, b=70),
+    fig.update_layout(
+        autosize=False,
+        width=plot_width,
+        height=plot_height,
+        margin=dict(
+            l=45,
+            r=260,
+            t=150,
+            b=70
+        ),
         legend=dict(
             x=1.02,
             y=0.98,
@@ -2253,85 +2260,26 @@ try:
     )
 
     st.plotly_chart(
-        fig_display,
+        fig,
         use_container_width=True,
         config={
-            "responsive": True,
+            "responsive": False,
             "displaylogo": False,
-            "modeBarButtonsToRemove": ["toImage"]
+            "toImageButtonOptions": {
+                "format": "png",
+                "filename": "INDRA_Projection_publication",
+                "width": 3600,
+                "height": 1500,
+                "scale": 1
+            }
         }
     )
 
-    # --------------------------------
-    # 2. Feste Exportfigur
-    # --------------------------------
-
-    export_width = 4800
-    export_height = 2000
-
-    fig_export = go.Figure(fig)
-
-    fig_export.update_layout(
-        autosize=False,
-        width=export_width,
-        height=export_height,
-        margin=dict(
-            l=220,
-            r=720,
-            t=340,
-            b=170
-        ),
-        legend=dict(
-            x=1.02,
-            y=0.98,
-            xanchor="left",
-            yanchor="top",
-            font=dict(
-                size=22,
-                color="black",
-                family="Arial"
-            ),
-            bgcolor="rgba(255,255,255,0.95)",
-            bordercolor="black",
-            borderwidth=2
-        ),
-        hoverlabel=dict(font_size=20),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        font=dict(
-            family="Arial",
-            size=20,
-            color="black"
-        )
+    st.info(
+        "PNG-Export über das Kamera-Symbol. "
+        "Exportgröße: 3600 × 1500 Pixel."
     )
-
-    # --------------------------------
-    # 3. Exportbereich
-    # --------------------------------
-
-    with st.expander("Publikations-PNG exportieren"):
-
-        st.plotly_chart(
-            fig_export,
-            use_container_width=False,
-            config={
-                "responsive": False,
-                "displaylogo": False,
-                "scrollZoom": False,
-                "toImageButtonOptions": {
-                    "format": "png",
-                    "filename": "INDRA_Projection_publication",
-                    "width": export_width,
-                    "height": export_height,
-                    "scale": 1
-                }
-            }
-        )
-
-        st.info(
-            "Im Exportdiagramm auf das Kamera-Symbol klicken. "
-            "Die Exportgröße beträgt 4800 × 2000 Pixel."
-        )
+  
 except Exception as e:
     st.error("Fehler bei der Diagrammerzeugung.")
     st.exception(e)
