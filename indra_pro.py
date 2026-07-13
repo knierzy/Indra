@@ -1227,22 +1227,23 @@ else:
 
 
 # Export Cartesian product results
+# auskommentiert vorübergehend ? 
+# with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
 
-with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
+  #  if not df_cartesian.empty:
 
-    if not df_cartesian.empty:
+   #     df_cartesian.to_excel(
+    #        writer,
+     #       sheet_name="Meta_Kombinationen",
+      #      index=False
+      #  )
 
-        df_cartesian.to_excel(
-            writer,
-            sheet_name="Meta_Kombinationen",
-            index=False
-        )
+   # df_segstats.to_excel(
+    #    writer,
+     #   sheet_name="Segment_Maxima",
+      #  index=False
+   # )
 
-    df_segstats.to_excel(
-        writer,
-        sheet_name="Segment_Maxima",
-        index=False
-    )
 
 
 print("✔️ Constrained Cartesian product file saved.")
