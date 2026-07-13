@@ -1853,57 +1853,135 @@ try:
             hoverinfo="text"
         ))
 
-              
+for i, art in enumerate(art_order):
 
-        # Überlappungen (Ringe)
-        overlaps = df[df["Symbol"] == "star"].copy()
-        if not overlaps.empty:
-            base_size = 6
-            ring_width = 4
+    sub = df[df["Art"] == art]
 
-            grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
+    if sub.empty:
+        continue
 
-            for (y0, x0), g in grouped:
-                arts = list(g["Art"])
-                n = len(arts)
+    art_str = str(art).upper()
 
-                # zentrales X
-                fig.add_trace(go.Scatter(
-                    x=[x0], y=[y0],
+    if art_str.startswith("DA"):
+        symbol_shape = "triangle-up"
+        marker_size = 12 * marker_scale
+    elif art_str.startswith("GW"):
+        symbol_shape = "square"
+        marker_size = 10 * marker_scale
+    elif art_str.startswith("FW"):
+        symbol_shape = "star"
+        marker_size = 11 * marker_scale
+    else:
+        symbol_shape = "circle"
+        marker_size = 10 * marker_scale
+
+    fig.add_trace(
+        go.Scatter(
+            x=sub["Anionen_trans"],
+            y=sub["Kationen_trans"],
+            mode="markers",
+            name=art,
+            marker=dict(
+                symbol=symbol_shape,
+                size=marker_size,
+                color=sub["LogEuclid"],
+                colorscale=custom_scale,
+                cmin=0,
+                cmax=max_maha,
+                showscale=(i == 0),
+                colorbar=dict(
+                    title=dict(
+                        text=(
+                            f"Log-Euclidean Distance<br>"
+                            f"(to {ref_group})"
+                        ),
+                        font=dict(
+                            size=12,
+                            family="Arial Black",
+                            color="black"
+                        )
+                    ),
+                    tickfont=dict(size=10),
+                    tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
+                    ticktext=[
+                        "0", "1", "2", "3", "4",
+                        f"{max_maha:.1f}"
+                    ],
+                    x=0.12,
+                    y=0.5,
+                    xanchor="right",
+                    yanchor="middle",
+                    len=1,
+                    thickness=24
+                ),
+                line=dict(width=0.5, color="black")
+            ),
+            text=sub["hover_text"],
+            hoverinfo="text"
+        )
+    )
+
+
+# HIER ist die for-Schleife beendet.
+# Ab hier keine 4 zusätzlichen Leerzeichen mehr.
+
+overlaps = df[df["Symbol"] == "star"].copy()
+
+if not overlaps.empty:
+    base_size = 6
+    ring_width = 4
+
+    grouped = overlaps.groupby(
+        ["Kationen_trans", "Anionen_trans"]
+    )
+
+    for (y0, x0), g in grouped:
+        arts = list(g["Art"].unique())
+        n = len(arts)
+
+        fig.add_trace(
+            go.Scatter(
+                x=[x0],
+                y=[y0],
+                mode="markers",
+                marker=dict(
+                    symbol="x",
+                    size=8,
+                    color="red",
+                    line=dict(
+                        width=3,
+                        color="darkred"
+                    )
+                ),
+                text=[f"Overlap with {n} groups"],
+                hoverinfo="text",
+                showlegend=False
+            )
+        )
+
+        for ring_index, art_name in enumerate(arts):
+            row = g[g["Art"] == art_name].iloc[0]
+            size = base_size + ring_index * ring_width
+
+            fig.add_trace(
+                go.Scatter(
+                    x=[x0],
+                    y=[y0],
                     mode="markers",
                     marker=dict(
-                        symbol="x",
-                        size=8,
-                        color="red",
-                        line=dict(width=3, color="darkred")
+                        symbol="circle",
+                        size=size,
+                        color="rgba(0,0,0,0)",
+                        line=dict(
+                            width=3,
+                            color="red"
+                        )
                     ),
-                    text=[f"Overlap with {n} groups"],
+                    text=[row["hover_text"]],
                     hoverinfo="text",
                     showlegend=False
-                ))
-
-                # konzentrische rote Halos
-                for i, art in enumerate(arts):
-                    row = g[g["Art"] == art].iloc[0]
-                    size = base_size + i * ring_width
-
-                    fig.add_trace(go.Scatter(
-                        x=[x0], y=[y0],
-                        mode="markers",
-                        marker=dict(
-                            symbol="circle",
-                            size=size,
-                            color="rgba(0,0,0,0)",  # transparent innen
-                            line=dict(
-                                width=5,
-                                color="red"
-                            ),
-                        ),
-                        text=[row["hover_text"]],
-                        hoverinfo="text",
-                        showlegend=False
-                    ))
-
+                )
+            )
     # ============================================================
     # 📍 ZENTRALE PUNKTE DER SUBGRUPPEN
     # ============================================================
