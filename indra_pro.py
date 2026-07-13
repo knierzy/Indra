@@ -1100,6 +1100,8 @@ for _, row in minmax_typisch.iterrows():
 
     valid = []
 
+    MAX_COMBINATIONS_PER_GROUP = 20_000
+
     for combo in combos:
 
         # Keep only combinations where all ion percentages sum to 100
@@ -1122,8 +1124,12 @@ for _, row in minmax_typisch.iterrows():
         valid.append(combo)
 
 
-    if len(valid) == 0:
-        continue
+    if len(valid) >= MAX_COMBINATIONS_PER_GROUP:
+    print(
+        f"⚠️ {gid}: auf "
+        f"{MAX_COMBINATIONS_PER_GROUP:,} Kombinationen begrenzt"
+    )
+    break
 
 
     print(f"\n📍 {gid} ({gemeinde})")
