@@ -2253,46 +2253,96 @@ try:
         scrolling=True
     )
 
-    import io
+   import io
 
+# ============================================================
+# EXPORTFÄHIGE KOPIE
+# ============================================================
 
-    pdf_buffer = io.BytesIO()
-    png_buffer = io.BytesIO()
+fig_export = go.Figure(fig)
 
-    # PDF/PNG-Kopie erzeugen
-    fig_pdf = go.Figure(fig)
-
-    fig_pdf.update_layout(
-        margin=dict(l=170, r=20, t=150, b=70)
+# Für Publikation feste Abmessungen verwenden.
+# autosize=False ist für reproduzierbare Exporte wichtig.
+fig_export.update_layout(
+    autosize=False,
+    width=1800,
+    height=1000,
+    margin=dict(l=170, r=350, t=170, b=90),
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+    font=dict(
+        family="Arial",
+        size=18,
+        color="black"
     )
+)
 
-    for tr in fig_pdf.data:
-        if hasattr(tr, "marker") and tr.marker is not None:
-            if hasattr(tr.marker, "colorbar") and tr.marker.colorbar is not None:
-                tr.marker.colorbar.x = -0.10
-                tr.marker.colorbar.xanchor = "right"
-                tr.marker.colorbar.len = 0.82
+# Colorbar für Export nach links verschieben
+for tr in fig_export.data:
+    marker = getattr(tr, "marker", None)
 
-    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=1)
-    
+    if marker is None:
+        continue
 
-    fig_pdf.write_image(pdf_buffer, format="pdf", width=1800, height=1000, scale=2)
-    fig_pdf.write_image(png_buffer, format="png", width=1800, height=1000, scale=3)
+    colorbar = getattr(marker, "colorbar", None)
 
-    st.download_button(
-        "📄 Plot als PDF herunterladen",
-        pdf_buffer.getvalue(),
-        "INDRA_Projection_publication.pdf",
-        "application/pdf"
-    )
+    if colorbar is not None:
+        colorbar.x = -0.10
+        colorbar.xanchor = "right"
+        colorbar.len = 0.82
 
-    st.download_button(
-        "🖼️ Plot als PNG herunterladen",
-        png_buffer.getvalue(),
-        "INDRA_Projection_publication.png",
-        "image/png"
-    )
 
-except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
-    st.exception(e)
+# ============================================================
+# EXPORT NUR EINMAL PRO FORMAT
+# ============================================================
+
+with st.spinner("Publikationsdateien werden erzeugt …"):
+
+    try:
+        # PNG: 1800 × 1000 bei scale=3
+        # ergibt effektiv 5400 × 3000 Pixel
+        png_bytes = fig_export.to_image(
+            format="png",
+            width=1800,
+            height=1000,
+            scale=3
+        )
+
+        # PDF ist vektorbasiert; scale=1 genügt normalerweise
+        pdf_bytes = fig_export.to_image(
+            format="pdf",
+            width=1800,
+            height=1000,
+            scale=1
+        )
+
+    except Exception as export_error:
+        st.error(
+            "Der Bildexport ist fehlgeschlagen. "
+            "Prüfe, ob Kaleido korrekt installiert ist."
+        )
+        st.exception(export_error)
+        st.stop()
+
+
+# ============================================================
+# DOWNLOADS
+# ============================================================
+
+st.download_button(
+    label="🖼️ Hochauflösendes PNG herunterladen",
+    data=png_bytes,
+    file_name="INDRA_Projection_5400x3000.png",
+    mime="image/png",
+    use_container_width=True
+)
+
+st.download_button(
+    label="📄 Vektor-PDF herunterladen",
+    data=pdf_bytes,
+    file_name="INDRA_Projection_publication.pdf",
+    mime="application/pdf",
+    use_container_width=True
+)
+
+st.success("Diagramm und Publikationsexporte wurden vollständig erzeugt.")
