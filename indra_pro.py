@@ -1104,8 +1104,6 @@ for _, row in minmax_typisch.iterrows():
 
     for combo in combos:
 
-        # Keep only combinations where all ion percentages sum to 100
-
         if sum(combo) != 100:
             continue
 
@@ -1113,23 +1111,22 @@ for _, row in minmax_typisch.iterrows():
 
         d = dict(zip(all_ions, combo))
 
-
-        # Apply learned ion-pair constraints
-
         if not ok_constraints(gid, d):
             continue
 
         count_final += 1
-
         valid.append(combo)
 
+        # WICHTIG: innerhalb der combo-Schleife abbrechen
+        if len(valid) >= MAX_COMBINATIONS_PER_GROUP:
+            print(
+                f"⚠️ {gid}: auf "
+                f"{MAX_COMBINATIONS_PER_GROUP:,} Kombinationen begrenzt"
+            )
+            break
 
-    if len(valid) >= MAX_COMBINATIONS_PER_GROUP:
-    print(
-        f"⚠️ {gid}: auf "
-        f"{MAX_COMBINATIONS_PER_GROUP:,} Kombinationen begrenzt"
-    )
-    break
+    if not valid:
+        continue
 
 
     print(f"\n📍 {gid} ({gemeinde})")
