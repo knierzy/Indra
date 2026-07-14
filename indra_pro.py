@@ -77,6 +77,27 @@ marker_scale = st.number_input(
 
 st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 
+
+color_scale_choice = st.selectbox(
+    "Farbskala",
+    [
+        "Custom INDRA (nichtlinear)",
+        "Viridis",
+        "Plasma",
+        "Inferno",
+        "Magma",
+        "Cividis",
+        "Turbo",
+        "Jet",
+        "RdYlBu",
+        "RdBu",
+        "Spectral",
+        "Earth"
+    ],
+    index=0
+)
+
+
 # ============================================================
 # AUSWAHL DER REFERENZBÄNDER
 # ============================================================
@@ -1843,6 +1864,12 @@ try:
 
     custom_scale = sorted(custom_scale, key=lambda z: z[0])
 
+    if color_scale_choice == "Custom INDRA (nichtlinear)":
+    active_colorscale = custom_scale
+    else:
+    active_colorscale = color_scale_choice
+
+  
     # ============================================================
     # 🎯 PUNKTE MIT LOG-EUCLIDEAN-FARBEN
     # ============================================================
@@ -1902,7 +1929,7 @@ try:
                 symbol=symbol_shape,
                 size=marker_size,
                 color=sub["LogEuclid"],
-                colorscale=custom_scale,
+                colorscale=active_colorscale,
                 cmin=0,
                 cmax=max_maha,
                 showscale=(i == 0),
