@@ -2611,12 +2611,17 @@ if len(group_centers) >= 2:
 
 
 # ============================================================
-# FINALES LAYOUT
+# FINALES LAYOUT – BREITES PUBLIKATIONSDIAGRAMM
 # ============================================================
 
+plot_width = 1800
+plot_height = 850
+
 fig.update_layout(
-    height=750,
-    autosize=True,
+    autosize=False,
+    width=plot_width,
+    height=plot_height,
+
     xaxis=dict(
         title=dict(
             text="",
@@ -2632,6 +2637,7 @@ fig.update_layout(
         zeroline=False,
         range=[0, xmax]
     ),
+
     yaxis=dict(
         title=dict(
             text="",
@@ -2645,61 +2651,65 @@ fig.update_layout(
         zeroline=False,
         range=[-6, ymax]
     ),
+
     title=dict(
         text="",
-        font=dict(size=24),
         x=0.5,
         xanchor="center"
     ),
+
     legend=dict(
         x=1.02,
         y=0.98,
         xanchor="left",
         yanchor="top",
+
         font=dict(
             size=14,
             color="black",
             family="Arial Black"
         ),
+
         itemsizing="trace",
         bgcolor="rgba(255,255,255,0.95)",
         bordercolor="black",
         borderwidth=1
     ),
+
     hoverlabel=dict(
         font_size=16
     ),
+
+    # Rechts Platz für die Legende,
+    # oben Platz für die beiden Informationsboxen
     margin=dict(
-        l=45,
-        r=20,
-        t=150,
-        b=70
+        l=70,
+        r=330,
+        t=145,
+        b=75
     ),
+
     plot_bgcolor="white",
     paper_bgcolor="white"
 )
 
 
 # ============================================================
-# HTML-EXPORT UND STREAMLIT-ANZEIGE
+# STREAMLIT-ANZEIGE
 # ============================================================
 
-html = fig.to_html(
-    include_plotlyjs="cdn",
-    full_html=False,
+st.plotly_chart(
+    fig,
+    use_container_width=True,
     config={
-        "responsive": False,
+        "responsive": True,
         "displaylogo": False,
         "toImageButtonOptions": {
             "format": "png",
             "filename": "INDRA_Projection",
-            "scale": 4
+            "width": 3600,
+            "height": 1700,
+            "scale": 1
         }
     }
-)
-
-components.html(
-    html,
-    height=750,
-    scrolling=True
 )
