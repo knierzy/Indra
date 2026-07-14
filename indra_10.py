@@ -77,6 +77,80 @@ marker_scale = st.number_input(
 
 st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 
+# ============================================================
+# AUSWAHL DER REFERENZBÄNDER
+# ============================================================
+
+reference_band_options = list(range(0, 51, 5))
+
+
+def parse_reference_values(text):
+    values = []
+
+    if not text.strip():
+        return values
+
+    for part in text.split(","):
+        part = part.strip().replace("%", "")
+
+        try:
+            value = int(part)
+
+            if 0 <= value <= 100:
+                values.append(value)
+            else:
+                st.warning(
+                    f"Der Wert {value} liegt außerhalb "
+                    f"des erlaubten Bereichs 0–100."
+                )
+
+        except ValueError:
+            st.warning(
+                f"'{part}' ist kein gültiger Zahlenwert "
+                f"und wurde ignoriert."
+            )
+
+    return values
+
+
+col_ca, col_hco3 = st.columns(2)
+
+with col_ca:
+    selected_ca_defaults = st.multiselect(
+        "Ca-Referenzbänder (%)",
+        options=reference_band_options,
+        default=[5, 10, 15, 20, 25, 30, 35, 40]
+    )
+
+    custom_ca_text = st.text_input(
+        "Zusätzliche Ca-Werte",
+        placeholder="z. B. 4, 12, 18"
+    )
+
+with col_hco3:
+    selected_hco3_defaults = st.multiselect(
+        "HCO₃-Referenzbänder (%)",
+        options=reference_band_options,
+        default=[5, 10, 15, 20, 25, 30, 35, 40, 45]
+    )
+
+    custom_hco3_text = st.text_input(
+        "Zusätzliche HCO₃-Werte",
+        placeholder="z. B. 4, 22, 37"
+    )
+
+
+custom_ca_values = parse_reference_values(custom_ca_text)
+custom_hco3_values = parse_reference_values(custom_hco3_text)
+
+selected_ca_bands = sorted(
+    set(selected_ca_defaults + custom_ca_values)
+)
+
+selected_hco3_bands = sorted(
+    set(selected_hco3_defaults + custom_hco3_values)
+)
+
 
 preferred_sheet = "Sheet1"
 
@@ -1547,7 +1621,7 @@ try:
     hco3_max = df["HCO3_val"].max()
 
     results_ca = []
-    for ca_val in [2, 5, 10, 15, 20, 25, 30, 35, 40]:
+    for ca_val in selected_ca_bands:
         sub = df[df["Ca_val"] == ca_val]
         if sub.empty:
             continue
@@ -1586,7 +1660,7 @@ try:
 
     # === HCO3-Referenzbänder für 20% und 40% ===
     results_hco3 = []
-    for hco3_val in [5, 10, 15, 20, 25, 30, 35, 40, 45]:
+    for hco3_val in selected_hco3_bands:
         sub = df[df["HCO3_val"] == hco3_val]
         if sub.empty:
             continue
