@@ -81,7 +81,7 @@ st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 # AUSWAHL DER REFERENZBÄNDER
 # ============================================================
 
-reference_band_options = list(range(0, 51, 5))
+reference_band_options = list(range(1, 51))
 
 
 def parse_reference_values(text):
@@ -119,7 +119,7 @@ with col_ca:
     selected_ca_defaults = st.multiselect(
         "Ca-Referenzbänder (%)",
         options=reference_band_options,
-        default=[5, 10, 15, 20, 25, 30, 35, 40]
+        default=[2, 5, 10, 15, 20, 25, 30, 35, 40]
     )
 
     custom_ca_text = st.text_input(
@@ -131,7 +131,7 @@ with col_hco3:
     selected_hco3_defaults = st.multiselect(
         "HCO₃-Referenzbänder (%)",
         options=reference_band_options,
-        default=[5, 10, 15, 20, 25, 30, 35, 40, 45]
+        default=[2, 5, 10, 15, 20, 25, 30, 35, 40, 45]
     )
 
     custom_hco3_text = st.text_input(
