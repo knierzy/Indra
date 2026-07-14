@@ -2318,6 +2318,3 @@ for hco3_val in selected_hco3_bands:
 
 
 
-except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
-    st.exception(e)
