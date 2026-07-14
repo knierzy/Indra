@@ -1461,107 +1461,133 @@ try:
         # Clean plot group names
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
 
-    # LogEuclid direkt über identische Gruppennamen zuordnen
-    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+# LogEuclid direkt über identische Gruppennamen zuordnen
+df["LogEuclid"] = df["Group_clean"].map(mah_dict)
 
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
+print("\nLogEuclid Check:")
+print(df["LogEuclid"].head())
+print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
-    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
+missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
-    print("\n❌ NICHT GEMATCHT:")
-    for m in missing[:20]:
-        print(m)
+print("\n❌ NICHT GEMATCHT:")
+for m in missing[:20]:
+    print(m)
 
 
-    fig = go.Figure()
+# ============================================================
+# FIGUR ERZEUGEN
+# ============================================================
 
-    mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
+fig = go.Figure()
 
-    mah_text = (
+
+# ============================================================
+# LOG-EUCLIDEAN-DISTANZBOX
+# ============================================================
+
+mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
+
+mah_text = (
     f"<span style='font-size:15px'><b>"
     f"Log-Euclidean distance – reference: {ref_group}"
     f"</b></span><br>"
 )
 
-    for g, d in mah_sorted[:5]:  # Top 5
-        mah_text += f"{g.title()}: {d:.2f}<br>"
+for g, d in mah_sorted[:5]:
+    mah_text += f"{g.title()}: {d:.2f}<br>"
 
-    fig.add_annotation(
-        xref="paper", yref="paper",
-        x=0.58, y=1.15,
-        xanchor="left", yanchor="top",
-        text=mah_text,
-        showarrow=False,
-        font=dict(size=16),  # Basisgröße für den Rest
-        align="left",
-        bgcolor="rgba(255,255,255,0.95)",
-        bordercolor="black", borderwidth=1.5
+fig.add_annotation(
+    xref="paper",
+    yref="paper",
+    x=0.58,
+    y=1.15,
+    xanchor="left",
+    yanchor="top",
+    text=mah_text,
+    showarrow=False,
+    font=dict(size=16),
+    align="left",
+    bgcolor="rgba(255,255,255,0.95)",
+    bordercolor="black",
+    borderwidth=1.5
+)
+
+
+print(f"\n📏 Log-Euclidean Distanzen relativ zu {ref_group}:\n")
+
+for g, d in mah_sorted:
+    print(f"{g:25s}  →  {d:.3f}")
+
+
+# Maximale Distanz für die spätere Farbskalierung
+max_maha = df["LogEuclid"].max()
+
+if pd.isna(max_maha) or max_maha <= 0:
+    max_maha = 1.0
+
+
+# ============================================================
+# Ca- UND HCO3-WERTE AUS DEN METAZAHLEN EXTRAHIEREN
+# ============================================================
+
+df["Ca_val"] = df["Metazahl_Kationen"].apply(
+    lambda x: pairs_to_percentages(
+        x,
+        ["Ca", "Mg", "Na", "K"]
+    )[0]["Ca"]
+)
+
+df["HCO3_val"] = df["Metazahl_Anionen"].apply(
+    lambda x: pairs_to_percentages(
+        x,
+        ["HCO₃", "SO₄", "Cl", "NO₃"]
+    )[0]["HCO₃"]
+)
+
+ca_max = df["Ca_val"].max()
+hco3_max = df["HCO3_val"].max()
+
+
+# ============================================================
+# AUSGEWÄHLTE Ca-REFERENZBÄNDER ZEICHNEN
+# ============================================================
+
+results_ca = []
+
+for ca_val in selected_ca_bands:
+
+    sub = df[df["Ca_val"] == ca_val]
+
+    if sub.empty:
+        print(f"⚠️ Kein Ca-Referenzband für {ca_val}% vorhanden.")
+        continue
+
+    y_min = (
+        sub["Kationen_trans_raw"].min()
+        / df["Kationen_trans_raw"].max()
+        * 100
     )
 
-    print("\n📏 Mahalanobis-Distanzen relativ zu Hallstatt:\n")
-
-    for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
-        print(f"{g:25s}  →  {d:.3f}")
-
-
-
-    print(f"\n📏 Log-Euclidean Distanzen relativ zu {ref_group}:\n")
-    for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
-        print(f"{g:25s}  →  {d:.3f}")
-
-
-
-    # 🔥 HIER HINZUFÜGEN
-    max_maha = df["LogEuclid"].max()
-    # 🔥 DEBUG HIER EINBAUEN
-    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
-
-    print("\n❌ NICHT GEMATCHT:")
-    for m in missing[:20]:
-        print(m)
-
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
-
-    print("\nDEBUG MATCHING:")
-    print(df["Group_clean"].unique()[:10])
-    print(list(mah_dict.keys())[:10])
-
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
-
-    # === Ca- und HCO3-Werte berechnen ===
-    df["Ca_val"] = df["Metazahl_Kationen"].apply(
-        lambda x: pairs_to_percentages(x, ["Ca", "Mg", "Na", "K"])[0]["Ca"]
+    y_max = (
+        sub["Kationen_trans_raw"].max()
+        / df["Kationen_trans_raw"].max()
+        * 100
     )
 
-    df["HCO3_val"] = df["Metazahl_Anionen"].apply(
-        lambda x: pairs_to_percentages(x, ["HCO₃", "SO₄", "Cl", "NO₃"])[0]["HCO₃"]
-    )
+    results_ca.append({
+        "Ca": ca_val,
+        "y_min": y_min,
+        "y_max": y_max
+    })
 
-    ca_max = df["Ca_val"].max()
-    hco3_max = df["HCO3_val"].max()
-
-    results_ca = []
-    for ca_val in [2, 5, 10, 15, 20, 25, 30, 35, 40]:
-        sub = df[df["Ca_val"] == ca_val]
-        if sub.empty:
-            continue
-        y_min = sub["Kationen_trans_raw"].min() / df["Kationen_trans_raw"].max() * 100
-        y_max = sub["Kationen_trans_raw"].max() / df["Kationen_trans_raw"].max() * 100
-        results_ca.append(dict(Ca=ca_val, y_min=y_min, y_max=y_max))
-
-        # Beispiel: Ca-Band
-        fig.add_trace(go.Scatter(
+    fig.add_trace(
+        go.Scatter(
             x=[0, 100, 100, 0],
             y=[y_min, y_min, y_max, y_max],
             fill="toself",
             fillpattern=dict(
-                shape="/",  # Schraffur
+                shape="/",
                 fgcolor="grey",
                 size=3,
                 solidity=0.08
@@ -1571,35 +1597,63 @@ try:
             opacity=0.5,
             name=f"Ca = {ca_val}%",
             showlegend=False,
-            hoverinfo="skip"  # kein Hover
-        ))
-
-        fig.add_annotation(
-            x=3,
-            y=(y_min + y_max) / 2,
-            text=f"<b>Ca = {ca_val}%</b>",
-            showarrow=False,
-            font=dict(size=8, color="grey"),
-            xanchor="left",
-            yanchor="middle"
+            hoverinfo="skip"
         )
+    )
 
-    # === HCO3-Referenzbänder für 20% und 40% ===
-    results_hco3 = []
-    for hco3_val in [5, 10, 15, 20, 25, 30, 35, 40, 45]:
-        sub = df[df["HCO3_val"] == hco3_val]
-        if sub.empty:
-            continue
-        x_min = sub["Anionen_trans_raw"].min() / df["Anionen_trans_raw"].max() * 100
-        x_max = sub["Anionen_trans_raw"].max() / df["Anionen_trans_raw"].max() * 100
-        results_hco3.append(dict(HCO3=hco3_val, x_min=x_min, x_max=x_max))
+    fig.add_annotation(
+        x=3,
+        y=(y_min + y_max) / 2,
+        text=f"<b>Ca = {ca_val}%</b>",
+        showarrow=False,
+        font=dict(
+            size=8,
+            color="grey"
+        ),
+        xanchor="left",
+        yanchor="middle"
+    )
 
-        fig.add_trace(go.Scatter(
+
+# ============================================================
+# AUSGEWÄHLTE HCO3-REFERENZBÄNDER ZEICHNEN
+# ============================================================
+
+results_hco3 = []
+
+for hco3_val in selected_hco3_bands:
+
+    sub = df[df["HCO3_val"] == hco3_val]
+
+    if sub.empty:
+        print(f"⚠️ Kein HCO₃-Referenzband für {hco3_val}% vorhanden.")
+        continue
+
+    x_min = (
+        sub["Anionen_trans_raw"].min()
+        / df["Anionen_trans_raw"].max()
+        * 100
+    )
+
+    x_max = (
+        sub["Anionen_trans_raw"].max()
+        / df["Anionen_trans_raw"].max()
+        * 100
+    )
+
+    results_hco3.append({
+        "HCO3": hco3_val,
+        "x_min": x_min,
+        "x_max": x_max
+    })
+
+    fig.add_trace(
+        go.Scatter(
             x=[x_min, x_max, x_max, x_min],
             y=[0, 0, 100, 100],
             fill="toself",
             fillpattern=dict(
-                shape="\\",  # Schraffur andere Richtung
+                shape="\\",
                 fgcolor="blue",
                 size=3,
                 solidity=0.08
@@ -1609,19 +1663,22 @@ try:
             opacity=0.5,
             name=f"HCO₃ = {hco3_val}%",
             showlegend=False,
-            hoverinfo="skip"  # kein Hover
-        ))
-
-        # Beschriftung im Plot
-        fig.add_annotation(
-            x=(x_min + x_max) / 2, y=-3,
-            text=f"<b>HCO₃ = {hco3_val}%</b>",
-            showarrow=False,
-            font=dict(size=8, color="blue"),
-            xanchor="center",
-            yanchor="bottom"
+            hoverinfo="skip"
         )
+    )
 
+    fig.add_annotation(
+        x=(x_min + x_max) / 2,
+        y=-3,
+        text=f"<b>HCO₃ = {hco3_val}%</b>",
+        showarrow=False,
+        font=dict(
+            size=8,
+            color="blue"
+        ),
+        xanchor="center",
+        yanchor="bottom"
+    )
 
     # === Theoretischer Balancepunkt berechnen ===
     x_theoretical = custom_transform_optimal(50000000)
