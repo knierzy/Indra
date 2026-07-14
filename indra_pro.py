@@ -1317,7 +1317,7 @@ def format_hover(row):
         f"<b>Anionen</b> (aus {str(row['Metazahl_Anionen']).zfill(8)}):<br>{a_lines}"
     )
 
-try:
+
     # Excel einlesen
     df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
 
