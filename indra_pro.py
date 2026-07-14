@@ -1864,10 +1864,10 @@ try:
 
     custom_scale = sorted(custom_scale, key=lambda z: z[0])
 
-if color_scale_choice == "Custom INDRA (nichtlinear)":
-    active_colorscale = custom_scale
-else:
-    active_colorscale = color_scale_choice
+    if color_scale_choice == "Custom INDRA (nichtlinear)":
+        active_colorscale = custom_scale
+    else:
+        active_colorscale = color_scale_choice
 
   
     # ============================================================
