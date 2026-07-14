@@ -1774,21 +1774,21 @@ for hco3_val in selected_hco3_bands:
     )
 
     # === Theoretischer Balancepunkt berechnen ===
-    x_theoretical = custom_transform_optimal(50000000)
-    y_theoretical = custom_transform_optimal(50000000)
+x_theoretical = custom_transform_optimal(50000000)
+y_theoretical = custom_transform_optimal(50000000)
 
-    x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
-    y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
+x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
+y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
 
-    print(f"📍 Theoretischer 50|50 Punkt: x={x_theoretical_scaled:.2f}, y={y_theoretical_scaled:.2f}")
+print(f"📍 Theoretischer 50|50 Punkt: x={x_theoretical_scaled:.2f}, y={y_theoretical_scaled:.2f}")
 
-    # Achsenreichweite so erweitern, dass der Punkt sichtbar ist (mit 5% Puffer)
-    xmax = max(100, x_theoretical_scaled * 1.08)
-    ymax = max(100, y_theoretical_scaled * 1.08)
+  # Achsenreichweite so erweitern, dass der Punkt sichtbar ist (mit 5% Puffer)
+xmax = max(100, x_theoretical_scaled * 1.08)
+ymax = max(100, y_theoretical_scaled * 1.08)
 
+# === Layout ===
     # === Layout ===
-    # === Layout ===
-    fig.update_layout(
+fig.update_layout(
         xaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
