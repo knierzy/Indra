@@ -83,6 +83,7 @@ st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
 
 reference_band_options = list(range(0, 51, 5))
 
+
 def parse_reference_values(text):
     values = []
 
@@ -138,8 +139,6 @@ with col_hco3:
         placeholder="z. B. 4, 22, 37"
     )
 
-selected_ca_bands = sorted(selected_ca_bands)
-selected_hco3_bands = sorted(selected_hco3_bands)
 
 custom_ca_values = parse_reference_values(custom_ca_text)
 custom_hco3_values = parse_reference_values(custom_hco3_text)
