@@ -1424,7 +1424,115 @@ df["hover_text"] = df.apply(
     axis=1
 )
 # LogEuclid direkt über identische Gruppennamen zuordnen
+# ============================================================
+# LOG-EUCLIDEAN-DISTANZEN VORBEREITEN
+# ============================================================
+
+ion_cols = [
+    "meq_L_Ca2+",
+    "meq_L_Mg2+",
+    "meq_L_Na+",
+    "meq_L_K+",
+    "meq_L_Cl-",
+    "meq_L_SO4_2-",
+    "meq_L_NO3-",
+    "meq_L_HCO3-"
+]
+
+# Prüfen, ob alle benötigten Spalten vorhanden sind
+missing_ion_cols = [
+    col for col in ion_cols
+    if col not in raw_df.columns
+]
+
+if missing_ion_cols:
+    raise KeyError(
+        f"Fehlende Ionenspalten in Typical_Data_5_95: "
+        f"{missing_ion_cols}"
+    )
+
+# Mittelwerte pro Gruppe
+group_means = (
+    raw_df
+    .groupby("Art")[ion_cols]
+    .mean()
+)
+
+group_means.index = (
+    group_means.index
+    .astype(str)
+    .str.strip()
+)
+
+# Verfügbare Referenzgruppen
+available_ref_groups = sorted(
+    group_means.index.astype(str).tolist()
+)
+
+if not available_ref_groups:
+    raise ValueError(
+        "Keine Gruppen für die Log-Euclidean-Distanz gefunden."
+    )
+
+default_ref = "Lake Hallstatt"
+
+default_index = (
+    available_ref_groups.index(default_ref)
+    if default_ref in available_ref_groups
+    else 0
+)
+
+ref_group = st.selectbox(
+    "Referenzgruppe für Log-Euclidean-Distanz",
+    options=available_ref_groups,
+    index=default_index
+)
+
+ref_vector = group_means.loc[ref_group].values
+
+# Distanz jeder Gruppe zur Referenz berechnen
+mah_dict = {}
+
+for group_name in group_means.index:
+
+    group_vector = group_means.loc[group_name].values
+
+    clean_name = (
+        str(group_name)
+        .strip()
+        .lower()
+    )
+
+    mah_dict[clean_name] = log_euclid(
+        group_vector,
+        ref_vector
+    )
+
+# Gruppennamen im Plot auf dieselbe Weise normalisieren
+df["Group_clean"] = (
+    df["Art"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+# Distanz zuordnen
 df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+
+print("\nLogEuclid Check:")
+print(df[["Art", "Group_clean", "LogEuclid"]].head())
+print("NaN Anzahl:", df["LogEuclid"].isna().sum())
+
+missing = (
+    df.loc[df["LogEuclid"].isna(), "Group_clean"]
+    .drop_duplicates()
+    .tolist()
+)
+
+if missing:
+    print("\n❌ NICHT GEMATCHT:")
+    for name in missing[:20]:
+        print(name)
 
 print("\nLogEuclid Check:")
 print(df["LogEuclid"].head())
