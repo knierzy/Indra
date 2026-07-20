@@ -48,7 +48,7 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is None:
-    st.info("Bitte eine Excel-Datei hochladen.")
+    st.info("Please upload an Excel file")
     st.stop()
 
 with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
