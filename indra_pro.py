@@ -1167,7 +1167,7 @@ for _, row in minmax_typisch.iterrows():
 
 
     print(
-        f"👉 {gid}: range sizes:",
+        f" {gid}: range sizes:",
         {k: len(v) for k, v in ranges_loc.items()}
     )
 
