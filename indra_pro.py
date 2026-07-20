@@ -1396,7 +1396,7 @@ def format_hover(row):
     k_labels = ["Ca", "Mg", "Na", "K"]
     a_labels = ["HCO₃", "SO₄", "Cl", "NO₃"]
     k_perc, _ = pairs_to_percentages(row["Cation_Meta_Number"], k_labels)
-    a_perc, _ = pairs_to_percentages(row["Anion_Meta_Numbe"], a_labels)
+    a_perc, _ = pairs_to_percentages(row["Anion_Meta_Number"], a_labels)
     k_lines = " · ".join([f"{lbl}: {k_perc[lbl]}%" if k_perc[lbl] is not None else f"{lbl}: –" for lbl in k_labels])
     a_lines = " · ".join([f"{lbl}: {a_perc[lbl]}%" if a_perc[lbl] is not None else f"{lbl}: –" for lbl in a_labels])
     return (
