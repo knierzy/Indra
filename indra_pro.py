@@ -2,7 +2,7 @@
 This script processes hydrochemical Excel data and generates:
 
 - cleaned ion datasets
-- HCO3 calculations from ANC
+- HCO3 calculations from ANC (Acid Neutralizing Capacity)
 - meq/L and percentage compositions
 - 5–95 % filtered typical hydrochemical ranges
   (except for DA_* reference groups)
@@ -99,7 +99,6 @@ color_scale_choice = st.selectbox(
 
 
 # choice of reference bands
-# ============================================================
 
 reference_band_options = list(range(1, 51))
 
@@ -182,10 +181,6 @@ if not st.button("Generate Plot"):
 # Helper Functions
 
 def find_header_row(xls_path, sheet, probes=5):
-    """
-    Detects the most likely header row in the Excel sheet
-    by searching the first rows for hydrochemical keywords.
-    """
 
     probe = pd.read_excel(
         xls_path,
