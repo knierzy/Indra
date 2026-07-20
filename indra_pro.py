@@ -1415,8 +1415,8 @@ try:
             raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
 
     # Transformation anwenden
-    df["Kationen_trans_raw"] = df["Cation_Meta_Numben"].apply(custom_transform_optimal)
-    df["Anionen_trans_raw"]  = df["Anion_Meta_Numbe"].apply(custom_transform_optimal)
+    df["Kationen_trans_raw"] = df["Cation_Meta_Number"].apply(custom_transform_optimal)
+    df["Anionen_trans_raw"]  = df["Anion_Meta_Number"].apply(custom_transform_optimal)
 
     # Normierung 0–100
     df["Kationen_trans"] = df["Kationen_trans_raw"] / df["Kationen_trans_raw"].max() * 100
