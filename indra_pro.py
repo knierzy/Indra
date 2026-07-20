@@ -59,7 +59,7 @@ base_addition = st.number_input(
     "Transformationsbasis: e + n",
     min_value=-1,
     max_value=97,
-    value=17,
+    value=7,
     step=1
 )
 
