@@ -1997,7 +1997,7 @@ try:
                         hoverinfo="text",
                         showlegend=False
                     ))
-=
+
    #  ZENTRALE PUNKTE DER SUBGRUPPEN
 
     group_centers = (
