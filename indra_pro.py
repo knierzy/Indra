@@ -1395,28 +1395,28 @@ def pairs_to_percentages(x, labels):
 def format_hover(row):
     k_labels = ["Ca", "Mg", "Na", "K"]
     a_labels = ["HCO₃", "SO₄", "Cl", "NO₃"]
-    k_perc, _ = pairs_to_percentages(row["Metazahl_Kationen"], k_labels)
-    a_perc, _ = pairs_to_percentages(row["Metazahl_Anionen"], a_labels)
+    k_perc, _ = pairs_to_percentages(row["Cation_Meta_Number"], k_labels)
+    a_perc, _ = pairs_to_percentages(row["Anion_Meta_Numbe"], a_labels)
     k_lines = " · ".join([f"{lbl}: {k_perc[lbl]}%" if k_perc[lbl] is not None else f"{lbl}: –" for lbl in k_labels])
     a_lines = " · ".join([f"{lbl}: {a_perc[lbl]}%" if a_perc[lbl] is not None else f"{lbl}: –" for lbl in a_labels])
     return (
         f"<b>Art:</b> {row['Art']}<br>"
-        f"<b>Kationen</b> (aus {str(row['Metazahl_Kationen']).zfill(8)}):<br>{k_lines}<br>"
-        f"<b>Anionen</b> (aus {str(row['Metazahl_Anionen']).zfill(8)}):<br>{a_lines}"
+        f"<b>Kationen</b> (aus {str(row['Cation_Meta_Number']).zfill(8)}):<br>{k_lines}<br>"
+        f"<b>Anionen</b> (aus {str(row['Anion_Meta_Numbe']).zfill(8)}):<br>{a_lines}"
     )
 
 try:
     # Excel einlesen
     df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
 
-    required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
+    required_cols = ['Cation_Meta_Number', 'Anion_Meta_Number', 'Art']
     for col in required_cols:
         if col not in df.columns:
             raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
 
     # Transformation anwenden
-    df["Kationen_trans_raw"] = df["Metazahl_Kationen"].apply(custom_transform_optimal)
-    df["Anionen_trans_raw"]  = df["Metazahl_Anionen"].apply(custom_transform_optimal)
+    df["Kationen_trans_raw"] = df["Cation_Meta_Numben"].apply(custom_transform_optimal)
+    df["Anionen_trans_raw"]  = df["Anion_Meta_Numbe"].apply(custom_transform_optimal)
 
     # Normierung 0–100
     df["Kationen_trans"] = df["Kationen_trans_raw"] / df["Kationen_trans_raw"].max() * 100
@@ -1623,11 +1623,11 @@ try:
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
     # === Ca- und HCO3-Werte berechnen ===
-    df["Ca_val"] = df["Metazahl_Kationen"].apply(
+    df["Ca_val"] = df["Cation_Meta_Numbe"].apply(
         lambda x: pairs_to_percentages(x, ["Ca", "Mg", "Na", "K"])[0]["Ca"]
     )
 
-    df["HCO3_val"] = df["Metazahl_Anionen"].apply(
+    df["HCO3_val"] = df["Anion_Meta_Numbe"].apply(
         lambda x: pairs_to_percentages(x, ["HCO₃", "SO₄", "Cl", "NO₃"])[0]["HCO₃"]
     )
 
