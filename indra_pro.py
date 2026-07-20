@@ -43,7 +43,7 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 uploaded_file = st.file_uploader(
-    "Compendium Excel-Datei hochladen",
+    "Upload Compendium Excel File",
     type=["xlsx"]
 )
 
@@ -56,7 +56,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
     input_file = Path(tmp.name)
 
 base_addition = st.number_input(
-    "Transformationsbasis: e + n",
+    "Transformation Base: e + n",
     min_value=-1,
     max_value=97,
     value=7,
@@ -65,23 +65,23 @@ base_addition = st.number_input(
 
 selected_base = math.e + base_addition
 
-st.write(f"Aktuelle Basis: e + {base_addition} = {selected_base:.4f}")
+st.write(f"Current Base: e + {base_addition} = {selected_base:.4f}")
 
 marker_scale = st.number_input(
-    "Punktgrößen-Faktor",
+    "Point Size Scale",
     min_value=0.5,
     max_value=3.0,
     value=1.0,
     step=0.1
 )
 
-st.write(f"Punktgrößen-Faktor: {marker_scale:.1f}×")
+st.write(f"Point Size Scale: {marker_scale:.1f}×")
 
 
 color_scale_choice = st.selectbox(
-    "Farbskala",
+    "Color Scale",
     [
-        "Custom INDRA (nichtlinear)",
+        "Custom INDRA (nonlinear)",
         "Viridis",
         "Plasma",
         "Inferno",
@@ -98,8 +98,7 @@ color_scale_choice = st.selectbox(
 )
 
 
-# ============================================================
-# AUSWAHL DER REFERENZBÄNDER
+# choice of reference bands
 # ============================================================
 
 reference_band_options = list(range(1, 51))
@@ -138,25 +137,25 @@ col_ca, col_hco3 = st.columns(2)
 
 with col_ca:
     selected_ca_defaults = st.multiselect(
-        "Ca-Referenzbänder (%)",
+        "Ca Reference Bands (%))",
         options=reference_band_options,
         default=[2, 5, 10, 15, 20, 25, 30, 35, 40]
     )
 
     custom_ca_text = st.text_input(
-        "Zusätzliche Ca-Werte",
+        "Additional Ca Values",
         placeholder="z. B. 4, 12, 18"
     )
 
 with col_hco3:
     selected_hco3_defaults = st.multiselect(
-        "HCO₃-Referenzbänder (%)",
+        "HCO₃ Reference Bands (%)",
         options=reference_band_options,
         default=[2, 5, 10, 15, 20, 25, 30, 35, 40, 45]
     )
 
     custom_hco3_text = st.text_input(
-        "Zusätzliche HCO₃-Werte",
+        "Additional HCO₃ Values",
         placeholder="z. B. 4, 22, 37"
     )
 
