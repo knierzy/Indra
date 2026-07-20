@@ -334,7 +334,7 @@ def norm_col(c):
 def normalize_row(row):
     vals = [row.get(f'Percent_%_{ion}', np.nan) for ion in ionen]
     if any(pd.isna(vals)) or row.get('Summe_Gesamt_meq_L', np.nan) <= 0:
-        return pd.Series([np.nan]*len(ionen), index=[f'Anteil_int_%_{ion}' for ion in ionen])
+        return pd.Series([np.nan]*len(ionen), index=[f'Percent_Int_%_{ion}' for ion in ionen])
     arr = np.array(vals, dtype=float)
     flo = np.floor(arr).astype(int)
     rest = int(100 - flo.sum())
@@ -343,7 +343,7 @@ def normalize_row(row):
         order = np.argsort(-diffs)  # größte Nachkommastellen zuerst
         for i in range(min(abs(rest), len(order))):
             flo[order[i]] += 1 if rest > 0 else -1
-    return pd.Series(flo, index=[f'Anteil_int_%_{ion}' for ion in ionen])
+    return pd.Series(flo, index=[f'Percent_Int_%_{ion}' for ion in ionen])
 
 
 
@@ -681,7 +681,7 @@ for ion in ionen:
 
 # Calculate integer percentage shares using the largest remainder method
 
-df_meq_pct[[f'Anteil_int_%_{ion}' for ion in ionen]] = (
+df_meq_pct[[f'Percent_Int_%_{ion}' for ion in ionen]] = (
     df_meq_pct.apply(normalize_row, axis=1)
 )
 
@@ -778,7 +778,7 @@ for ion in ionen:
 
 # Calculate integer percentage shares using the largest remainder method
 
-df_typisch[[f'Anteil_int_%_{ion}' for ion in ionen]] = (
+df_typisch[[f'Percent_Int_%_{ion}' for ion in ionen]] = (
     df_typisch.apply(normalize_row, axis=1)
 )
 
@@ -855,7 +855,7 @@ ionen = [
     'HCO3-'
 ]
 
-int_cols = [f'Anteil_int_%_{ion}' for ion in ionen]
+int_cols = [f'Percent_Int_%_{ion}' for ion in ionen]
 
 for c in int_cols:
 
@@ -1150,8 +1150,8 @@ for _, row in minmax_typisch.iterrows():
 
     for ion in all_ions:
 
-        min_val = row.get(f"Anteil_int_%_{ion}_min")
-        max_val = row.get(f"Anteil_int_%_{ion}_max")
+        min_val = row.get(f"Percent_Int_%_{ion}_min")
+        max_val = row.get(f"Percent_Int_%_{ion}_max")
 
         if pd.isna(min_val) or pd.isna(max_val):
 
