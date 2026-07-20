@@ -922,11 +922,11 @@ counts = (
 
 # Calculate mean charge balance error per Art
 
-bilanz_mean = (
+balance_mean = (
     df_typ_bis10
-    .groupby('Art', dropna=False)['Bilanzfehler_%']
+    .groupby('Art', dropna=False)['Charge_Balance_Error_%']
     .mean()
-    .rename('Bilanzfehler_mean_%')
+    .rename('Charge_Balance_mean_%')
 )
 
 
@@ -935,7 +935,7 @@ bilanz_mean = (
 minmax_typisch = (
     minmax_typisch
     .merge(counts, on='Art', how='left')
-    .merge(bilanz_mean, on='Art', how='left')
+    .merge(balance_mean, on='Art', how='left')
 )
 
 
