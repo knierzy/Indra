@@ -340,7 +340,7 @@ def normalize_row(row):
     rest = int(100 - flo.sum())
     if rest != 0:
         diffs = arr - flo
-        order = np.argsort(-diffs)  # größte Nachkommastellen zuerst
+        order = np.argsort(-diffs)  # Largest fractional parts first
         for i in range(min(abs(rest), len(order))):
             flo[order[i]] += 1 if rest > 0 else -1
     return pd.Series(flo, index=[f'Percent_Int_%_{ion}' for ion in ionen])
