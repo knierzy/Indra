@@ -391,7 +391,7 @@ print(f"➡️ Used sheet: {sheet}")
 print(f"🧭 Used header row: {hrow}")
 
 
-# Find relevant columns
+# find relevant columns
 
 cols = list(df.columns)
 
@@ -447,7 +447,7 @@ for k, v in mapping.items():
 
 
 
-# Calculate bicarbonate from ANC or use existing bicarbonate column
+# calculate bicarbonate from ANC or use existing bicarbonate column
 
 anc_col = mapping['ACID_NEUTRALIZING_CAPACITY']
 hco3_col = mapping['BICARBONATE_mg_L']
@@ -702,14 +702,13 @@ df['__keep__'] = True
 
 for gid, g in df.groupby('Art', dropna=False):
 
-    # Case 1: DA_* groups are not filtered
+  
 
     if isinstance(gid, str) and gid.startswith("DA_"):
 
         df.loc[g.index, '__keep__'] = True
         continue
 
-    # Case 2: standard groups are filtered by the 5–95 percent range
 
     mask_g = pd.Series(True, index=g.index)
 
