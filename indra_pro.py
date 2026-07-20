@@ -332,7 +332,7 @@ def norm_col(c):
 
 
 def normalize_row(row):
-    vals = [row.get(f'Anteil_%_{ion}', np.nan) for ion in ionen]
+    vals = [row.get(f'Percent_%_{ion}', np.nan) for ion in ionen]
     if any(pd.isna(vals)) or row.get('Summe_Gesamt_meq_L', np.nan) <= 0:
         return pd.Series([np.nan]*len(ionen), index=[f'Anteil_int_%_{ion}' for ion in ionen])
     arr = np.array(vals, dtype=float)
@@ -672,7 +672,7 @@ for ion in ionen:
     num = df_meq_pct[f'meq_L_{ion}']
     den = df_meq_pct['Summe_Gesamt_meq_L']
 
-    df_meq_pct[f'Anteil_%_{ion}'] = np.where(
+    df_meq_pct[f'Percent_%_{ion}'] = np.where(
         den > 0,
         (num / den) * 100,
         np.nan
@@ -769,7 +769,7 @@ for ion in ionen:
     num = df_typisch[f'meq_L_{ion}']
     den_all = df_typisch['Summe_Gesamt_meq_L']
 
-    df_typisch[f'Anteil_%_{ion}'] = np.where(
+    df_typisch[f'Percent_%_{ion}'] = np.where(
         den_all > 0,
         (num / den_all) * 100,
         np.nan
@@ -800,7 +800,7 @@ corr_results = []
 
 for gid, g in df_typisch.groupby("Art"):
 
-    cols = [f"Anteil_%_{ion}" for ion in ions]
+    cols = [f"Percent_%_{ion}" for ion in ions]
     df_sub = g[cols].dropna()
 
     if len(df_sub) < 3:
@@ -812,8 +812,8 @@ for gid, g in df_typisch.groupby("Art"):
 
         for j in range(i + 1, len(cols)):
 
-            ionA = cols[i].replace("Anteil_%_", "")
-            ionB = cols[j].replace("Anteil_%_", "")
+            ionA = cols[i].replace("Percent_%_", "")
+            ionB = cols[j].replace("Percent_%_", "")
 
             corr_val = corr.iloc[i, j]
 
@@ -1029,8 +1029,8 @@ def lern_constraint_bands(df_typ):
 
                 # Use floating-point percentages instead of integer percentages
 
-                colA = f"Anteil_%_{ionA}"
-                colB = f"Anteil_%_{ionB}"
+                colA = f"Percent_%_{ionA}"
+                colB = f"Percent_%_{ionB}"
 
                 key = f"{ionA}__{ionB}"
 
