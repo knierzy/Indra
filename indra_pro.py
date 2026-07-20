@@ -618,22 +618,22 @@ df['meq_L_HCO3-'] = mgL_to_meqL(df['HCO3_mg_L'], 61.016, 1)
 
 # Calculate cation and anion sums
 
-df['Sum_Kationen_meq_L'] = df[
+df['Cation_Sum_meq_L'] = df[
     ['meq_L_Ca2+', 'meq_L_Mg2+', 'meq_L_Na+', 'meq_L_K+']
 ].sum(axis=1)
 
-df['Sum_Anionen_meq_L'] = df[
+df['Anion_Sum_meq_L'] = df[
     ['meq_L_Cl-', 'meq_L_SO4_2-', 'meq_L_NO3-', 'meq_L_HCO3-']
 ].sum(axis=1)
 
 
 # Calculate charge balance error
 
-den = df['Sum_Kationen_meq_L'] + df['Sum_Anionen_meq_L']
+den = df['Cation_Sum_meq_L'] + df['Anion_Sum_meq_LL']
 
 df['Bilanzfehler_%'] = np.where(
     den > 0,
-    np.abs(df['Sum_Kationen_meq_L'] - df['Sum_Anionen_meq_L']) / den * 100,
+    np.abs(df['Cation_Sum_meq_L'] - df['Anion_Sum_meq_L']) / den * 100,
     np.nan
 )
 
@@ -1236,12 +1236,12 @@ for _, row in minmax_typisch.iterrows():
         return int("".join(f"{int(row[col]):02}" for col in spalten))
 
 
-    df_loc["Metazahl_Kationen"] = df_loc.apply(
+    df_loc["Cation_Meta_Number"] = df_loc.apply(
         lambda r: erzeuge_metazahl(r, ion_pairs_kat),
         axis=1
     )
 
-    df_loc["Metazahl_Anionen"] = df_loc.apply(
+    df_loc["Anion_Meta_Number"] = df_loc.apply(
         lambda r: erzeuge_metazahl(r, ion_pairs_ani),
         axis=1
     )
@@ -1267,12 +1267,12 @@ def split_metazahl(x):
 if not df_cartesian.empty:
 
     df_cartesian[["Kat1", "Kat2", "Kat3", "Kat4"]] = (
-        df_cartesian["Metazahl_Kationen"]
+        df_cartesian["Cation_Meta_Number"]
         .apply(lambda x: pd.Series(split_metazahl(x)))
     )
 
     df_cartesian[["Ani1", "Ani2", "Ani3", "Ani4"]] = (
-        df_cartesian["Metazahl_Anionen"]
+        df_cartesian["Anion_Meta_Number"]
         .apply(lambda x: pd.Series(split_metazahl(x)))
     )
 
