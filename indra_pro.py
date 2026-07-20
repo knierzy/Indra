@@ -1334,9 +1334,8 @@ print("✔️ Constrained Cartesian product file saved.")
 print("📁", output_file_cartesian)
 
 
-# Das ist log euclidean... passe noch an
-#
-# -*- coding: utf-8 -*-
+# log-euclidean
+
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -1368,8 +1367,8 @@ raw_df = pd.read_excel(
 
 
 
-# ============================================================
-# --- Hilfsfunktion zur Transformation mit frei wählbarer Basis ---
+
+# ---furction for transformation of base 
 def custom_transform_optimal(x, base=None):
     if base is None:
         base = selected_base
@@ -1383,7 +1382,7 @@ def custom_transform_optimal(x, base=None):
     except:
         return None
 
-# --- Hover-Helfer ---
+# -hover help
 def pairs_to_percentages(x, labels):
     try:
         s = str(int(x)).zfill(8)
@@ -1406,7 +1405,7 @@ def format_hover(row):
     )
 
 try:
-    # Excel einlesen
+    #  read excel
     df = pd.read_excel(input_file, sheet_name="Meta_Kombinationen")
 
     required_cols = ['Cation_Meta_Number', 'Anion_Meta_Number', 'Art']
@@ -1414,18 +1413,18 @@ try:
         if col not in df.columns:
             raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
 
-    # Transformation anwenden
+    # apply trasnformation
     df["Kationen_trans_raw"] = df["Cation_Meta_Number"].apply(custom_transform_optimal)
     df["Anionen_trans_raw"]  = df["Anion_Meta_Number"].apply(custom_transform_optimal)
 
-    # Normierung 0–100
+    # normalization 0-100
     df["Kationen_trans"] = df["Kationen_trans_raw"] / df["Kationen_trans_raw"].max() * 100
     df["Anionen_trans"]  = df["Anionen_trans_raw"]  / df["Anionen_trans_raw"].max()  * 100
 
-    # Duplikate entfernen
+    # remove duplicates
     df = df.drop_duplicates(subset=["Kationen_trans", "Anionen_trans", "Art"])
 
-    # Überlappungen zählen
+    # count overlaps
     koord_counts = (
         df.groupby(["Kationen_trans", "Anionen_trans"])
         .size()
@@ -1436,17 +1435,17 @@ try:
 
 
 
-    # Hover vorbereiten
+    # prepare hover 
     df["hover_text"] = df.apply(format_hover, axis=1)
 
-    # ============================================================
-    # MAHALANOBIS-DISTANZ (VOR DEM PLOT!)
+    #
+    # mahalabonis distance
     # ============================================================
 
 
     from scipy.spatial.distance import mahalanobis
 
-    # --- Ionen definieren ---
+    # ---define ions---
     ion_cols = [
         "meq_L_Ca2+",
         "meq_L_Mg2+",
@@ -1458,33 +1457,33 @@ try:
         "meq_L_HCO3-"
     ]
 
-    # --- Kovarianzmatrix ---
+    # --- Covariance matrix---
     cov = np.cov(raw_df[ion_cols].values.T)
     cov += np.eye(cov.shape[0]) * 1e-6
     cov_inv = np.linalg.pinv(cov)
 
-    # --- Gruppenmittelwerte ---
+    # Group mean values
     group_means = raw_df.groupby("Art")[ion_cols].mean()
     group_means.index = group_means.index.astype(str).str.strip()
 
-    # ============================================================
-    # 🔬 LOG-TRANSFORMIERTE MAHALANOBIS (NEU)
-    # ============================================================
 
-    # --- Log-Transformation der Rohdaten ---
+    # Log-tranformed mahalabonis 
+  
+
+    # ---log transformation of raw data ---
     X_log = np.log1p(raw_df[ion_cols])
 
-    # --- Kovarianzmatrix im Log-Raum ---
+    # ---Covariance matrix in log space---
     cov_log = np.cov(X_log.values.T)
     cov_log += np.eye(cov_log.shape[0]) * 1e-6
     cov_log_inv = np.linalg.pinv(cov_log)
 
-    # --- Gruppenmittelwerte im Log-Raum ---
+    # --- group mean values in log space ---
     group_means_log = raw_df.groupby("Art")[ion_cols].mean()
     group_means_log = np.log1p(group_means_log)
     group_means_log.index = group_means_log.index.astype(str).str.strip()
 
-    # --- DEBUG: Vergleich Hallstatt vs Ossiach ---
+    # --- DEBUG: comparison Hallstatt vs Ossiach ---
     from scipy.spatial.distance import euclidean, mahalanobis
 
     h_name = next(
@@ -1516,7 +1515,7 @@ try:
 
     print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
 
-    # --- Referenzgruppe für Log-Euclidean-Distanz auswählen ---
+    # choose reference group for Log-euclidean distance
     available_ref_groups = sorted(group_means.index.astype(str).tolist())
 
     default_ref = "Lake Hallstatt"
@@ -1549,7 +1548,7 @@ try:
         # Clean plot group names
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
 
-    # LogEuclid direkt über identische Gruppennamen zuordnen
+    # LogEuclidean above group name
     df["LogEuclid"] = df["Group_clean"].map(mah_dict)
 
     print("\nLogEuclid Check:")
@@ -1601,9 +1600,9 @@ try:
 
 
 
-    # 🔥 HIER HINZUFÜGEN
+
     max_maha = df["LogEuclid"].max()
-    # 🔥 DEBUG HIER EINBAUEN
+ 
     missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
     print("\n❌ NICHT GEMATCHT:")
