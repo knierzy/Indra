@@ -333,7 +333,7 @@ def norm_col(c):
 
 def normalize_row(row):
     vals = [row.get(f'Percent_%_{ion}', np.nan) for ion in ionen]
-    if any(pd.isna(vals)) or row.get('Summe_Gesamt_meq_L', np.nan) <= 0:
+    if any(pd.isna(vals)) or row.get('Total_meq_L', np.nan) <= 0:
         return pd.Series([np.nan]*len(ionen), index=[f'Percent_Int_%_{ion}' for ion in ionen])
     arr = np.array(vals, dtype=float)
     flo = np.floor(arr).astype(int)
@@ -642,7 +642,7 @@ df['Bilanzfehler_%'] = np.where(
 
 df_meq_pct = df.copy()
 
-df_meq_pct['Summe_Gesamt_meq_L'] = (
+df_meq_pct['Total_meq_L'] = (
     df_meq_pct['meq_L_Ca2+'] +
     df_meq_pct['meq_L_Mg2+'] +
     df_meq_pct['meq_L_Na+'] +
@@ -670,7 +670,7 @@ ionen = [
 for ion in ionen:
 
     num = df_meq_pct[f'meq_L_{ion}']
-    den = df_meq_pct['Summe_Gesamt_meq_L']
+    den = df_meq_pct['Total_meq_L']
 
     df_meq_pct[f'Percent_%_{ion}'] = np.where(
         den > 0,
@@ -742,7 +742,7 @@ print(
 
 # Add percentage shares based on meq/L
 
-df_typisch['Summe_Gesamt_meq_L'] = (
+df_typisch['Total_meq_L'] = (
     df_typisch['meq_L_Ca2+'] +
     df_typisch['meq_L_Mg2+'] +
     df_typisch['meq_L_Na+'] +
@@ -767,7 +767,7 @@ ionen = [
 for ion in ionen:
 
     num = df_typisch[f'meq_L_{ion}']
-    den_all = df_typisch['Summe_Gesamt_meq_L']
+    den_all = df_typisch['Total_meq_L']
 
     df_typisch[f'Percent_%_{ion}'] = np.where(
         den_all > 0,
