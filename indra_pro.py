@@ -177,7 +177,7 @@ preferred_sheet = "Sheet1"
 output_file = OUTPUT_DIR / "compendium_processed.xlsx"
 output_file_cartesian = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
 
-if not st.button("Diagramm erzeugen"):
+if not st.button("Generate Plot"):
     st.stop()
 # Helper Functions
 
