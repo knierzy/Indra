@@ -380,10 +380,10 @@ print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
 
 # Create municipality name column from the fourth column
 
-gemeinde_col_raw = df.columns[3]
+municipality_col_raw = df.columns[3]
 df['Municipality'] = df.iloc[:, 3].astype(str).str.strip()
 
-print(f"✅ Municipality name extracted from column '{gemeinde_col_raw}'.")
+print(f"✅ Municipality name extracted from column '{municipality_col_raw}'.")
 
 
 print(f"📑 Sheets: {xls.sheet_names}")
@@ -887,14 +887,14 @@ minmax_typisch = minmax_typisch.reset_index()
 
 # Add municipality name back to each measurement station
 
-gemeinde_map = (
+municipality_map = (
     df_typ_bis10[['Art', 'Municipality']]
     .dropna()
     .drop_duplicates(subset='Art')
 )
 
 minmax_typisch = minmax_typisch.merge(
-    gemeinde_map,
+    municipality_map,
     on='Art',
     how='left'
 )
@@ -1141,7 +1141,7 @@ all_results = []
 for _, row in minmax_typisch.iterrows():
 
     gid = row["Art"]
-    gemeinde = row.get("Municipality", "")
+    municipality = row.get("Municipality", "")
 
 
     # Build ion ranges from min/max values
@@ -1214,7 +1214,7 @@ for _, row in minmax_typisch.iterrows():
         continue
 
 
-    print(f"\n📍 {gid} ({gemeinde})")
+    print(f"\n📍 {gid} ({municipality})")
     print(f"  🔢 Raw search space:     {total_raw:,}")
     print(f"  ➗ Sum = 100:            {count_sum_ok:,}")
     print(f"  🔗 After constraints:    {count_final:,}")
@@ -1227,7 +1227,7 @@ for _, row in minmax_typisch.iterrows():
     df_loc = pd.DataFrame(valid, columns=all_ions)
 
     df_loc["Art"] = gid
-    df_loc["Municipality"] = gemeinde
+    df_loc["Municipality"] = municipality
 
 
     # Generate meta numbers
@@ -1283,7 +1283,7 @@ if not df_cartesian.empty:
 
     for gid, g in df_cartesian.groupby("Art"):
 
-        gemeinde = g["Municipality"].iloc[0]
+        municipality = g["Municipality"].iloc[0]
 
         kat_means = {
             lab: g[f"Kat{i + 1}"].mean()
@@ -1297,7 +1297,7 @@ if not df_cartesian.empty:
 
         results.append({
             "Art": gid,
-            "Municipality": gemeinde,
+            "Municipality": municipality,
             "Max_Kation_Segment": max(kat_means, key=kat_means.get),
             "Max_Kation_Mean": round(max(kat_means.values()), 2),
             "Max_Anionen_Segment": max(ani_means, key=ani_means.get),
