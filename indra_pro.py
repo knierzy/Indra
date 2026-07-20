@@ -629,7 +629,7 @@ df['Anion_Sum_meq_L'] = df[
 
 # Calculate charge balance error
 
-den = df['Cation_Sum_meq_L'] + df['Anion_Sum_meq_LL']
+den = df['Cation_Sum_meq_L'] + df['Anion_Sum_meq_L']
 
 df['Bilanzfehler_%'] = np.where(
     den > 0,
