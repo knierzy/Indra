@@ -1534,7 +1534,7 @@ try:
     )
 
     ref_group = st.selectbox(
-        "Referenzgruppe für Log-Euclidean-Distanz",
+        "Reference groups for log-euclidean distance",
         options=available_ref_groups,
         index=default_index
     )
