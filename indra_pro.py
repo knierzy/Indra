@@ -119,14 +119,14 @@ def parse_reference_values(text):
                 values.append(value)
             else:
                 st.warning(
-                    f"Der Wert {value} liegt außerhalb "
-                    f"des erlaubten Bereichs 0–100."
+                    f"Value {value} is outside the allowed range (0–100) "
+                    f"is outside the valid range (0–100)"
                 )
 
         except ValueError:
             st.warning(
-                f"'{part}' ist kein gültiger Zahlenwert "
-                f"und wurde ignoriert."
+                f"'{part}' is not a valid numeric value and has been ignored "
+                f"ingored"
             )
 
     return values
