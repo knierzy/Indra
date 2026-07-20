@@ -1402,7 +1402,7 @@ def format_hover(row):
     return (
         f"<b>Art:</b> {row['Art']}<br>"
         f"<b>Kationen</b> (aus {str(row['Cation_Meta_Number']).zfill(8)}):<br>{k_lines}<br>"
-        f"<b>Anionen</b> (aus {str(row['Anion_Meta_Numbe']).zfill(8)}):<br>{a_lines}"
+        f"<b>Anionen</b> (aus {str(row['Anion_Meta_Number']).zfill(8)}):<br>{a_lines}"
     )
 
 try:
@@ -1623,11 +1623,11 @@ try:
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
     # === Ca- und HCO3-Werte berechnen ===
-    df["Ca_val"] = df["Cation_Meta_Numbe"].apply(
+    df["Ca_val"] = df["Cation_Meta_Number"].apply(
         lambda x: pairs_to_percentages(x, ["Ca", "Mg", "Na", "K"])[0]["Ca"]
     )
 
-    df["HCO3_val"] = df["Anion_Meta_Numbe"].apply(
+    df["HCO3_val"] = df["Anion_Meta_Number"].apply(
         lambda x: pairs_to_percentages(x, ["HCO₃", "SO₄", "Cl", "NO₃"])[0]["HCO₃"]
     )
 
