@@ -1997,10 +1997,9 @@ try:
                         hoverinfo="text",
                         showlegend=False
                     ))
+=
+   #  ZENTRALE PUNKTE DER SUBGRUPPEN
 
-    # ============================================================
-    # 📍 ZENTRALE PUNKTE DER SUBGRUPPEN
-    # ============================================================
     group_centers = (
         df.groupby("Art")[["Anionen_trans", "Kationen_trans"]]
         .median()
@@ -2018,9 +2017,9 @@ try:
     print("\n📏 Distanzmatrix der Plot-Zentren:")
     print(center_dist.round(2))
 
-    # ============================================================
-    # 🔗 Korrelation Plotdistanz vs LED
-    # ============================================================
+  
+    # Korrelation Plotdistanz vs LED
+
 
     common_groups = [g for g in center_dist.index if g in group_means.index]
 
@@ -2047,9 +2046,9 @@ try:
     print(f"Pearson r  = {pear_r:.3f}  (p={pear_p:.4f})")
     print(f"Spearman ρ = {spear_r:.3f}  (p={spear_p:.4f})")
 
-    # ============================================================
-    # 🔷 CONVEX HULL PRO SUBGRUPPE
-    # ============================================================
+
+    #CONVEX HULL PRO SUBGRUPPE
+ 
 
     for art in df["Art"].unique():
 
@@ -2097,7 +2096,6 @@ try:
 
 
 
-    # === Diagonale Linie vom Ursprung (0,0) zum theoretischen Gleichgewichtspunkt ===
     # === Diagonale Linie vom Ursprung (0,0) zum theoretischen Gleichgewichtspunkt ===
 
     # Steigung der ursprünglichen Balance-Linie
@@ -2236,10 +2234,8 @@ try:
         return name[:6]
 
 
-    # ============================================================
-    # ============================================================
-    # 🏷️ LABEL COLLISION AVOIDANCE
-    # ============================================================
+    #  LABEL COLLISION AVOIDANCE
+
 
     placed_labels = []
 
