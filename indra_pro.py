@@ -367,7 +367,7 @@ df = df.reset_index(drop=True)
 # Create ID column from the first column
 
 df['ID'] = df.iloc[:, 0].astype(str).str.strip()
-print("✅ ID extracted from the first column.")
+print(" ID extracted from the first column.")
 
 
 # Create measurement station column from the second column
@@ -396,7 +396,7 @@ print(f"🧭 Used header row: {hrow}")
 cols = list(df.columns)
 
 mapping = {
-    'SAMPLING_DATE': pick(cols, r'G102|sampling|entnahme|date'),
+    'SAMPLING_DATE': pick(cols, r'G102|sampling|collection|date'),
     'CALCIUM_mg_L': pick(cols, r'G134|calcium'),
     'MAGNESIUM_mg_L': pick(cols, r'G135|magnesium'),
     'SODIUM_mg_L': pick(cols, r'G136|sodium|natrium'),
@@ -631,7 +631,7 @@ df['Anion_Sum_meq_L'] = df[
 
 den = df['Cation_Sum_meq_L'] + df['Anion_Sum_meq_L']
 
-df['Bilanzfehler_%'] = np.where(
+df['Charge_Balance_Error_%'] = np.where(
     den > 0,
     np.abs(df['Cation_Sum_meq_L'] - df['Anion_Sum_meq_L']) / den * 100,
     np.nan
