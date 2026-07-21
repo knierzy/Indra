@@ -367,7 +367,7 @@ df = df.reset_index(drop=True)
 # Create ID column from the first column
 
 df['ID'] = df.iloc[:, 0].astype(str).str.strip()
-print(" ID extracted from the first column.")
+
 
 
 # Create municipality name column from the fourth column
@@ -375,12 +375,7 @@ print(" ID extracted from the first column.")
 municipality_col_raw = df.columns[3]
 df['Municipality'] = df.iloc[:, 3].astype(str).str.strip()
 
-print(f"✅ Municipality name extracted from column '{municipality_col_raw}'.")
 
-
-print(f"📑 Sheets: {xls.sheet_names}")
-print(f"➡️ Used sheet: {sheet}")
-print(f"🧭 Used header row: {hrow}")
 
 
 # find relevant columns
@@ -401,7 +396,7 @@ mapping = {
     'pH': pick(cols, r'\bph\b'),
 }
 
-print("\n🔎 Column mapping:")
+
 for k, v in mapping.items():
     print(f"{k:30s} -> {v}")
 
@@ -562,16 +557,9 @@ required_ions = [
     'HCO3_mg_L'
 ]
 
-print("\n🔎 Availability before complete-ion filter:")
+
 for c in required_ions:
     print(c, df[c].notna().sum())
-
-print("\n🔎 Bicarbonate sources:")
-print("HCO3 original:", df['HCO3_mg_L_original'].notna().sum())
-print("ANC:", df['ANC_mmol_L'].notna().sum())
-print("HCO3 quick:", df['HCO3_mg_L_quick'].notna().sum())
-print("HCO3 final:", df['HCO3_mg_L_final'].notna().sum())
-
 
 
 
@@ -588,11 +576,6 @@ if df.empty:
 
 n_after = len(df)
 
-print(
-    f"🧪 Complete ion analyses: "
-    f"{n_after} of {n_before} rows retained "
-    f"({n_after / n_before:.1%})"
-)
 
 
 # Convert ion concentrations from mg/L to meq/L
@@ -726,10 +709,7 @@ for gid, g in df.groupby('Art', dropna=False):
 
 df_typisch = df[df['__keep__']].drop(columns='__keep__').copy()
 
-print(
-    f"🧪 Typical data per Art, 5–95 percent range: "
-    f"{len(df_typisch)} of {len(df)} rows retained"
-)
+
 
 
 # Add percentage shares based on meq/L
@@ -966,13 +946,7 @@ with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
     )
 
 
-print(
-    f"\n✅ File saved with calculated data, grouped data, "
-    f"min/max values, meq/percentage data, and correlation pairs: {output_file}"
-)
 
-
-print("\n📦 Creating constrained Cartesian product and meta numbers ...")
 
 
 # Define ion sets
@@ -1206,10 +1180,7 @@ for _, row in minmax_typisch.iterrows():
         continue
 
 
-    print(f"\n📍 {gid} ({municipality})")
-    print(f"  🔢 Raw search space:     {total_raw:,}")
-    print(f"  ➗ Sum = 100:            {count_sum_ok:,}")
-    print(f"  🔗 After constraints:    {count_final:,}")
+
 
     if total_raw > 0:
 
@@ -1321,9 +1292,6 @@ with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
         index=False
     )
 
-
-print("✔️ Constrained Cartesian product file saved.")
-print("📁", output_file_cartesian)
 
 
 # log-euclidean
@@ -1491,21 +1459,11 @@ try:
     h = group_means.loc[h_name].values
     o = group_means.loc[o_name].values
 
-    print("\n🔍 Vergleich Hallstatt vs Ossiach")
-    print("Hallstatt:", h_name)
-    print("Ossiach:", o_name)
-
-    print("\nMittelwerte Differenz:")
-    print(group_means.loc[h_name] - group_means.loc[o_name])
-
-    print("\nDistanzen:")
-    print("Euclidean:   ", euclidean(h, o))
-    print("Mahalanobis (raw): ", mahalanobis(o, h, cov_inv))
 
     h_log = group_means_log.loc[h_name].values
     o_log = group_means_log.loc[o_name].values
 
-    print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
+
 
     # choose reference group for Log-euclidean distance
     available_ref_groups = sorted(group_means.index.astype(str).tolist())
@@ -1524,7 +1482,7 @@ try:
         index=default_index
     )
 
-    print(f"\n reference: {ref_group}")
+
 
     ref_vector = group_means.loc[ref_group].values
         # LOG-Version for plot
@@ -1543,13 +1501,10 @@ try:
     # LogEuclidean above group name
     df["LogEuclid"] = df["Group_clean"].map(mah_dict)
 
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
     missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
-    print("\n Not MATCHT:")
+
     for m in missing[:20]:
         print(m)
 
@@ -1579,14 +1534,14 @@ try:
         bordercolor="black", borderwidth=1.5
     )
 
-    print("\n📏 Mahalanobis distances relative to Hallstatt:\n")
+
 
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
 
 
-    print(f"\n📏 Log-Euclidean Distanzen relativ zu {ref_group}:\n")
+
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
@@ -1597,21 +1552,11 @@ try:
  
     missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
-    print("\n❌ NICHT GEMATCHT:")
+  
     for m in missing[:20]:
         print(m)
 
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
-    print("\nDEBUG MATCHING:")
-    print(df["Group_clean"].unique()[:10])
-    print(list(mah_dict.keys())[:10])
-
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
     # Calculate Ca and HCO3 values
     df["Ca_val"] = df["Cation_Meta_Number"].apply(
