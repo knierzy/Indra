@@ -1858,9 +1858,7 @@ try:
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
     df["LogEuclid"] = df["Group_clean"].map(mah_dict)
 
-    print("Punkte gesamt:", len(df))
-    print("LogEuclid gültig:", df["LogEuclid"].notna().sum())
-    print("LogEuclid NaN:", df["LogEuclid"].isna().sum())
+
 
     if df["LogEuclid"].isna().any():
         print("Nicht gematchte Gruppen:")
@@ -2002,8 +2000,6 @@ try:
         columns=group_centers.index
     )
 
-    print("\n📏 Distanzmatrix der Plot-Zentren:")
-    print(center_dist.round(2))
 
   
     # Correlation between plot distance and LED
@@ -2030,9 +2026,7 @@ try:
     pear_r, pear_p = pearsonr(plot_vals, led_vals)
     spear_r, spear_p = spearmanr(plot_vals, led_vals)
 
-    print("\n🔗 Korrelation Plotdistanz vs LED")
-    print(f"Pearson r  = {pear_r:.3f}  (p={pear_p:.4f})")
-    print(f"Spearman ρ = {spear_r:.3f}  (p={spear_p:.4f})")
+
 
 
     #CONVEX HULL PRO SUBGRUPPE
@@ -2284,10 +2278,6 @@ try:
             yanchor="middle"
         )
 
-    print(np.var(raw_df[ion_cols], axis=0))
-
-
-    print(np.corrcoef(raw_df[ion_cols].values.T))
 
     
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
