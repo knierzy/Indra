@@ -370,8 +370,6 @@ df['ID'] = df.iloc[:, 0].astype(str).str.strip()
 print(" ID extracted from the first column.")
 
 
-
-
 # Create municipality name column from the fourth column
 
 municipality_col_raw = df.columns[3]
