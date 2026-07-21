@@ -1709,7 +1709,7 @@ try:
     x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
     y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
 
-    print(f"📍 Theoretischer 50|50 Punkt: x={x_theoretical_scaled:.2f}, y={y_theoretical_scaled:.2f}")
+
 
     # Extend the axis range so that the point is visibl
     xmax = max(100, x_theoretical_scaled * 1.08)
@@ -2331,5 +2331,5 @@ try:
 
 
 except Exception as e:
-    print("❌ Fehler beim Plotten:", e)
+    print(" Error while plotting", e)
     st.exception(e)
