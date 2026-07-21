@@ -1432,7 +1432,7 @@ try:
 
     #
     # mahalabonis distance
-    # ============================================================
+
 
 
     from scipy.spatial.distance import mahalanobis
@@ -1527,7 +1527,7 @@ try:
     print(f"\n✅ Referenz: {ref_group}")
 
     ref_vector = group_means.loc[ref_group].values
-        # LOG-Version für Plot verwenden
+        # LOG-Version for plot
     ref_vector = group_means.loc[ref_group].values
 
     # Calculate Log-Euclidean distances to reference group
@@ -1564,7 +1564,7 @@ try:
     f"</b></span><br>"
 )
 
-    for g, d in mah_sorted[:5]:  # Top 5
+    for g, d in mah_sorted[:5]:  
         mah_text += f"{g.title()}: {d:.2f}<br>"
 
     fig.add_annotation(
@@ -1573,7 +1573,7 @@ try:
         xanchor="left", yanchor="top",
         text=mah_text,
         showarrow=False,
-        font=dict(size=16),  # Basisgröße für den Rest
+        font=dict(size=16), 
         align="left",
         bgcolor="rgba(255,255,255,0.95)",
         bordercolor="black", borderwidth=1.5
@@ -1613,7 +1613,7 @@ try:
     print(df["LogEuclid"].head())
     print("NaN Anzahl:", df["LogEuclid"].isna().sum())
 
-    # === Ca- und HCO3-Werte berechnen ===
+    # Calculate Ca and HCO3 values
     df["Ca_val"] = df["Cation_Meta_Number"].apply(
         lambda x: pairs_to_percentages(x, ["Ca", "Mg", "Na", "K"])[0]["Ca"]
     )
@@ -1634,13 +1634,13 @@ try:
         y_max = sub["Kationen_trans_raw"].max() / df["Kationen_trans_raw"].max() * 100
         results_ca.append(dict(Ca=ca_val, y_min=y_min, y_max=y_max))
 
-        # Beispiel: Ca-Band
+        # Ca band
         fig.add_trace(go.Scatter(
             x=[0, 100, 100, 0],
             y=[y_min, y_min, y_max, y_max],
             fill="toself",
             fillpattern=dict(
-                shape="/",  # Schraffur
+                shape="/",  
                 fgcolor="grey",
                 size=3,
                 solidity=0.08
@@ -1650,7 +1650,7 @@ try:
             opacity=0.5,
             name=f"Ca = {ca_val}%",
             showlegend=False,
-            hoverinfo="skip"  # kein Hover
+            hoverinfo="skip"  
         ))
 
         fig.add_annotation(
@@ -1663,7 +1663,7 @@ try:
             yanchor="middle"
         )
 
-    # === HCO3-Referenzbänder für 20% und 40% ===
+    # HCO3 reference bands
     results_hco3 = []
     for hco3_val in selected_hco3_bands:
         sub = df[df["HCO3_val"] == hco3_val]
@@ -1678,7 +1678,7 @@ try:
             y=[0, 0, 100, 100],
             fill="toself",
             fillpattern=dict(
-                shape="\\",  # Schraffur andere Richtung
+                shape="\\", 
                 fgcolor="blue",
                 size=3,
                 solidity=0.08
@@ -1691,7 +1691,7 @@ try:
             hoverinfo="skip"  # kein Hover
         ))
 
-        # Beschriftung im Plot
+        # Label in the plot
         fig.add_annotation(
             x=(x_min + x_max) / 2, y=-3,
             text=f"<b>HCO₃ = {hco3_val}%</b>",
@@ -1702,7 +1702,7 @@ try:
         )
 
 
-    # === Theoretischer Balancepunkt berechnen ===
+    # Calculate the theoretical equilibrium point
     x_theoretical = custom_transform_optimal(50000000)
     y_theoretical = custom_transform_optimal(50000000)
 
@@ -1711,19 +1711,18 @@ try:
 
     print(f"📍 Theoretischer 50|50 Punkt: x={x_theoretical_scaled:.2f}, y={y_theoretical_scaled:.2f}")
 
-    # Achsenreichweite so erweitern, dass der Punkt sichtbar ist (mit 5% Puffer)
+    # Extend the axis range so that the point is visibl
     xmax = max(100, x_theoretical_scaled * 1.08)
     ymax = max(100, y_theoretical_scaled * 1.08)
 
-    # === Layout ===
-    # === Layout ===
+    #  Layout 
     fig.update_layout(
         xaxis=dict(
             title=dict(text="", font=dict(size=12)),
             tickvals=[0, 100],
             ticktext=["", f"HCO₃ (≈ {hco3_max}%)"],
             tickfont=dict(size=12),
-            showline=False,  # ❌ schwarze Achsenlinie ausschalten
+            showline=False,  
             zeroline=False,
             range=[0, xmax]
         ),
@@ -1733,7 +1732,7 @@ try:
             ticktext=["", ""],
             tickfont=dict(size=12),
             tickangle=-90,
-            showline=False,  # ❌ schwarze Achsenlinie ausschalten
+            showline=False,  
             zeroline=False,
             range=[-6, ymax]
         ),
@@ -1743,9 +1742,9 @@ try:
         ),
         legend=dict(
             font=dict(
-                size=28,  # 🔼 größer
+                size=28,  
                 color="black",
-                family="Arial Black"  # 🔥 fett wie Labels
+                family="Arial Black"  
             ),
 
             itemsizing="trace",
@@ -1755,9 +1754,9 @@ try:
             xanchor="left",
             yanchor="top",
 
-            bgcolor="rgba(255,255,255,0.9)",  # 🔼 klarer
+            bgcolor="rgba(255,255,255,0.9)",  
             bordercolor="black",
-            borderwidth=2  # 🔥 kräftiger Rahmen
+            borderwidth=2  
         ),
         hoverlabel=dict(font_size=20),
         margin=dict(l=0, r=80, t=60, b=40),
@@ -1777,23 +1776,23 @@ try:
     )
 
 
-    # X-Achse (HCO3)
+    # x axis (HCO3)
     fig.add_annotation(
-        x=100, y=0, ax=0, ay=0,  # statt x=hco3_max → x=100
+        x=100, y=0, ax=0, ay=0,  
         xref="x", yref="y", axref="x", ayref="y",
         showarrow=True, arrowhead=1, arrowsize=1,
         arrowwidth=1, arrowcolor="black", text=""
     )
 
-    # Y-Achse (Ca)
+    # y axis (Ca)
     fig.add_annotation(
-        x=0, y=100, ax=0, ay=0,  # statt y=ca_max → y=100
+        x=0, y=100, ax=0, ay=0,  
         xref="x", yref="y", axref="x", ayref="y",
         showarrow=True, arrowhead=1, arrowsize=1,
         arrowwidth=1, arrowcolor="black", text=""
     )
 
-    # Vertikale Linie bei HCO₃ max
+    # vertical line at HCO₃ maximum
     fig.add_shape(
         type="line",
         x0=100, x1=100,
@@ -1802,7 +1801,7 @@ try:
         line=dict(color="black", width=0.5, dash="dash")
     )
 
-    # Horizontale Linie bei Ca max
+    # Horizontal line at Ca maximum
     fig.add_shape(
         type="line",
         x0=0, x1=100,
@@ -1810,10 +1809,8 @@ try:
         xref="x", yref="y",
         line=dict(color="black", width=0.5, dash="dash")
     )
-
-        # ============================================================
-    # 🎨 NICHTLINEARE COLORBAR (0–4 gestreckt)
-    # ============================================================
+       
+   #  Nonlinear color bar (0–4 stretched)
 
     max_maha = df["LogEuclid"].max()
     if pd.isna(max_maha) or max_maha <= 0:
@@ -1854,9 +1851,9 @@ try:
         active_colorscale = color_scale_choice
 
   
-    # ============================================================
-    # 🎯 PUNKTE MIT LOG-EUCLIDEAN-FARBEN
-    # ============================================================
+
+  # Points with Log-Euclidean colors
+   
 
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
     df["LogEuclid"] = df["Group_clean"].map(mah_dict)
@@ -1940,7 +1937,7 @@ try:
 
               
 
-        # Überlappungen (Ringe)
+        # overlaps (rings)
         overlaps = df[df["Symbol"] == "star"].copy()
         if not overlaps.empty:
             base_size = 6
@@ -1952,7 +1949,7 @@ try:
                 arts = list(g["Art"])
                 n = len(arts)
 
-                # zentrales X
+                # central X
                 fig.add_trace(go.Scatter(
                     x=[x0], y=[y0],
                     mode="markers",
@@ -1967,7 +1964,7 @@ try:
                     showlegend=False
                 ))
 
-                # konzentrische rote Halos
+                # Concentric red halos
                 for i, art in enumerate(arts):
                     row = g[g["Art"] == art].iloc[0]
                     size = base_size + i * ring_width
@@ -1978,7 +1975,7 @@ try:
                         marker=dict(
                             symbol="circle",
                             size=size,
-                            color="rgba(0,0,0,0)",  # transparent innen
+                            color="rgba(0,0,0,0)",  # transparent
                             line=dict(
                                 width=5,
                                 color="red"
@@ -1989,7 +1986,7 @@ try:
                         showlegend=False
                     ))
 
-   #  ZENTRALE PUNKTE DER SUBGRUPPEN
+   #  central points of subgroups
 
     group_centers = (
         df.groupby("Art")[["Anionen_trans", "Kationen_trans"]]
@@ -2009,7 +2006,7 @@ try:
     print(center_dist.round(2))
 
   
-    # Korrelation Plotdistanz vs LED
+    # Correlation between plot distance and LED
 
 
     common_groups = [g for g in center_dist.index if g in group_means.index]
@@ -2045,7 +2042,7 @@ try:
 
         sub = df[df["Art"] == art]
 
-        # nur sinnvoll wenn genug Punkte
+        # only meaningful with enough data points
         if len(sub) < 3:
             continue
 
@@ -2056,7 +2053,7 @@ try:
 
             hull_points = points[hull.vertices]
 
-            # schließen der Linie
+            # close line
             hull_points = np.vstack([hull_points, hull_points[0]])
 
             fig.add_trace(go.Scatter(
@@ -2065,38 +2062,34 @@ try:
                 mode="lines",
                 line=dict(
                     width=1.5,
-                    color="rgba(0,0,0,0.8)"  # dünn + leicht transparent
+                    color="rgba(0,0,0,0.8)"  # Thin, slightly transparent
                 ),
                 showlegend=False,
                 hoverinfo="skip"
             ))
 
         except:
-            pass  # falls numerische Probleme
+            pass  # in case of numerical issues
 
 
-
-    # === Referenzpunkt (Balancepunkt 50|50) hinzufügen ===
-    # → Berechne reale transformierte Koordinaten für Metazahl 50000000
+    # Calculate the theoretical equilibrium point (50|50)
     x_theoretical = custom_transform_optimal(50000000)
     y_theoretical = custom_transform_optimal(50000000)
 
-    # In dieselbe Skala wie die anderen Punkte (0–100 relativ zu Daten-Maximum)
+    # Scale to the same 0–100 range as the other points
     x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
     y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
 
+    # Diagonal line from the origin to the theoretical equilibrium point
 
-
-    # === Diagonale Linie vom Ursprung (0,0) zum theoretischen Gleichgewichtspunkt ===
-
-    # Steigung der ursprünglichen Balance-Linie
+    #  Slope of the original balance line
     slope = y_theoretical_scaled / x_theoretical_scaled
 
-    # Datenbereich bestimmen
+    # Determine the data range
     x_data_max = df["Anionen_trans"].max()
     y_data_max = df["Kationen_trans"].max()
 
-    # Schnittpunkt der Linie mit dem Datenbereich berechnen
+    # Calculate the intersection of the line with the data range
     y_at_xmax = slope * x_data_max
 
     if y_at_xmax <= y_data_max:
@@ -2106,7 +2099,7 @@ try:
         y_end = y_data_max
         x_end = y_data_max / slope
 
-    # Linie zeichnen (gekürzt auf Datenbereich)
+    # draw line
     fig.add_shape(
         type="line",
         x0=0, y0=0,
@@ -2115,7 +2108,7 @@ try:
         line=dict(color="grey", width=0.5, dash="dot"),
     )
 
-    # Beschriftung mittig auf der gekürzten Linie
+    # center label on the dashed line
     fig.add_annotation(
         x=x_end * 0.5,
         y=y_end * 0.5,
@@ -2126,11 +2119,11 @@ try:
         opacity=0.8
     )
 
-    # === Overlap-Statistik & überlappende Gruppen (oben links) ===
-    # === Overlap-Statistik & eindeutige überlappende Gruppen (oben links) ===
+
+    # overlap statistics 
     from itertools import combinations
 
-    # Overlap-Koordinaten zählen
+    # count overlap coordinates
     koord_counts = (
         df.groupby(["Kationen_trans", "Anionen_trans"])["Art"]
         .nunique()
@@ -2148,7 +2141,7 @@ try:
         float(overlap_coords_df["region_count"].mean()) if n_overlap_coords else 0.0
     )
 
-    # Eindeutige Paare sammeln (jedes nur einmal)
+    # Collect unique pairs (each only once)
     pair_set = set()
     for (_, _), g in df.groupby(["Kationen_trans", "Anionen_trans"]):
         arts_here = sorted(g["Art"].unique())
@@ -2156,7 +2149,7 @@ try:
             for a, b in combinations(arts_here, 2):
                 pair_set.add(f"{a} × {b}")
 
-    # Text für Box
+    # text for box
     if pair_set:
         overlap_text = (
                 f"<span style='font-size:15px;'><b>Overlap statistic</b></span><br>"
@@ -2172,13 +2165,10 @@ try:
             f"No overlapping determined"
         )
 
-
-
-
-    # Box oben links einfügen
+    # insert box
     fig.add_annotation(
         xref="paper", yref="paper",
-        x=0.38, y=1.15,  # 🔼 höher & zentriert
+        x=0.38, y=1.15,  
         xanchor="center", yanchor="top",
         text=overlap_text,
         showarrow=False,
@@ -2187,9 +2177,8 @@ try:
         bgcolor="rgba(255,255,255,0.95)",
         bordercolor="black",
         borderwidth=1.5,
-        width=400  # 🔥 macht die Box breit!
+        width=400  #  width box
     )
-
 
     def smart_label(name):
 
@@ -2210,7 +2199,7 @@ try:
             if len(parts) > 1:
                 second = parts[1]
 
-                # zusammengesetzte Namen kürzen
+                # shorten compound names
                 second = second.replace("-", " ")
                 subparts = second.split()
 
@@ -2225,7 +2214,8 @@ try:
         return name[:6]
 
 
-    #  LABEL COLLISION AVOIDANCE
+
+  #label collision avoidance
 
 
     placed_labels = []
@@ -2272,7 +2262,7 @@ try:
         y_center = sub["Kationen_trans"].median()
 
 
-        # verschobene Position falls nötig
+        # position shifted if necessary
         x_lab, y_lab = move_if_overlap(x_center, y_center)
 
         label = smart_label(art)
@@ -2281,7 +2271,7 @@ try:
             x=x_lab,
             y=y_lab,
             text=label,
-            showarrow=False,  # ← KEINE Pfeile
+            showarrow=False,  # no arrows
             font=dict(
                 size=14,
                 color="black",
@@ -2294,7 +2284,6 @@ try:
             yanchor="middle"
         )
 
-    print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
 
