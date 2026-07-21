@@ -2297,12 +2297,12 @@ try:
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
 
-    print("\nKorrelationsmatrix:")
+
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # ============================================================
+    
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
-    # ============================================================
+    
 
     fig.update_layout(
         height=750,
@@ -2339,7 +2339,6 @@ try:
         height=750,
         scrolling=True
     )
-
 
 
 except Exception as e:
