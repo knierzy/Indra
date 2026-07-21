@@ -279,7 +279,7 @@ def to_num(s):
         # Remove brackets
         s = re.sub(r'[\[\]\(\)]', '', s)
 
-        # Range value: 0.1-0.3 → mean value
+        # convert range values (e.g. 0.1-0.3) to their mean
         if "-" in s:
 
             parts = s.split("-")
@@ -300,7 +300,7 @@ def to_num(s):
             except:
                 return np.nan
 
-    # Standard numeric conversion
+    # standard numeric conversion
     return pd.to_numeric(s, errors="coerce")
 
 
@@ -347,7 +347,7 @@ def normalize_row(row):
 
 
 
-# Read Excel file
+# read Excel file
 
 xls = pd.ExcelFile(input_file)
 sheet = preferred_sheet if preferred_sheet in xls.sheet_names else xls.sheet_names[0]
@@ -370,12 +370,6 @@ df['ID'] = df.iloc[:, 0].astype(str).str.strip()
 print(" ID extracted from the first column.")
 
 
-# Create measurement station column from the second column
-
-station_col_raw = df.columns[1]
-df['Messstation'] = df.iloc[:, 1].astype(str).str.strip()
-
-print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
 
 
 # Create municipality name column from the fourth column
