@@ -143,7 +143,7 @@ with col_ca:
 
     custom_ca_text = st.text_input(
         "Additional Ca Values",
-        placeholder="z. B. 4, 12, 18"
+        placeholder="e. g. 4, 12, 18"
     )
 
 with col_hco3:
@@ -155,7 +155,7 @@ with col_hco3:
 
     custom_hco3_text = st.text_input(
         "Additional HCO₃ Values",
-        placeholder="z. B. 4, 22, 37"
+        placeholder="e. g. 4, 22, 37"
     )
 
 
@@ -1524,7 +1524,7 @@ try:
         index=default_index
     )
 
-    print(f"\n✅ Referenz: {ref_group}")
+    print(f"\n reference: {ref_group}")
 
     ref_vector = group_means.loc[ref_group].values
         # LOG-Version for plot
@@ -1549,7 +1549,7 @@ try:
 
     missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
 
-    print("\n❌ NICHT GEMATCHT:")
+    print("\n Not MATCHT:")
     for m in missing[:20]:
         print(m)
 
@@ -1579,7 +1579,7 @@ try:
         bordercolor="black", borderwidth=1.5
     )
 
-    print("\n📏 Mahalanobis-Distanzen relativ zu Hallstatt:\n")
+    print("\n📏 Mahalanobis distances relative to Hallstatt:\n")
 
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
