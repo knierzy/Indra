@@ -1341,7 +1341,7 @@ try:
     df["hover_text"] = df.apply(format_hover, axis=1)
 
     #
-    # mahalabonis distance
+
 
 
 
@@ -1422,14 +1422,14 @@ try:
     f"</b></span><br>"
 )
 
-    for g, d in mah_sorted[:5]:  
+    for g, d in logeuclid_sorted[:5]:  
         logeuclid_text += f"{g.title()}: {d:.2f}<br>"
 
     fig.add_annotation(
         xref="paper", yref="paper",
         x=0.58, y=1.15,
         xanchor="left", yanchor="top",
-        text=mah_text,
+        text=logeuclid_text,
         showarrow=False,
         font=dict(size=16), 
         align="left",
@@ -1651,10 +1651,10 @@ try:
    #  Nonlinear color bar (0–4 stretched)
 
     max_logeuclid = df["LogEuclid"].max()
-    if pd.isna(max_maha) or max_maha <= 0:
+    if pd.isna(max_logeuclid) or max_logeuclid <= 0:
         max_logeuclid = 1.0
 
-    t = 1.2 / max_maha
+    t = 1.2 / max_logeuclid
     gamma = 0.5
 
     def stretch(x):
@@ -1735,7 +1735,7 @@ try:
                 color=sub["LogEuclid"],
                 colorscale=active_colorscale,
                 cmin=0,
-                cmax=max_maha,
+                cmax=max_logeuclid,
                 showscale=(i == 0),
                 colorbar=dict(
                     title=dict(
@@ -1743,8 +1743,8 @@ try:
                         font=dict(size=12, family="Arial Black", color="black")
                     ),
                     tickfont=dict(size=10),
-                    tickvals=[0, 1, 2, 3, 4, round(max_maha, 1)],
-                    ticktext=["0", "1", "2", "3", "4", f"{max_maha:.1f}"],
+                    tickvals=[0, 1, 2, 3, 4, round(max_logeuclid, 1)],
+                    ticktext=["0", "1", "2", "3", "4", f"{max_logeuclid:.1f}"],
                     x=0.12,
                     y=0.5,
                     xanchor="right",
