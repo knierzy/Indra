@@ -1184,17 +1184,17 @@ for _, row in minmax_typisch.iterrows():
 
     # Generate meta numbers
 
-    def erzeuge_metazahl(row, spalten):
+    def generate_metazahl(row, spalten):
         return int("".join(f"{int(row[col]):02}" for col in spalten))
 
 
     df_loc["Cation_Meta_Number"] = df_loc.apply(
-        lambda r: erzeuge_metazahl(r, ion_pairs_kat),
+        lambda r: generate_metazahl(r, ion_pairs_kat),
         axis=1
     )
 
     df_loc["Anion_Meta_Number"] = df_loc.apply(
-        lambda r: erzeuge_metazahl(r, ion_pairs_ani),
+        lambda r: generate_metazahl(r, ion_pairs_ani),
         axis=1
     )
 
