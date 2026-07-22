@@ -332,9 +332,9 @@ def norm_col(c):
 
 
 def normalize_row(row):
-    vals = [row.get(f'Percent_%_{ion}', np.nan) for ion in ionen]
+    vals = [row.get(f'Percent_%_{ion}', np.nan) for ion in ions]
     if any(pd.isna(vals)) or row.get('Total_meq_L', np.nan) <= 0:
-        return pd.Series([np.nan]*len(ionen), index=[f'Percent_Int_%_{ion}' for ion in ionen])
+        return pd.Series([np.nan]*len(ionen), index=[f'Percent_Int_%_{ion}' for ion in ions])
     arr = np.array(vals, dtype=float)
     flo = np.floor(arr).astype(int)
     rest = int(100 - flo.sum())
@@ -343,7 +343,7 @@ def normalize_row(row):
         order = np.argsort(-diffs)  # Largest fractional parts first
         for i in range(min(abs(rest), len(order))):
             flo[order[i]] += 1 if rest > 0 else -1
-    return pd.Series(flo, index=[f'Percent_Int_%_{ion}' for ion in ionen])
+    return pd.Series(flo, index=[f'Percent_Int_%_{ion}' for ion in ions])
 
 
 
@@ -629,7 +629,7 @@ ionen = [
 
 # Calculate percentage share of each ion
 
-for ion in ionen:
+for ion in ions:
 
     num = df_meq_pct[f'meq_L_{ion}']
     den = df_meq_pct['Total_meq_L']
@@ -643,7 +643,7 @@ for ion in ionen:
 
 # Calculate integer percentage shares using the largest remainder method
 
-df_meq_pct[[f'Percent_Int_%_{ion}' for ion in ionen]] = (
+df_meq_pct[[f'Percent_Int_%_{ion}' for ion in ions]] = (
     df_meq_pct.apply(normalize_row, axis=1)
 )
 
@@ -723,7 +723,7 @@ ionen = [
     'HCO3-'
 ]
 
-for ion in ionen:
+for ion in ions:
 
     num = df_typisch[f'meq_L_{ion}']
     den_all = df_typisch['Total_meq_L']
@@ -737,7 +737,7 @@ for ion in ionen:
 
 # Calculate integer percentage shares using the largest remainder method
 
-df_typisch[[f'Percent_Int_%_{ion}' for ion in ionen]] = (
+df_typisch[[f'Percent_Int_%_{ion}' for ion in ions]] = (
     df_typisch.apply(normalize_row, axis=1)
 )
 
@@ -814,7 +814,7 @@ ionen = [
     'HCO3-'
 ]
 
-int_cols = [f'Percent_Int_%_{ion}' for ion in ionen]
+int_cols = [f'Percent_Int_%_{ion}' for ion in ions]
 
 for c in int_cols:
 
