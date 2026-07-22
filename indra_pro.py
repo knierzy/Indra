@@ -1414,7 +1414,7 @@ try:
 
     fig = go.Figure()
 
-    logeuclid_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
+    logeuclid_sorted = sorted(mah_logeuclid.items(), key=lambda x: x[1])
 
     logeuclid_text = (
     f"<span style='font-size:15px'><b>"
