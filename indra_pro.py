@@ -734,16 +734,7 @@ df_typisch[[f'Percent_Int_%_{ion}' for ion in ions]] = (
 
 # Calculate correlation matrix values per Art
 
-ions = [
-    "Ca2+",
-    "Mg2+",
-    "Na+",
-    "K+",
-    "Cl-",
-    "SO4_2-",
-    "NO3-",
-    "HCO3-"
-]
+
 
 corr_results = []
 
@@ -793,16 +784,7 @@ if 'ID' not in df_typ_bis10.columns:
     raise ValueError("❌ Column 'ID' not found. Please check whether it exists in the input file.")
 
 
-ions = [
-    'Ca2+',
-    'Mg2+',
-    'Na+',
-    'K+',
-    'Cl-',
-    'SO4_2-',
-    'NO3-',
-    'HCO3-'
-]
+
 
 int_cols = [f'Percent_Int_%_{ion}' for ion in ions]
 
