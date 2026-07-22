@@ -1402,7 +1402,7 @@ try:
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
 
     # LogEuclidean above group name
-    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+    df["LogEuclid"] = df["Group_clean"].map(logeuclid_dict)
 
 
     missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
@@ -1438,12 +1438,13 @@ try:
     )
 
 
-    for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
+    for g, d in sorted(logeuclid_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
 
     max_logeuclid = df["LogEuclid"].max()
- 
+
+
   
     for m in missing[:20]:
         print(m)
