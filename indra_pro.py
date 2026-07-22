@@ -615,16 +615,6 @@ df_meq_pct['Total_meq_L'] = (
     df_meq_pct['meq_L_HCO3-']
 )
 
-ionen = [
-    'Ca2+',
-    'Mg2+',
-    'Na+',
-    'K+',
-    'Cl-',
-    'SO4_2-',
-    'NO3-',
-    'HCO3-'
-]
 
 
 # Calculate percentage share of each ion
