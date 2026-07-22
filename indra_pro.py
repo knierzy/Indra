@@ -712,16 +712,6 @@ df_typisch['Total_meq_L'] = (
     df_typisch['meq_L_HCO3-']
 )
 
-ions = [
-    'Ca2+',
-    'Mg2+',
-    'Na+',
-    'K+',
-    'Cl-',
-    'SO4_2-',
-    'NO3-',
-    'HCO3-'
-]
 
 for ion in ions:
 
