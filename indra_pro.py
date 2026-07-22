@@ -928,16 +928,7 @@ def lern_constraint_bands(df_typ):
     - positive correlations between ion pairs
     """
 
-    ions = [
-        "Ca2+",
-        "Mg2+",
-        "Na+",
-        "K+",
-        "HCO3-",
-        "SO4_2-",
-        "Cl-",
-        "NO3-"
-    ]
+ 
 
     constraints = {}
 
