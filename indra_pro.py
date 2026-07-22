@@ -126,7 +126,7 @@ def parse_reference_values(text):
         except ValueError:
             st.warning(
                 f"'{part}' is not a valid numeric value and has been ignored "
-                f"ingored"
+                f"ignored"
             )
 
     return values
@@ -374,8 +374,6 @@ df['ID'] = df.iloc[:, 0].astype(str).str.strip()
 
 municipality_col_raw = df.columns[3]
 df['Municipality'] = df.iloc[:, 3].astype(str).str.strip()
-
-
 
 
 # find relevant columns
@@ -782,7 +780,6 @@ df_typ_bis10 = df_typisch.copy()
 
 if 'ID' not in df_typ_bis10.columns:
     raise ValueError("❌ Column 'ID' not found. Please check whether it exists in the input file.")
-
 
 
 
@@ -1273,7 +1270,7 @@ raw_df = pd.read_excel(
 
 
 
-# ---furction for transformation of base 
+# function for transformation of base 
 def custom_transform_optimal(x, base=None):
     if base is None:
         base = selected_base
@@ -1287,7 +1284,7 @@ def custom_transform_optimal(x, base=None):
     except:
         return None
 
-# -hover help
+# hover help
 def pairs_to_percentages(x, labels):
     try:
         s = str(int(x)).zfill(8)
@@ -1318,7 +1315,7 @@ try:
         if col not in df.columns:
             raise ValueError(f"Spalte '{col}' is missing from the file")
 
-    # apply trasnformation
+    # apply transformation
     df["Cations_trans_raw"] = df["Cation_Meta_Number"].apply(custom_transform_optimal)
     df["Anions_trans_raw"]  = df["Anion_Meta_Number"].apply(custom_transform_optimal)
 
@@ -1348,9 +1345,7 @@ try:
 
 
 
-    from scipy.spatial.distance import mahalanobis
-
-    # ---define ions---
+    # define ions
     ion_cols = [
         "meq_L_Ca2+",
         "meq_L_Mg2+",
@@ -1362,51 +1357,17 @@ try:
         "meq_L_HCO3-"
     ]
 
-    # --- Covariance matrix---
-    cov = np.cov(raw_df[ion_cols].values.T)
-    cov += np.eye(cov.shape[0]) * 1e-6
-    cov_inv = np.linalg.pinv(cov)
+   
 
     # Group mean values
     group_means = raw_df.groupby("Art")[ion_cols].mean()
     group_means.index = group_means.index.astype(str).str.strip()
 
 
-    # Log-tranformed mahalabonis 
+
   
 
-    # ---log transformation of raw data ---
-    X_log = np.log1p(raw_df[ion_cols])
 
-    # ---Covariance matrix in log space---
-    cov_log = np.cov(X_log.values.T)
-    cov_log += np.eye(cov_log.shape[0]) * 1e-6
-    cov_log_inv = np.linalg.pinv(cov_log)
-
-    # --- group mean values in log space ---
-    group_means_log = raw_df.groupby("Art")[ion_cols].mean()
-    group_means_log = np.log1p(group_means_log)
-    group_means_log.index = group_means_log.index.astype(str).str.strip()
-
-    # --- DEBUG: comparison Hallstatt vs Ossiach ---
-    from scipy.spatial.distance import euclidean, mahalanobis
-
-    h_name = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake hallstatt"
-    )
-
-    o_name = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake ossiach"
-    )
-
-    h = group_means.loc[h_name].values
-    o = group_means.loc[o_name].values
-
-
-    h_log = group_means_log.loc[h_name].values
-    o_log = group_means_log.loc[o_name].values
 
 
 
@@ -1431,11 +1392,11 @@ try:
     ref_vector = group_means.loc[ref_group].values
 
     # Calculate Log-Euclidean distances to reference group
-    mah_dict = {}
+    logeuclid_dict = {}
 
     for g in group_means.index:
         vec = group_means.loc[g].values
-        mah_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
+        logeuclid_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
 
         # Clean plot group names
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
@@ -1453,16 +1414,16 @@ try:
 
     fig = go.Figure()
 
-    mah_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
+    logeuclid_sorted = sorted(mah_dict.items(), key=lambda x: x[1])
 
-    mah_text = (
+    logeuclid_text = (
     f"<span style='font-size:15px'><b>"
     f"Log-Euclidean distance – reference: {ref_group}"
     f"</b></span><br>"
 )
 
     for g, d in mah_sorted[:5]:  
-        mah_text += f"{g.title()}: {d:.2f}<br>"
+        logeuclid_text += f"{g.title()}: {d:.2f}<br>"
 
     fig.add_annotation(
         xref="paper", yref="paper",
@@ -1481,7 +1442,7 @@ try:
         print(f"{g:25s}  →  {d:.3f}")
 
 
-    max_maha = df["LogEuclid"].max()
+    max_logeuclid = df["LogEuclid"].max()
  
   
     for m in missing[:20]:
@@ -1688,9 +1649,9 @@ try:
        
    #  Nonlinear color bar (0–4 stretched)
 
-    max_maha = df["LogEuclid"].max()
+    max_logeuclid = df["LogEuclid"].max()
     if pd.isna(max_maha) or max_maha <= 0:
-        max_maha = 1.0
+        max_logeuclid = 1.0
 
     t = 1.2 / max_maha
     gamma = 0.5
