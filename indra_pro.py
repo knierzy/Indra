@@ -906,8 +906,6 @@ with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
 
 
 
-
-
 # Define ion sets
 
 ion_pairs_kat = ["Ca2+", "Mg2+", "Na+", "K+"]
@@ -1132,7 +1130,7 @@ for _, row in minmax_typisch.iterrows():
 
     if total_raw > 0:
 
-        print(f"  📉 Reduction ratio:      {count_final / total_raw:.8f}")
+       
 
 
     df_loc = pd.DataFrame(valid, columns=all_ions)
@@ -1272,7 +1270,6 @@ raw_df = pd.read_excel(
     raw_file,
     sheet_name="Typical_Data_5_95"
 )
-
 
 
 
@@ -1753,7 +1750,6 @@ try:
 
 
 
-
     df["LogEuclid"] = df["LogEuclid"].fillna(0)
 
     art_order = (
@@ -1819,7 +1815,6 @@ try:
             hoverinfo="text"
         ))
 
-              
 
         # overlaps (rings)
         overlaps = df[df["Symbol"] == "star"].copy()
@@ -1886,7 +1881,6 @@ try:
         columns=group_centers.index
     )
 
-
   
     # Correlation between plot distance and LED
 
@@ -1911,8 +1905,6 @@ try:
 
     pear_r, pear_p = pearsonr(plot_vals, led_vals)
     spear_r, spear_p = spearmanr(plot_vals, led_vals)
-
-
 
 
     #CONVEX HULL PRO SUBGRUPPE
@@ -2163,7 +2155,6 @@ try:
             xanchor="center",
             yanchor="middle"
         )
-
 
     
     # FINAL LAYOUT + EXPORT + STREAMLIT DISPLAY
