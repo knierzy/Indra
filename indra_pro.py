@@ -615,7 +615,7 @@ df_meq_pct['Total_meq_L'] = (
     df_meq_pct['meq_L_HCO3-']
 )
 
-ionen = [
+ions = [
     'Ca2+',
     'Mg2+',
     'Na+',
@@ -712,7 +712,7 @@ df_typisch['Total_meq_L'] = (
     df_typisch['meq_L_HCO3-']
 )
 
-ionen = [
+ions = [
     'Ca2+',
     'Mg2+',
     'Na+',
@@ -803,7 +803,7 @@ if 'ID' not in df_typ_bis10.columns:
     raise ValueError("❌ Column 'ID' not found. Please check whether it exists in the input file.")
 
 
-ionen = [
+ions = [
     'Ca2+',
     'Mg2+',
     'Na+',
@@ -1246,10 +1246,10 @@ if not df_cartesian.empty:
         results.append({
             "Art": gid,
             "Municipality": municipality,
-            "Max_Kation_Segment": max(kat_means, key=kat_means.get),
-            "Max_Kation_Mean": round(max(kat_means.values()), 2),
-            "Max_Anionen_Segment": max(ani_means, key=ani_means.get),
-            "Max_Anionen_Mean": round(max(ani_means.values()), 2),
+            "Max_Cation_Segment": max(kat_means, key=kat_means.get),
+            "Max_Cation_Mean": round(max(kat_means.values()), 2),
+            "Max_Anion_Segment": max(ani_means, key=ani_means.get),
+            "Max_Anion_Mean": round(max(ani_means.values()), 2),
         })
 
     df_segstats = pd.DataFrame(results)
