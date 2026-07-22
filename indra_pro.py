@@ -551,8 +551,6 @@ for c in required_ions:
     print(c, df[c].notna().sum())
 
 
-
-
 n_before = len(df)
 
 df = df.dropna(subset=required_ions).copy()
@@ -1167,8 +1165,6 @@ for _, row in minmax_typisch.iterrows():
 
     if len(valid) == 0:
         continue
-
-
 
 
     if total_raw > 0:
@@ -1794,13 +1790,6 @@ try:
 
 
 
-    if df["LogEuclid"].isna().any():
-        print("Nicht gematchte Gruppen:")
-        print(
-            df.loc[df["LogEuclid"].isna(), "Art"]
-            .drop_duplicates()
-            .head(30)
-        )
 
     df["LogEuclid"] = df["LogEuclid"].fillna(0)
 
