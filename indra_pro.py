@@ -1599,8 +1599,8 @@ try:
         sub = df[df["HCO3_val"] == hco3_val]
         if sub.empty:
             continue
-        x_min = sub["Anionen_trans_raw"].min() / df["Anionen_trans_raw"].max() * 100
-        x_max = sub["Anionen_trans_raw"].max() / df["Anionen_trans_raw"].max() * 100
+        x_min = sub["Anions_trans_raw"].min() / df["Anions_trans_raw"].max() * 100
+        x_max = sub["Anions_trans_raw"].max() / df["Anions_trans_raw"].max() * 100
         results_hco3.append(dict(HCO3=hco3_val, x_min=x_min, x_max=x_max))
 
         fig.add_trace(go.Scatter(
