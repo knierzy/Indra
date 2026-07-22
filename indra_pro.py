@@ -417,18 +417,7 @@ if missing_mapping:
 # Create Art column from column B
 
 df['Art'] = df.iloc[:, 1].astype(str).str.strip()
-print("✅ Group column created.")
 
-
-print("\n🔎 Group size by Art:")
-print(df.groupby('Art').size().describe())
-
-
-
-print("\n🔎 Group sizes for percentile filtering:")
-
-
-print("\n🔎 Column mapping:")
 for k, v in mapping.items():
     print(f"  {k:15s} → {v if (isinstance(v, str) and v in df.columns) else str(v)}")
 
