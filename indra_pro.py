@@ -1130,7 +1130,7 @@ for _, row in minmax_typisch.iterrows():
 
     if total_raw > 0:
 
-       
+    print(f"  📉 Reduction ratio:      {count_final / total_raw:.8f}")
 
 
     df_loc = pd.DataFrame(valid, columns=all_ions)
