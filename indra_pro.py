@@ -1345,8 +1345,8 @@ def format_hover(row):
     a_lines = " · ".join([f"{lbl}: {a_perc[lbl]}%" if a_perc[lbl] is not None else f"{lbl}: –" for lbl in a_labels])
     return (
         f"<b>Art:</b> {row['Art']}<br>"
-        f"<b>Kationen</b> (aus {str(row['Cation_Meta_Number']).zfill(8)}):<br>{k_lines}<br>"
-        f"<b>Anionen</b> (aus {str(row['Anion_Meta_Number']).zfill(8)}):<br>{a_lines}"
+        f"<b>Cations</b> (aus {str(row['Cation_Meta_Number']).zfill(8)}):<br>{k_lines}<br>"
+        f"<b>Anions</b> (aus {str(row['Anion_Meta_Number']).zfill(8)}):<br>{a_lines}"
     )
 
 try:
@@ -1356,26 +1356,26 @@ try:
     required_cols = ['Cation_Meta_Number', 'Anion_Meta_Number', 'Art']
     for col in required_cols:
         if col not in df.columns:
-            raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
+            raise ValueError(f"Spalte '{col}' is missing from the file")
 
     # apply trasnformation
-    df["Kationen_trans_raw"] = df["Cation_Meta_Number"].apply(custom_transform_optimal)
-    df["Anionen_trans_raw"]  = df["Anion_Meta_Number"].apply(custom_transform_optimal)
+    df["Cations_trans_raw"] = df["Cation_Meta_Number"].apply(custom_transform_optimal)
+    df["Anions_trans_raw"]  = df["Anion_Meta_Number"].apply(custom_transform_optimal)
 
     # normalization 0-100
-    df["Kationen_trans"] = df["Kationen_trans_raw"] / df["Kationen_trans_raw"].max() * 100
-    df["Anionen_trans"]  = df["Anionen_trans_raw"]  / df["Anionen_trans_raw"].max()  * 100
+    df["Cations_trans"] = df["Cations_trans_raw"] / df["Cations_trans_raw"].max() * 100
+    df["Anions_trans"]  = df["Anions_trans_raw"]  / df["Anions_trans_raw"].max()  * 100
 
     # remove duplicates
-    df = df.drop_duplicates(subset=["Kationen_trans", "Anionen_trans", "Art"])
+    df = df.drop_duplicates(subset=["Cations_trans", "Anions_trans", "Art"])
 
     # count overlaps
     koord_counts = (
-        df.groupby(["Kationen_trans", "Anionen_trans"])
+        df.groupby(["Cations_trans", "Anions_trans"])
         .size()
         .reset_index(name="region_count")
     )
-    df = df.merge(koord_counts, on=["Kationen_trans", "Anionen_trans"], how="left")
+    df = df.merge(koord_counts, on=["Cations_trans", "Anions_trans"], how="left")
     df["Symbol"] = df["region_count"].apply(lambda x: "star" if x > 1 else "circle")
 
 
@@ -1560,8 +1560,8 @@ try:
         sub = df[df["Ca_val"] == ca_val]
         if sub.empty:
             continue
-        y_min = sub["Kationen_trans_raw"].min() / df["Kationen_trans_raw"].max() * 100
-        y_max = sub["Kationen_trans_raw"].max() / df["Kationen_trans_raw"].max() * 100
+        y_min = sub["Cations_trans_raw"].min() / df["Cations_trans_raw"].max() * 100
+        y_max = sub["Cations_trans_raw"].max() / df["Cations_trans_raw"].max() * 100
         results_ca.append(dict(Ca=ca_val, y_min=y_min, y_max=y_max))
 
         # Ca band
@@ -1636,8 +1636,8 @@ try:
     x_theoretical = custom_transform_optimal(50000000)
     y_theoretical = custom_transform_optimal(50000000)
 
-    x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
-    y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
+    x_theoretical_scaled = x_theoretical / df["Anions_trans_raw"].max() * 100
+    y_theoretical_scaled = y_theoretical / df["Cations_trans_raw"].max() * 100
 
 
 
@@ -1823,8 +1823,8 @@ try:
             marker_size = 10 * marker_scale
 
         fig.add_trace(go.Scatter(
-            x=sub["Anionen_trans"],
-            y=sub["Kationen_trans"],
+            x=sub["Anions_trans"],
+            y=sub["Cations_trans"],
             mode="markers",
             name=art,
             marker=dict(
@@ -1864,7 +1864,7 @@ try:
             base_size = 6
             ring_width = 4
 
-            grouped = overlaps.groupby(["Kationen_trans", "Anionen_trans"])
+            grouped = overlaps.groupby(["Cations_trans", "Anions_trans"])
 
             for (y0, x0), g in grouped:
                 arts = list(g["Art"])
@@ -1910,7 +1910,7 @@ try:
    #  central points of subgroups
 
     group_centers = (
-        df.groupby("Art")[["Anionen_trans", "Kationen_trans"]]
+        df.groupby("Art")[["Anions_trans", "Cations_trans"]]
         .median()
     )
 
@@ -1963,7 +1963,7 @@ try:
         if len(sub) < 3:
             continue
 
-        points = sub[["Anionen_trans", "Kationen_trans"]].values
+        points = sub[["Anions_trans", "Cations_trans"]].values
 
         try:
             hull = ConvexHull(points)
@@ -1994,8 +1994,8 @@ try:
     y_theoretical = custom_transform_optimal(50000000)
 
     # Scale to the same 0–100 range as the other points
-    x_theoretical_scaled = x_theoretical / df["Anionen_trans_raw"].max() * 100
-    y_theoretical_scaled = y_theoretical / df["Kationen_trans_raw"].max() * 100
+    x_theoretical_scaled = x_theoretical / df["Anions_trans_raw"].max() * 100
+    y_theoretical_scaled = y_theoretical / df["Cations_trans_raw"].max() * 100
 
     # Diagonal line from the origin to the theoretical equilibrium point
 
@@ -2003,8 +2003,8 @@ try:
     slope = y_theoretical_scaled / x_theoretical_scaled
 
     # Determine the data range
-    x_data_max = df["Anionen_trans"].max()
-    y_data_max = df["Kationen_trans"].max()
+    x_data_max = df["Anions_trans"].max()
+    y_data_max = df["Cations_trans"].max()
 
     # Calculate the intersection of the line with the data range
     y_at_xmax = slope * x_data_max
@@ -2042,7 +2042,7 @@ try:
 
     # count overlap coordinates
     koord_counts = (
-        df.groupby(["Kationen_trans", "Anionen_trans"])["Art"]
+        df.groupby(["Cations_trans", "Anions_trans"])["Art"]
         .nunique()
         .reset_index(name="region_count")
     )
@@ -2060,7 +2060,7 @@ try:
 
     # Collect unique pairs (each only once)
     pair_set = set()
-    for (_, _), g in df.groupby(["Kationen_trans", "Anionen_trans"]):
+    for (_, _), g in df.groupby(["Cations_trans", "Anions_trans"]):
         arts_here = sorted(g["Art"].unique())
         if len(arts_here) > 1:
             for a, b in combinations(arts_here, 2):
@@ -2175,8 +2175,8 @@ try:
         if sub.empty:
             continue
 
-        x_center = sub["Anionen_trans"].median()
-        y_center = sub["Kationen_trans"].median()
+        x_center = sub["Anions_trans"].median()
+        y_center = sub["Cations_trans"].median()
 
 
         # position shifted if necessary
