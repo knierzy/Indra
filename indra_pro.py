@@ -1427,9 +1427,6 @@ try:
         index=default_index
     )
 
-
-
-    ref_vector = group_means.loc[ref_group].values
         # LOG-Version for plot
     ref_vector = group_means.loc[ref_group].values
 
@@ -1480,23 +1477,12 @@ try:
     )
 
 
-
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
-
-
-
-
-    for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
-        print(f"{g:25s}  →  {d:.3f}")
-
-
 
 
     max_maha = df["LogEuclid"].max()
  
-    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
-
   
     for m in missing[:20]:
         print(m)
@@ -1743,11 +1729,6 @@ try:
   
 
   # Points with Log-Euclidean colors
-   
-
-    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
-    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
-
 
 
     df["LogEuclid"] = df["LogEuclid"].fillna(0)
