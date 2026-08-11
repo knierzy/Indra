@@ -189,10 +189,12 @@ try:
 
     # --- Referenz (Hallstatt) ---
     # --- Referenz (Hallstatt) ---
-    ref_group = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake hallstatt"
-    )
+    # --- Referenz (Lake Hallstatt) ---
+    ref_group = "Lake Hallstatt"
+
+    if ref_group not in group_means.index:
+        raise ValueError("❌ Lake Hallstatt nicht gefunden!")
+
     print(f"\n✅ Referenz: {ref_group}")
 
         # LOG-Version für Plot verwenden
@@ -205,22 +207,61 @@ try:
         vec = group_means.loc[g].values
         mah_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
 
-        # Clean plot group names
+    # Clean plot group names
     df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
+    
+    # ============================================================
+    # Mapping Plotgruppen → Referenzgruppen
+    # ============================================================
 
-    # LogEuclid direkt über identische Gruppennamen zuordnen
-    df["LogEuclid"] = df["Group_clean"].map(mah_dict)
+    def match_maha(name):
 
-    print("\nLogEuclid Check:")
-    print(df["LogEuclid"].head())
-    print("NaN Anzahl:", df["LogEuclid"].isna().sum())
+        name = str(name).strip().lower()
+         # 1️⃣ exakter Match zuerst!
+        if name in mah_dict:
+            return mah_dict[name]
 
-    missing = df[df["LogEuclid"].isna()]["Group_clean"].unique()
+        mapping = {
+            "da_altheim": "tgw_altheim",
+            "da_bad schallerbach": "tgw_bad schallerbach",
+            "da_buch-st. magdalena": "tgw_buch-st. magdalena",
+            "da_großwilfersdorf": "tgw_großwilfersdorf",
+            "da_rottenbach": "tgw_rottenbach",
+            "da_senftenbach": "tgw_senftenbach",
 
-    print("\n❌ NICHT GEMATCHT:")
-    for m in missing[:20]:
-        print(m)
+            "gw_gaweinstal": "gaweinstal_pg31600452",
+            "gw_groß-enzersdorf": "groß-enzersdorf_pg30800302",
+            "gw_laa_an_der_thaya": "laa_pg31600422",
+            "gw_mureck": "mureck_pg61511062",
+            "gw_traiskirchen": "traiskirchen_pg30600152",
 
+            "fw_tux": "kk72410012_tux",
+
+            "lake constance": "bodensee",
+            "lake fuschl": "fuschlsee",
+            "lake hallstatt": "hallstätter see",
+            "lake millstatt": "millstätter see",
+            "lake neusiedl": "neusiedlersee",
+            "lake ossiach": "ossiacher see",
+            "lake wolfgang": "wolfgangsee"
+        }
+
+        # 1️⃣ direkte Zuordnung
+        if name in mapping:
+            return mah_dict.get(mapping[name], np.nan)
+
+        # 3️⃣ unscharfer Match
+        for key in mah_dict.keys():
+
+            key_norm = str(key).strip().lower()
+
+            if name in key_norm:
+                return mah_dict[key]
+
+            if key_norm in name:
+                return mah_dict[key]
+
+        return np.nan
 
     fig = go.Figure()
 
@@ -248,7 +289,7 @@ try:
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
         print(f"{g:25s}  →  {d:.3f}")
 
-
+    df["LogEuclid"] = df["Group_clean"].apply(match_maha)
 
     print("\n📏 Log-Euclidean Distanzen relativ zu Hallstatt:\n")
     for g, d in sorted(mah_dict.items(), key=lambda x: x[1]):
@@ -512,7 +553,6 @@ try:
         [t + (1 - t) * 0.5, "rgb(244,109,67)"],
         [1.0, "rgb(165,0,38)"]
     ]
-
     # ============================================================
     # 🎯 PUNKTE MIT MAHALANOBIS-FARBEN
     # ============================================================
@@ -558,9 +598,10 @@ try:
                 symbol=symbol_shape,
                 size=marker_size,
 
-                # 🔥 ORIGINALWERTE (kein sqrt!)
                 color=sub["LogEuclid"],
                 colorscale=custom_scale,
+
+            
 
                 cmin=0,
                 cmax=max_maha,  # 🔥 wieder korrekt
@@ -592,19 +633,12 @@ try:
                     len=1,
                     thickness=24
                 ),
-                                line=dict(
-                    width=2.5 if str(art).strip().lower() == "lake constance" else 0.5,
-                    color="goldenrod" if str(art).strip().lower() == "lake constance" else "black"
-                )
+
+                line=dict(width=0.5, color="black")
             ),
             text=sub["hover_text"],
             hoverinfo="text"
         ))
-
-
-
-# danach geht dein Code normal weiter
-
 
         # Überlappungen (Ringe)
         overlaps = df[df["Symbol"] == "star"].copy()
@@ -965,6 +999,7 @@ try:
         )
 
     import numpy as np
+    from playwright.sync_api import sync_playwright
 
     print("Varianzen:")
     print(np.var(raw_df[ion_cols], axis=0))
@@ -972,13 +1007,34 @@ try:
     print("\nKorrelationsmatrix:")
     print(np.corrcoef(raw_df[ion_cols].values.T))
 
-    # Export
-    fig.write_html(plot_output)
+    # ============================================================
+    # EXPORT: HTML + PNG per Browser-Screenshot
+    # ============================================================
 
-    print(f"\n✅ Plot gespeichert unter:\n→ {plot_output}")
-    print("✅ Nur HTML exportiert. Keine Anzeige.")
+    fig.write_html(plot_output, include_plotlyjs="cdn", full_html=True)
+    print(f"\n✅ HTML gespeichert unter:\n→ {plot_output}")
 
-    # Ergebnisse (Grenzen) auch ausgeben
+    png_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.png"
+    html_path = "file:///" + str(plot_output).replace("\\", "/")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+
+        page = browser.new_page(
+            viewport={"width": 2260, "height": 1210},
+            device_scale_factor=2
+        )
+
+        page.goto(html_path, wait_until="domcontentloaded", timeout=120000)
+        page.wait_for_timeout(3000)
+        page.screenshot(path=str(png_output), full_page=True)
+
+        browser.close()
+
+    print(f"✅ PNG gespeichert unter:\n→ {png_output}")
+
+    fig.show()
+
     print("\nCa-Grenzen aus Daten:")
     for r in results_ca:
         print(f"Ca={r['Ca']}%  ->  y_min={r['y_min']:.2f}  y_max={r['y_max']:.2f}")
