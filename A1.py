@@ -29,7 +29,7 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-input_file = DATA_DIR / "compendium.xlsx"
+input_file = DATA_DIR / "B1.xlsx"
 
 preferred_sheet = "Sheet1"
 
