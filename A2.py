@@ -1,6 +1,7 @@
-# Das ist log euclidean... passe noch an
-#
-# -*- coding: utf-8 -*-
+# Log-Euclidean distance calculation
+
+
+
 import math
 import pandas as pd
 import plotly.graph_objects as go
@@ -8,12 +9,13 @@ from plotly.express.colors import qualitative
 import numpy as np
 from scipy.spatial import ConvexHull
 from scipy.spatial import distance_matrix
-# === Datei & Zielpfad ===
+
+# === File and output paths ===
 from scipy.spatial.distance import euclidean
+
 
 def log_euclid(a, b):
     return euclidean(np.log1p(a), np.log1p(b))
-
 
 
 from pathlib import Path
@@ -40,10 +42,9 @@ raw_df = pd.read_excel(
 )
 
 
-
 # ============================================================
-# --- Hilfsfunktion zur Transformation mit frei wählbarer Basis ---
-def custom_transform_optimal(x, base=math.e +14): #12.1415926535
+# --- Helper function for transformation using a freely selectable base ---
+def custom_transform_optimal(x, base=math.e + 14):  # Example base: e + 14
     try:
         x_str = str(int(x)).zfill(8)
         a = int(x_str[0:2])
