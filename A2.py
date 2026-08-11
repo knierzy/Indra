@@ -234,12 +234,13 @@ try:
     # ============================================================
     # Map plot subgroup names to reference dataset subgroup names
     # ============================================================
-    def match_maha(name):
+    def match_led(name):
 
         name = str(name).strip().lower()
-         # 1️⃣ exakter Match zuerst!
-        if name in mah_dict:
-            return mah_dict[name]
+
+        # Exact match
+        if name in led_dict:
+            return led_dict[name]
 
         mapping = {
             "da_altheim": "tgw_altheim",
@@ -266,25 +267,25 @@ try:
             "lake wolfgang": "wolfgangsee"
         }
 
-        # 1️⃣ direkte Zuordnung
+        # Direct mapping
         if name in mapping:
-            return mah_dict.get(mapping[name], np.nan)
+            return led_dict.get(mapping[name], np.nan)
 
-        # 3️⃣ unscharfer Match
-        for key in mah_dict.keys():
+        # Fuzzy matching
+        for key in led_dict.keys():
 
             key_norm = str(key).strip().lower()
 
             if name in key_norm:
-                return mah_dict[key]
+                return led_dict[key]
 
             if key_norm in name:
-                return mah_dict[key]
+                return led_dict[key]
 
         return np.nan
 
-      fig = go.Figure()
-
+    fig = go.Figure()
+    
     # Sort Log-Euclidean distances
     led_sorted = sorted(led_dict.items(), key=lambda x: x[1])
 
