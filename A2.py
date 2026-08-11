@@ -1214,7 +1214,7 @@ try:
         return x, y
 
 
-    # Calculate median position of each subgroup
+    # Calculate median position and add label for each subgroup
     for art in df["Art"].unique():
 
         sub = df[df["Art"] == art]
@@ -1225,32 +1225,30 @@ try:
         x_center = sub["Anionen_trans"].median()
         y_center = sub["Kationen_trans"].median()
 
+        # Shift label position if necessary to avoid overlap
+        x_lab, y_lab = move_if_overlap(
+            x_center,
+            y_center
+        )
 
-        
-    # Shift label position if necessary to avoid overlap
-    x_lab, y_lab = move_if_overlap(
-        x_center,
-        y_center
-    )
+        label = smart_label(art)
 
-    label = smart_label(art)
-
-    fig.add_annotation(
-        x=x_lab,
-        y=y_lab,
-        text=label,
-        showarrow=False,  # No arrows
-        font=dict(
-            size=25,
-            color="black",
-            family="Arial Black"
-        ),
-        bgcolor="rgba(255,255,255,0.8)",
-        bordercolor="black",
-        borderwidth=1,
-        xanchor="center",
-        yanchor="middle"
-    )
+        fig.add_annotation(
+            x=x_lab,
+            y=y_lab,
+            text=label,
+            showarrow=False,
+            font=dict(
+                size=25,
+                color="black",
+                family="Arial Black"
+            ),
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="black",
+            borderwidth=1,
+            xanchor="center",
+            yanchor="middle"
+        )
 
 
     from playwright.sync_api import sync_playwright
