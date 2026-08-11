@@ -1,6 +1,11 @@
-# Log-Euclidean distance calculation
-
-
+# This script generates an INDRA Projection (IP) plot for multivariate
+# hydrochemical datasets based on transformed cation and anion metanumbers.
+# Constrained compositional fields are transformed using an irrational base and 
+# visualized in 2D. The script displays subgroup fields, theoretical Ca and HCO3
+# reference bands, and compositional overlaps between subgroups. Log-Euclidean 
+# distances are calculated from the original eight-dimensional
+# hydrochemical compositions and used to assess compositional similarity 
+# between subgroups and a selected reference group.
 
 import math
 import pandas as pd
@@ -55,7 +60,7 @@ def custom_transform_optimal(x, base=math.e + 14):  # Example base: e + 14
     except:
         return None
 
-# --- Hover-Helfer ---
+# --- Helper functions for hover information ---
 def pairs_to_percentages(x, labels):
     try:
         s = str(int(x)).zfill(8)
@@ -64,157 +69,169 @@ def pairs_to_percentages(x, labels):
     except:
         return dict(zip(labels, [None]*4)), [None]*4
 
+
 def format_hover(row):
     k_labels = ["Ca", "Mg", "Na", "K"]
     a_labels = ["HCO₃", "SO₄", "Cl", "NO₃"]
-    k_perc, _ = pairs_to_percentages(row["Metazahl_Kationen"], k_labels)
-    a_perc, _ = pairs_to_percentages(row["Metazahl_Anionen"], a_labels)
-    k_lines = " · ".join([f"{lbl}: {k_perc[lbl]}%" if k_perc[lbl] is not None else f"{lbl}: –" for lbl in k_labels])
-    a_lines = " · ".join([f"{lbl}: {a_perc[lbl]}%" if a_perc[lbl] is not None else f"{lbl}: –" for lbl in a_labels])
-    return (
-        f"<b>Art:</b> {row['Art']}<br>"
-        f"<b>Kationen</b> (aus {str(row['Metazahl_Kationen']).zfill(8)}):<br>{k_lines}<br>"
-        f"<b>Anionen</b> (aus {str(row['Metazahl_Anionen']).zfill(8)}):<br>{a_lines}"
+
+    k_perc, _ = pairs_to_percentages(
+        row["Metazahl_Kationen"], k_labels
+    )
+    a_perc, _ = pairs_to_percentages(
+        row["Metazahl_Anionen"], a_labels
     )
 
+    k_lines = " · ".join([
+        f"{lbl}: {k_perc[lbl]}%"
+        if k_perc[lbl] is not None
+        else f"{lbl}: –"
+        for lbl in k_labels
+    ])
+
+    a_lines = " · ".join([
+        f"{lbl}: {a_perc[lbl]}%"
+        if a_perc[lbl] is not None
+        else f"{lbl}: –"
+        for lbl in a_labels
+    ])
+
+    return (
+        f"<b>Group:</b> {row['Art']}<br>"
+        f"<b>Cations</b> (from {str(row['Metazahl_Kationen']).zfill(8)}):<br>"
+        f"{k_lines}<br>"
+        f"<b>Anions</b> (from {str(row['Metazahl_Anionen']).zfill(8)}):<br>"
+        f"{a_lines}"
+    )
+
+
 try:
-    # Excel einlesen
+    # Read Excel input file
     df = pd.read_excel(input_file)
 
-    required_cols = ['Metazahl_Kationen', 'Metazahl_Anionen', 'Art']
+    required_cols = [
+        'Metazahl_Kationen',
+        'Metazahl_Anionen',
+        'Art'
+    ]
+
     for col in required_cols:
         if col not in df.columns:
-            raise ValueError(f"Spalte '{col}' fehlt in der Datei!")
+            raise ValueError(
+                f"Required column '{col}' is missing from the input file."
+            )
 
-    # Transformation anwenden
-    df["Kationen_trans_raw"] = df["Metazahl_Kationen"].apply(custom_transform_optimal)
-    df["Anionen_trans_raw"]  = df["Metazahl_Anionen"].apply(custom_transform_optimal)
+    # Apply metanumber transformation
+    df["Kationen_trans_raw"] = (
+        df["Metazahl_Kationen"]
+        .apply(custom_transform_optimal)
+    )
 
-    # Normierung 0–100
-    df["Kationen_trans"] = df["Kationen_trans_raw"] / df["Kationen_trans_raw"].max() * 100
-    df["Anionen_trans"]  = df["Anionen_trans_raw"]  / df["Anionen_trans_raw"].max()  * 100
+    df["Anionen_trans_raw"] = (
+        df["Metazahl_Anionen"]
+        .apply(custom_transform_optimal)
+    )
 
-    # Duplikate entfernen
-    df = df.drop_duplicates(subset=["Kationen_trans", "Anionen_trans", "Art"])
+    # Normalize transformed coordinates to a 0–100 scale
+    df["Kationen_trans"] = (
+        df["Kationen_trans_raw"]
+        / df["Kationen_trans_raw"].max()
+        * 100
+    )
 
-    # Überlappungen zählen
+    df["Anionen_trans"] = (
+        df["Anionen_trans_raw"]
+        / df["Anionen_trans_raw"].max()
+        * 100
+    )
+
+    # Remove duplicate coordinates within the same subgroup
+    df = df.drop_duplicates(
+        subset=[
+            "Kationen_trans",
+            "Anionen_trans",
+            "Art"
+        ]
+    )
+
+    # Count coordinate overlaps
     koord_counts = (
-        df.groupby(["Kationen_trans", "Anionen_trans"])
+        df.groupby([
+            "Kationen_trans",
+            "Anionen_trans"
+        ])
         .size()
         .reset_index(name="region_count")
     )
-    df = df.merge(koord_counts, on=["Kationen_trans", "Anionen_trans"], how="left")
-    df["Symbol"] = df["region_count"].apply(lambda x: "star" if x > 1 else "circle")
 
-
-
-    # Hover vorbereiten
-    df["hover_text"] = df.apply(format_hover, axis=1)
-
-    # ============================================================
-    # MAHALANOBIS-DISTANZ (VOR DEM PLOT!)
-    # ============================================================
-
-
-    from scipy.spatial.distance import mahalanobis
-
-    # --- Ionen definieren ---
-    ion_cols = [
-        "meq_L_Ca2+",
-        "meq_L_Mg2+",
-        "meq_L_Na+",
-        "meq_L_K+",
-        "meq_L_Cl-",
-        "meq_L_SO4_2-",
-        "meq_L_NO3-",
-        "meq_L_HCO3-"
-    ]
-
-    # --- Kovarianzmatrix ---
-    cov = np.cov(raw_df[ion_cols].values.T)
-    cov += np.eye(cov.shape[0]) * 1e-6
-    cov_inv = np.linalg.pinv(cov)
-
-    # --- Gruppenmittelwerte ---
-    group_means = raw_df.groupby("Art")[ion_cols].mean()
-    group_means.index = group_means.index.astype(str).str.strip()
-
-    # ============================================================
-    # 🔬 LOG-TRANSFORMIERTE MAHALANOBIS (NEU)
-    # ============================================================
-
-    # --- Log-Transformation der Rohdaten ---
-    X_log = np.log1p(raw_df[ion_cols])
-
-    # --- Kovarianzmatrix im Log-Raum ---
-    cov_log = np.cov(X_log.values.T)
-    cov_log += np.eye(cov_log.shape[0]) * 1e-6
-    cov_log_inv = np.linalg.pinv(cov_log)
-
-    # --- Gruppenmittelwerte im Log-Raum ---
-    group_means_log = raw_df.groupby("Art")[ion_cols].mean()
-    group_means_log = np.log1p(group_means_log)
-    group_means_log.index = group_means_log.index.astype(str).str.strip()
-
-    # --- DEBUG: Vergleich Hallstatt vs Ossiach ---
-    from scipy.spatial.distance import euclidean, mahalanobis
-
-    h_name = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake hallstatt"
+    df = df.merge(
+        koord_counts,
+        on=[
+            "Kationen_trans",
+            "Anionen_trans"
+        ],
+        how="left"
     )
 
-    o_name = next(
-        g for g in group_means.index
-        if str(g).strip().lower() == "lake ossiach"
+    df["Symbol"] = df["region_count"].apply(
+        lambda x: "star" if x > 1 else "circle"
     )
 
-    h = group_means.loc[h_name].values
-    o = group_means.loc[o_name].values
+    # Generate hover information
+    df["hover_text"] = df.apply(
+        format_hover,
+        axis=1
+    )
+ # ============================================================
+# LOG-EUCLIDEAN DISTANCES
+# ============================================================
 
-    print("\n🔍 Vergleich Hallstatt vs Ossiach")
-    print("Hallstatt:", h_name)
-    print("Ossiach:", o_name)
+# --- Define major-ion variables ---
+ion_cols = [
+    "meq_L_Ca2+",
+    "meq_L_Mg2+",
+    "meq_L_Na+",
+    "meq_L_K+",
+    "meq_L_Cl-",
+    "meq_L_SO4_2-",
+    "meq_L_NO3-",
+    "meq_L_HCO3-"
+]
 
-    print("\nMittelwerte Differenz:")
-    print(group_means.loc[h_name] - group_means.loc[o_name])
+# --- Calculate subgroup mean compositions ---
+group_means = raw_df.groupby("Art")[ion_cols].mean()
+group_means.index = group_means.index.astype(str).str.strip()
 
-    print("\nDistanzen:")
-    print("Euclidean:   ", euclidean(h, o))
-    print("Mahalanobis (raw): ", mahalanobis(o, h, cov_inv))
+# --- Define reference subgroup ---
+ref_group = "Lake Hallstatt"
 
-    h_log = group_means_log.loc[h_name].values
-    o_log = group_means_log.loc[o_name].values
+if ref_group not in group_means.index:
+    raise ValueError("Reference subgroup 'Lake Hallstatt' not found.")
 
-    print("Mahalanobis (log): ", mahalanobis(o_log, h_log, cov_log_inv))
+print(f"\nReference subgroup: {ref_group}")
 
-    # --- Referenz (Hallstatt) ---
-    # --- Referenz (Hallstatt) ---
-    # --- Referenz (Lake Hallstatt) ---
-    ref_group = "Lake Hallstatt"
+ref_vector = group_means.loc[ref_group].values
 
-    if ref_group not in group_means.index:
-        raise ValueError("❌ Lake Hallstatt nicht gefunden!")
+# --- Calculate Log-Euclidean distances to the reference subgroup ---
+led_dict = {}
 
-    print(f"\n✅ Referenz: {ref_group}")
+for g in group_means.index:
+    vec = group_means.loc[g].values
+    led_dict[str(g).strip().lower()] = log_euclid(
+        vec,
+        ref_vector
+    )
 
-        # LOG-Version für Plot verwenden
-    ref_vector = group_means.loc[ref_group].values
+# --- Standardize plot subgroup names for matching ---
+df["Group_clean"] = (
+    df["Art"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
 
-    # Calculate Log-Euclidean distances to reference group
-    mah_dict = {}
-
-    for g in group_means.index:
-        vec = group_means.loc[g].values
-        mah_dict[str(g).strip().lower()] = log_euclid(vec, ref_vector)
-
-    # Clean plot group names
-    df["Group_clean"] = df["Art"].astype(str).str.strip().str.lower()
-    
-    # ============================================================
-    # Mapping Plotgruppen → Referenzgruppen
-    # ============================================================
-
+# ============================================================
+# Map plot subgroup names to reference dataset subgroup names
+# ============================================================
     def match_maha(name):
 
         name = str(name).strip().lower()
