@@ -247,7 +247,7 @@ print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
 gemeinde_col_raw = df.columns[3]
 df['Gemeindename'] = df.iloc[:, 3].astype(str).str.strip()
 
-print(f"✅ Municipality name extracted from column '{gemeinde_col_raw}'.")
+print(f" Municipality name extracted from column '{gemeinde_col_raw}'.")
 
 
 print(f"📑 Sheets: {xls.sheet_names}")
@@ -840,7 +840,7 @@ with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
 
 
 print(
-    f"\n✅ File saved with calculated data, grouped data, "
+    f"\n File saved with calculated data, grouped data, "
     f"min/max values, meq/percentage data, and correlation pairs: {output_file}"
 )
 
@@ -925,7 +925,7 @@ def lern_constraint_bands(df_typ):
 
                 if corr is not None and corr < -0.6:
                     print(
-                        f"⚠️ Strong negative correlation ignored: "
+                        f" Strong negative correlation ignored: "
                         f"{ionA} vs {ionB} (r={corr:.2f})"
                     )
 
@@ -1020,7 +1020,7 @@ for _, row in minmax_typisch.iterrows():
 
         if pd.isna(min_val) or pd.isna(max_val):
 
-            print(f"❌ Skipping {gid} because of NaN in {ion}")
+            print(f" Skipping {gid} because of NaN in {ion}")
             ranges_loc = None
             break
 
@@ -1032,7 +1032,7 @@ for _, row in minmax_typisch.iterrows():
 
 
     print(
-        f"👉 {gid}: range sizes:",
+        f"{gid}: range sizes:",
         {k: len(v) for k, v in ranges_loc.items()}
     )
 
@@ -1079,7 +1079,7 @@ for _, row in minmax_typisch.iterrows():
         continue
 
 
-    print(f"\n📍 {gid} ({gemeinde})")
+    print(f"\n {gid} ({gemeinde})")
     print(f"  🔢 Raw search space:     {total_raw:,}")
     print(f"  ➗ Sum = 100:            {count_sum_ok:,}")
     print(f"  🔗 After constraints:    {count_final:,}")
