@@ -2139,34 +2139,6 @@ try:
         scrolling=True
     )
 
-    # ========================================================
-    # Export figure
-    # ========================================================
-
-    st.subheader("Export figure")
-
-    try:
-        img_bytes = fig.to_image(
-            format="png",
-            width=1600,
-            height=900,
-            scale=2
-        )
-
-        st.download_button(
-            label="Download PNG",
-            data=img_bytes,
-            file_name="INDRA_Projection.png",
-            mime="image/png"
-        )
-
-    except Exception as exc:
-        st.warning(
-            "Figure export is currently unavailable. "
-            "For PNG export, make sure Kaleido is installed. "
-            f"Details: {exc}"
-        )
-
 
 except Exception as e:
     print(" Error while plotting", e)
