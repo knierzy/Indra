@@ -4,6 +4,5 @@ numpy
 scipy
 plotly
 openpyxl
-kaleido==0.2.1
 Pillow
 kaleido>=1.0.0
