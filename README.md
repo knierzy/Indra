@@ -46,6 +46,7 @@ An interactive version is available at:
 https://indrapro.streamlit.app
 
 The application supports Excel uploads, automatic data processing, adjustable transformation bases, and interactive visualization.
+The included B1.xlsx dataset can be uploaded to the web application to test the INDRA Projection.
 
 ## Author
 
