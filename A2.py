@@ -31,8 +31,8 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-input_file = DATA_DIR / "CartesianProduct_constraints.xlsx"
-raw_file = DATA_DIR / "compendium_processed.xlsx"
+input_file = OUTPUT_DIR / "CartesianProduct_constraints.xlsx"
+raw_file = OUTPUT_DIR / "compendium_processed.xlsx"
 
 plot_output = OUTPUT_DIR / "Metanumber_Plot_Ca_HCO3_Bands.html"
 
