@@ -231,7 +231,7 @@ df = df.reset_index(drop=True)
 # Create ID column from the first column
 
 df['ID'] = df.iloc[:, 0].astype(str).str.strip()
-print("✅ ID extracted from the first column.")
+print(" ID extracted from the first column.")
 
 
 # Create measurement station column from the second column
@@ -239,7 +239,7 @@ print("✅ ID extracted from the first column.")
 station_col_raw = df.columns[1]
 df['Messstation'] = df.iloc[:, 1].astype(str).str.strip()
 
-print(f"✅ Measurement station extracted from column '{station_col_raw}'.")
+print(f" Measurement station extracted from column '{station_col_raw}'.")
 
 
 # Create municipality name column from the fourth column
@@ -250,9 +250,9 @@ df['Gemeindename'] = df.iloc[:, 3].astype(str).str.strip()
 print(f" Municipality name extracted from column '{gemeinde_col_raw}'.")
 
 
-print(f"📑 Sheets: {xls.sheet_names}")
-print(f"➡️ Used sheet: {sheet}")
-print(f"🧭 Used header row: {hrow}")
+print(f" Sheets: {xls.sheet_names}")
+print(f" Used sheet: {sheet}")
+print(f" Used header row: {hrow}")
 
 
 # Find relevant columns
@@ -273,7 +273,7 @@ mapping = {
     'pH': pick(cols, r'\bph\b'),
 }
 
-print("\n🔎 Column mapping:")
+print("\n Column mapping:")
 for k, v in mapping.items():
     print(f"{k:30s} -> {v}")
 
@@ -294,18 +294,18 @@ if missing_mapping:
 # Create Art column from column B
 
 df['Art'] = df.iloc[:, 1].astype(str).str.strip()
-print("✅ Group column created.")
+print(" Group column created.")
 
 
-print("\n🔎 Group size by Art:")
+print("\n Group size by Art:")
 print(df.groupby('Art').size().describe())
 
 
 
-print("\n🔎 Group sizes for percentile filtering:")
+print("\n Group sizes for percentile filtering:")
 
 
-print("\n🔎 Column mapping:")
+print("\n Column mapping:")
 for k, v in mapping.items():
     print(f"  {k:15s} → {v if (isinstance(v, str) and v in df.columns) else str(v)}")
 
@@ -434,11 +434,11 @@ required_ions = [
     'HCO3_mg_L'
 ]
 
-print("\n🔎 Availability before complete-ion filter:")
+print("\n Availability before complete-ion filter:")
 for c in required_ions:
     print(c, df[c].notna().sum())
 
-print("\n🔎 Bicarbonate sources:")
+print("\n Bicarbonate sources:")
 print("HCO3 original:", df['HCO3_mg_L_original'].notna().sum())
 print("ANC:", df['ANC_mmol_L'].notna().sum())
 print("HCO3 quick:", df['HCO3_mg_L_quick'].notna().sum())
@@ -461,7 +461,7 @@ if df.empty:
 n_after = len(df)
 
 print(
-    f"🧪 Complete ion analyses: "
+    f" Complete ion analyses: "
     f"{n_after} of {n_before} rows retained "
     f"({n_after / n_before:.1%})"
 )
@@ -600,7 +600,7 @@ for gid, g in df.groupby('Art', dropna=False):
 df_typisch = df[df['__keep__']].drop(columns='__keep__').copy()
 
 print(
-    f"🧪 Typical data per Art, 5–95 percent range: "
+    f" Typical data per Art, 5–95 percent range: "
     f"{len(df_typisch)} of {len(df)} rows retained"
 )
 
@@ -706,7 +706,7 @@ df_typ_bis10 = df_typisch.copy()
 # Check whether the ID column exists
 
 if 'ID' not in df_typ_bis10.columns:
-    raise ValueError("❌ Column 'ID' not found. Please check whether it exists in the input file.")
+    raise ValueError(" Column 'ID' not found. Please check whether it exists in the input file.")
 
 
 ionen = [
@@ -845,7 +845,7 @@ print(
 )
 
 
-print("\n📦 Creating constrained Cartesian product and meta numbers ...")
+print("\n Creating constrained Cartesian product and meta numbers ...")
 
 
 # Define ion sets
@@ -1195,5 +1195,5 @@ with pd.ExcelWriter(output_file_cartesian, engine="openpyxl") as writer:
     )
 
 
-print("✔️ Constrained Cartesian product file saved.")
-print("📁", output_file_cartesian)
+print(" Constrained Cartesian product file saved.")
+print("", output_file_cartesian)
