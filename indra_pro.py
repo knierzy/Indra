@@ -779,7 +779,7 @@ df_typ_bis10 = df_typisch.copy()
 # Check whether the ID column exists
 
 if 'ID' not in df_typ_bis10.columns:
-    raise ValueError("❌ Column 'ID' not found. Please check whether it exists in the input file.")
+    raise ValueError(" Column 'ID' not found. Please check whether it exists in the input file.")
 
 
 
@@ -971,7 +971,7 @@ def lern_constraint_bands(df_typ):
 
                 if corr is not None and corr < -0.6:
                     print(
-                        f"⚠️ Strong negative correlation ignored: "
+                        f" Strong negative correlation ignored: "
                         f"{ionA} vs {ionB} (r={corr:.2f})"
                     )
 
@@ -1358,15 +1358,9 @@ try:
     ]
 
    
-
     # Group mean values
     group_means = raw_df.groupby("Art")[ion_cols].mean()
     group_means.index = group_means.index.astype(str).str.strip()
-
-
-
-  
-
 
 
 
